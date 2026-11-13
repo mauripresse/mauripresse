@@ -8,7 +8,7 @@ const IMG = "https://mauripresse.com/images/"; /* logo uniquement */
 /* Photos libres de droits (Unsplash, licence gratuite), choisies pour correspondre à chaque produit */
 const PH = (id, w = 1200) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=75`;
 const PHOTOS = {
-  hero: "1718670013921-2f144aba173a",          // cartes de visite sur marbre
+  hero: "1777652918682-dec5c79d1301",         // remise de carte de visite en main propre
   atelier: "1503694978374-8a2fa686963a",       // presse offset en marche
   grandformat: "1693031630369-bd429a57f115",   // imprimante grand format
   cmyk: "1715154470884-1c2be0b0129f",          // compte-fils sur charte CMJN
