@@ -18,7 +18,7 @@
 <main>
   <section class="pagehead"><div class="wrap">
     <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><span>Panier</span></nav>
-    <h1>Votre <span class="h-accent">panier.</span></h1>
+    <h1><span class="ph-ico" id="ph-ico"></span>Votre <span class="h-accent">panier.</span></h1>
     <ol class="stepper" aria-label="Étapes de commande"><li class="is-on">Panier</li><li>Coordonnées & fichiers</li><li>Confirmation de l'atelier</li></ol>
   </div></section>
 
@@ -43,13 +43,14 @@
 
 <script>
 (() => {
+  document.getElementById("ph-ico").innerHTML = BAG_ICON;
   function draw() {
     const c = Cart.get(), ht = c.reduce((s, l) => s + l.price, 0);
     document.getElementById("p-recap").style.display = c.length ? "" : "none";
     document.getElementById("p-lines").innerHTML = c.length
-      ? c.map((l, i) => `<article class="cline"><span class="cline__n">${String(i + 1).padStart(2, "0")}</span>
+      ? c.map((l, i) => `<article class="cline"><span class="cline__ico">${lineIcon(l.name)}</span>
           <div><h3>${esc(l.name)}</h3><p>${esc(l.detail)}</p></div>
-          <div class="cline__p"><b>${eur(l.price)}</b><small>HT</small><button data-rm="${i}">Retirer</button></div></article>`).join("")
+          <div class="cline__p"><b>${eur(l.price)}</b><small>HT</small><button class="cline__rm" data-rm="${i}" aria-label="Retirer ${esc(l.name)} du panier">${TRASH_ICON}<span>Retirer</span></button></div></article>`).join("")
       : `<div class="cempty"><h2>Votre panier est vide.</h2><p>Configurez un produit pour obtenir un prix immédiat, ou demandez un devis sur mesure.</p>
           <div class="hero__cta"><a class="btn" href="catalogue.html">Voir le catalogue <span class="arrow">→</span></a><a class="btn btn--ghost" href="contact.html">Demander un devis</a></div></div>`;
     document.getElementById("p-n").textContent = c.length + " article" + (c.length > 1 ? "s" : "") + " · HT";

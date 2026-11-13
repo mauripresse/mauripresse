@@ -14,6 +14,7 @@ doc: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="curren
     user: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
     bag: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
     wa: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.1-5.4A8.5 8.5 0 1 1 21 11.5Z"/></svg>',
+    mail: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>',
   };
 
   /* Ouvert / fermé (Lun–Sam 9h–19h30, heure de Paris) */
@@ -123,11 +124,14 @@ const header = `
     </div>
     <div class="footer__bottom"><span>© ${new Date().getFullYear()} Mauri Presse. Tous droits réservés.</span><span class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
   </div></footer>
-  <a class="wa" href="${SHOP.wa}" target="_blank" rel="noopener" aria-label="Écrire sur WhatsApp">${icon.wa}<span>WhatsApp</span></a>
+  <div class="fab-stack">
+    <a class="fab fab--mail" href="mailto:${SHOP.mail}" aria-label="Écrire un e-mail" title="${SHOP.mail}">${icon.mail}<span>E-mail</span></a>
+    <a class="fab fab--wa" href="${SHOP.wa}" target="_blank" rel="noopener" aria-label="Écrire sur WhatsApp">${icon.wa}<span>WhatsApp</span></a>
+  </div>
   <div class="drawer" data-drawer aria-hidden="true">
     <div class="drawer__veil" data-cart-close></div>
     <aside class="drawer__panel" role="dialog" aria-label="Panier">
-      <div class="drawer__head"><h3>Votre panier</h3><button class="x" data-cart-close aria-label="Fermer">✕</button></div>
+      <div class="drawer__head"><h3><span class="drawer__badge">${icon.bag}</span>Votre panier</h3><button class="x" data-cart-close aria-label="Fermer">✕</button></div>
       <div class="drawer__body" data-cart-lines></div>
       <div class="drawer__foot">
         <div class="total"><span>Total HT</span><b data-cart-total>0,00 €</b></div>
@@ -158,8 +162,12 @@ const header = `
       const box = document.querySelector("[data-cart-lines]");
       if (!box) return;
       box.innerHTML = c.length
-        ? c.map((l, i) => `<div class="line"><h4>${esc(l.name)}</h4><b>${eur(l.price)}</b><p>${esc(l.detail)}</p><button data-rm="${i}">Retirer</button></div>`).join("")
-        : '<p class="empty">Votre panier est vide.<br><a href="catalogue.html" style="text-decoration:underline">Parcourir le catalogue</a></p>';
+        ? c.map((l, i) => `<article class="line">
+            <span class="line__ico">${lineIcon(l.name)}</span>
+            <div class="line__body"><h4>${esc(l.name)}</h4><p>${esc(l.detail)}</p></div>
+            <div class="line__side"><b>${eur(l.price)}</b><button class="line__rm" data-rm="${i}" aria-label="Retirer ${esc(l.name)} du panier">${TRASH_ICON}</button></div>
+          </article>`).join("")
+        : `<div class="empty"><span class="empty__ico">${BAG_ICON}</span><p>Votre panier est vide.</p><a class="btn btn--sm" href="catalogue.html">Parcourir le catalogue <span class="arrow">→</span></a></div>`;
       document.querySelector("[data-cart-total]").textContent = eur(c.reduce((s, l) => s + l.price, 0));
     },
   };
