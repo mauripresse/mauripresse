@@ -20,6 +20,10 @@
     <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><span>Mon compte</span></nav>
     <h1>Mon <span class="h-accent">compte.</span></h1>
     <p>Connectez-vous pour retrouver vos commandes, ou créez votre compte en une minute.</p>
+    <div class="hero__cta" style="margin-top:22px">
+      <a class="btn btn--cyan" id="go-creer" href="#compte-form">Créer un compte <span class="arrow">→</span></a>
+      <a class="btn btn--ghost" href="#compte-form">Se connecter</a>
+    </div>
   </div></section>
 
   <div class="wrap contact">
@@ -34,7 +38,7 @@
     </div>
 
     <!-- TODO intégration : brancher ces formulaires sur l'authentification existante de /mon-compte -->
-    <div class="form">
+    <div class="form" id="compte-form">
       <div class="tabs" role="tablist">
         <button role="tab" aria-selected="true" data-tab="login">Connexion</button>
         <button role="tab" aria-selected="false" data-tab="signup">Créer un compte</button>
@@ -66,12 +70,15 @@
 <script>
 (() => {
   const tabs = document.querySelectorAll("[data-tab]"), ok = document.getElementById("ok");
-  tabs.forEach((t) => t.addEventListener("click", () => {
-    tabs.forEach((x) => x.setAttribute("aria-selected", x === t));
-    document.getElementById("login").hidden = t.dataset.tab !== "login";
-    document.getElementById("signup").hidden = t.dataset.tab !== "signup";
+  const select = (name) => {
+    tabs.forEach((x) => x.setAttribute("aria-selected", x.dataset.tab === name));
+    document.getElementById("login").hidden = name !== "login";
+    document.getElementById("signup").hidden = name !== "signup";
     ok.classList.remove("is-on");
-  }));
+  };
+  tabs.forEach((t) => t.addEventListener("click", () => select(t.dataset.tab)));
+  document.getElementById("go-creer").addEventListener("click", () => select("signup"));
+  if (new URLSearchParams(location.search).get("onglet") === "creer") select("signup");
   ["login", "signup"].forEach((id) => document.getElementById(id).addEventListener("submit", (e) => {
     e.preventDefault();
     if (!e.target.checkValidity()) { e.target.reportValidity(); return; }

@@ -12,6 +12,7 @@ searchBig: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="
 doc: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></svg>',
     bolt: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>',
     user: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
+    userPlus: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg>',
     bag: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
     wa: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.1-5.4A8.5 8.5 0 1 1 21 11.5Z"/></svg>',
     mail: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>',
@@ -62,7 +63,7 @@ const header = `
     <a class="hpill hpill--quote" href="contact.html"${cur(PAGE === "contact.html")}>Devis sur mesure</a>
     <button class="hicon hicon--search" type="button" data-search-toggle aria-label="Rechercher">${icon.searchBig}</button>
     <a class="hicon" href="compte.html" aria-label="Mon compte"${cur(PAGE === "compte.html")}>${icon.user}<span class="hicon__lbl">Compte</span></a>
-    <button class="hicon hicon--cart" type="button" data-cart-open aria-label="Ouvrir le panier"${cur(PAGE === "panier.html")}>${icon.bag}<span class="hicon__lbl">Panier</span><span class="cart-count" data-cart-count>0</span></button>
+    <button class="hicon hicon--cart" type="button" data-cart-open aria-label="Ouvrir le panier"${cur(PAGE === "panier.html")}><span class="hicon__icowrap">${icon.bag}<span class="cart-count" data-cart-count>0</span></span><span class="hicon__lbl">Panier</span></button>
   </nav>
 </div>
 <nav class="nav" aria-label="Catégories"><div class="wrap">
@@ -85,7 +86,8 @@ const header = `
     <div class="mmenu__quick">
       <a class="mq mq--express" href="catalogue.html?express=1"${cur(EXPRESS_ON)}>${icon.bolt}<span>Express 24h</span></a>
       <a class="mq" href="contact.html"${cur(PAGE === "contact.html")}>${icon.doc}<span>Devis</span></a>
-      <a class="mq" href="compte.html"${cur(PAGE === "compte.html")}>${icon.user}<span>Compte</span></a>
+      <a class="mq" href="compte.html"${cur(PAGE === "compte.html")}>${icon.user}<span>Se connecter</span></a>
+      <a class="mq" href="compte.html?onglet=creer">${icon.userPlus}<span>Créer un compte</span></a>
     </div>
     <a class="mall${ALL_ON ? " is-current" : ""}" href="catalogue.html"${cur(ALL_ON)}><span>Tous les produits</span><span>→</span></a>
     <p class="mmenu__label">Nos familles</p>
