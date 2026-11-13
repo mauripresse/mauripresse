@@ -19,8 +19,8 @@
 <main>
   <section class="pagehead pagehead--plain"><div class="wrap">
     <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><span>Catalogue</span></nav>
-    <h1>Que voulez-vous <span class="h-accent">imprimer ?</span></h1>
-    <p>Choisissez une famille, ou cherchez directement un produit.</p>
+    <h1>Tout ce qui <span class="h-accent">s'imprime,</span> classé par famille.</h1>
+    <p>14 familles, du produit configurable en ligne au sur-mesure. Cherchez un produit, ou parcourez la liste.</p>
 
     <div class="cbar">
       <div class="cbar__search">
@@ -33,19 +33,28 @@
     </div>
   </div></section>
 
-  <!-- Vue par défaut : les 14 familles -->
-  <section class="section section--tight" id="view-families"><div class="wrap">
-    <div class="fams" id="fams"></div>
-  </div></section>
+  <nav class="cnav" aria-label="Aller à une famille" id="cnav"><div class="cnav__track" id="cnav-track"></div></nav>
 
-  <!-- Vue recherche : les produits trouvés -->
-  <section class="section section--tight" id="view-results" hidden><div class="wrap">
-    <div class="rhead"><h2 id="r-title"></h2><button type="button" class="btn btn--ghost btn--sm" id="back">← Toutes les familles</button></div>
-    <div class="rlist" id="rlist"></div>
+  <div class="wrap">
+    <p class="ccount" id="ccount" aria-live="polite"></p>
+    <div id="cgroups"></div>
     <div class="cempty" id="noresult" hidden>
       <h2>Aucun produit trouvé.</h2>
       <p>Nous imprimons aussi sur mesure : décrivez-nous votre projet, l'équipe vous répond avec un prix et un délai.</p>
       <div class="hero__cta"><a class="btn" href="contact.html">Demander un devis <span class="arrow">→</span></a></div>
+    </div>
+  </div>
+
+  <section class="section section--tight"><div class="wrap">
+    <div class="urgent">
+      <div>
+        <h2>Un produit qui n'est pas dans la liste&nbsp;?</h2>
+        <p>Nous imprimons aussi sur mesure. Décrivez votre projet, l'équipe PAO vous répond avec un prix et un délai.</p>
+      </div>
+      <div class="urgent__cta">
+        <a class="btn" href="contact.html">Demander un devis <span class="arrow">→</span></a>
+        <a class="btn btn--ghost" href="tel:0147707924">01 47 70 79 24</a>
+      </div>
     </div>
   </div></section>
 </main>
@@ -55,47 +64,84 @@
   const params = new URLSearchParams(location.search);
   const filter = document.getElementById("filter"), express = document.getElementById("express"), clear = document.getElementById("clear");
   const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const row = (it, c) => {
+    const k = typeof it !== "string";
+    return `<a class="rrow" href="${itemHref(it)}" data-name="${esc(norm(itemName(it) + " " + c.name))}" data-x="${k ? 1 : 0}">
+      <span class="rrow__ico">${catIcon(c.id)}</span>
+      <div><h3>${esc(itemName(it))}</h3><p>${k ? "Configuration en ligne, prix immédiat" : "Format, quantité et finitions sur mesure"}</p></div>
+      ${k ? `<span class="rrow__p">dès <b>${eur(computePrice(it.p, 0, [it.o || 0], "std"))}</b> HT<span class="pill">24h</span></span>` : `<span class="rrow__p"><span class="pill pill--soft">Sur devis →</span></span>`}
+    </a>`;
+  };
 
-  /* Familles */
-  document.getElementById("fams").innerHTML = CATS.map((c, i) => {
-    const conf = c.items.some((it) => typeof it !== "string");
-    return `<a class="fam t${(i % 4) + 1}" href="categorie.html?c=${c.id}">
-      <span class="fam__ico">${catIcon(c.id)}</span>
-      <div class="fam__txt">
-        <h2>${esc(c.name)}</h2>
-        <p>${esc(c.blurb)}</p>
+  document.getElementById("cnav-track").innerHTML = CATS.map((c) => `<a href="#${c.id}" data-nav="${c.id}">${esc(c.name)}</a>`).join("");
+  document.getElementById("cgroups").innerHTML = CATS.map((c, i) => `
+    <section class="cgroup" id="${c.id}">
+      <div class="cgroup__head">
+        <span class="cgroup__ico">${catIcon(c.id)}</span>
+        <div><h2>${esc(c.name)}</h2><p>${esc(c.blurb)}</p></div>
+        <span class="cgroup__n" id="n-${c.id}"></span>
+        <a class="cgroup__all" href="categorie.html?c=${c.id}">Tout voir <span class="arrow">→</span></a>
       </div>
-      <div class="fam__foot"><span>${c.items.length} produit${c.items.length > 1 ? "s" : ""}</span>${conf ? '<span class="pill">24h</span>' : ""}<span class="fam__go">→</span></div>
-    </a>`;
-  }).join("");
+      <div class="rlist">${c.items.map((it) => row(it, c)).join("")}</div>
+    </section>`).join("");
 
-  /* Produits (pour la recherche) */
-  const ALL = CATS.flatMap((c) => c.items.map((it) => ({ it, c, conf: typeof it !== "string", s: norm(itemName(it) + " " + c.name) })));
-  const row = (x) => `<a class="rrow" href="${itemHref(x.it)}">
-      <span class="rrow__ico">${catIcon(x.c.id)}</span>
-      <div><h3>${esc(itemName(x.it))}</h3><p>${esc(x.c.name)}</p></div>
-      ${x.conf ? `<span class="rrow__p">dès <b>${eur(computePrice(x.it.p, 0, [x.it.o || 0], "std"))}</b> HT <span class="pill">24h</span></span>` : `<span class="rrow__p"><span class="pill pill--soft">Sur devis →</span></span>`}
-    </a>`;
+  const groups = [...document.querySelectorAll(".cgroup")], navLinks = [...document.querySelectorAll("[data-nav]")];
+  const totalCount = CATS.reduce((n, c) => n + c.items.length, 0);
 
   function apply() {
-    const q = norm(filter.value.trim()), x = express.checked, active = !!q || x;
+    const q = norm(filter.value.trim()), x = express.checked;
     clear.hidden = !q;
-    document.getElementById("view-families").hidden = active;
-    document.getElementById("view-results").hidden = !active;
-    if (!active) return;
-    const words = q.split(/\s+/).filter(Boolean);
-    const hits = ALL.filter((p) => words.every((w) => p.s.includes(w)) && (!x || p.conf));
-    document.getElementById("r-title").textContent = hits.length + " produit" + (hits.length > 1 ? "s" : "") + (x && !q ? " disponibles en express 24h" : " trouvé" + (hits.length > 1 ? "s" : ""));
-    document.getElementById("rlist").innerHTML = hits.map(row).join("");
-    document.getElementById("noresult").hidden = hits.length > 0;
+    let visible = 0;
+    groups.forEach((g) => {
+      let n = 0;
+      g.querySelectorAll(".rrow").forEach((r) => {
+        const ok = (!q || r.dataset.name.includes(q)) && (!x || r.dataset.x === "1");
+        r.style.display = ok ? "" : "none";
+        if (ok) n++;
+      });
+      g.hidden = n === 0;
+      g.querySelector(`#n-${g.id}`).textContent = n + " produit" + (n > 1 ? "s" : "");
+      document.querySelector(`[data-nav="${g.id}"]`).style.display = n === 0 ? "none" : "";
+      visible += n;
+    });
+    document.getElementById("ccount").textContent = q || x
+      ? visible + " produit" + (visible > 1 ? "s" : "") + (x && !q ? " disponibles en express 24h" : " trouvé" + (visible > 1 ? "s" : ""))
+      : totalCount + " produits dans 14 familles";
+    document.getElementById("noresult").hidden = visible > 0;
+    document.getElementById("cgroups").hidden = visible === 0;
   }
   filter.value = params.get("q") || "";
   express.checked = params.get("express") === "1";
   filter.addEventListener("input", apply);
   express.addEventListener("change", apply);
   clear.addEventListener("click", () => { filter.value = ""; apply(); filter.focus(); });
-  document.getElementById("back").addEventListener("click", () => { filter.value = ""; express.checked = false; apply(); });
   apply();
+
+  /* La barre des familles colle juste sous l'en-tête, même quand celui-ci se range sur téléphone */
+  const cnav = document.getElementById("cnav"), headerEl = document.querySelector(".header");
+  const syncTop = () => { cnav.style.top = Math.max(0, headerEl.getBoundingClientRect().bottom) + "px"; };
+  window.addEventListener("scroll", () => requestAnimationFrame(syncTop), { passive: true });
+  window.addEventListener("resize", syncTop);
+  headerEl.addEventListener("transitionend", syncTop);
+  syncTop();
+
+  /* Famille active dans la barre de navigation, selon le défilement */
+  let current = null;
+  const onScroll = () => {
+    const y = cnav.getBoundingClientRect().bottom + 4;
+    let on = groups.find((g) => !g.hidden && g.getBoundingClientRect().top <= y) || groups.find((g) => !g.hidden);
+    for (const g of groups) { if (g.hidden) continue; if (g.getBoundingClientRect().top <= y) on = g; else break; }
+    if (on && on !== current) {
+      current = on;
+      navLinks.forEach((a) => a.classList.toggle("is-on", a.dataset.nav === on.id));
+      const link = navLinks.find((a) => a.dataset.nav === on.id);
+      if (link) link.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+    }
+  };
+  let tick = false;
+  window.addEventListener("scroll", () => { if (!tick) { tick = true; requestAnimationFrame(() => { tick = false; onScroll(); }); } }, { passive: true });
+  onScroll();
+  if (location.hash) { const g = document.getElementById(location.hash.slice(1)); if (g) setTimeout(() => g.scrollIntoView({ block: "start" }), 50); }
 })();
 </script>
 </body>
