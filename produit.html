@@ -68,6 +68,11 @@
       <div class="recap__unit" id="r-unit"></div>
       <button class="btn btn--cyan btn--block" id="add" type="button">Ajouter au panier <span class="arrow">→</span></button>
       <ul class="assure"><li>Paiement sécurisé (CB, Visa, PayPal)</li><li>Imprimé dans notre atelier parisien</li><li>Assistance PAO au 07 83 46 02 17</li></ul>
+      <a class="guarantee" id="guarantee-link" href="garantie.html">
+        <span class="guarantee__ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <span><b>Prix le plus bas garanti</b><small>Trouvé moins cher ailleurs ? On vous rembourse la différence.</small></span>
+        <span class="arrow">→</span>
+      </a>
     </aside>
   </div>
 </main>
@@ -149,6 +154,7 @@
       price: computePrice(key, state.q, state.c, state.d),
     });
   });
+  document.getElementById("guarantee-link").href = "garantie.html?produit=" + encodeURIComponent(p.name);
   document.body.classList.add("has-buybar");
   document.getElementById("bb-add").addEventListener("click", () => document.getElementById("add").click());
   /* Téléphone : un groupe ouvert à la fois, on passe au suivant après chaque choix */

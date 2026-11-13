@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prix le plus bas garanti · Mauri Presse</title>
+<meta name="description" content="Trouvé moins cher ailleurs pour le même produit ? Mauri Presse vous rembourse la différence. Envoyez votre preuve, on analyse votre demande.">
+<link rel="icon" href="https://mauripresse.com/images/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+
+<main>
+  <section class="pagehead"><div class="wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><span>Prix le plus bas garanti</span></nav>
+    <h1>Trouvé moins cher ? <span class="h-accent">On vous rembourse la différence.</span></h1>
+    <p>Pour un produit identique (même format, même papier, mêmes finitions, même quantité), si vous trouvez un prix plus bas ailleurs — en ligne ou chez un imprimeur près de chez vous — envoyez-nous la preuve. Après vérification, nous vous remboursons l'écart.</p>
+    <div class="badges">
+      <span class="badge">✓ Produit strictement identique exigé</span>
+      <span class="badge">✓ Preuve datée de moins de 7 jours</span>
+      <span class="badge">✓ Réponse sous 48 h ouvrées</span>
+    </div>
+  </div></section>
+
+  <div class="wrap contact">
+    <div>
+      <span class="eyebrow eyebrow--cyan">Comment ça marche</span>
+      <ol class="gsteps">
+        <li><b>Vous trouvez moins cher</b><p>Un devis ou un prix affiché, pour exactement le même produit.</p></li>
+        <li><b>Vous nous envoyez la preuve</b><p>Un lien, une capture d'écran ou un devis/facture, selon où vous l'avez trouvé.</p></li>
+        <li><b>On compare et on vous répond</b><p>Si tout correspond, on vous rembourse la différence — sur une commande déjà passée ou en déduction de votre prochaine.</p></li>
+      </ol>
+      <div class="info" style="margin-top:24px">
+        <div><span class="k">Une question</span><span><a href="tel:0147707924">01 47 70 79 24</a></span></div>
+        <div><span class="k">E-mail</span><span><a href="mailto:mauripresse24@gmail.com">mauripresse24@gmail.com</a></span></div>
+      </div>
+    </div>
+
+    <!-- TODO intégration : brancher ce formulaire sur un vrai traitement (réception + e-mail à l'atelier) -->
+    <div class="form">
+      <h2>Votre demande</h2>
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-tab="online">J'ai trouvé une imprimerie en ligne</button>
+        <button role="tab" aria-selected="false" data-tab="local">J'ai trouvé un imprimeur local</button>
+      </div>
+
+      <form id="g-form" novalidate>
+        <div class="fgrid">
+          <label class="field field--full"><span>Produit concerné</span><input name="produit" id="g-produit" required></label>
+
+          <div class="field field--full" data-panel="online">
+            <span>Lien du site concurrent *</span>
+            <input name="lien" type="url" placeholder="https://…" required>
+          </div>
+          <label class="field" data-panel="online"><span>Nom du site / de l'imprimeur *</span><input name="site" required></label>
+          <label class="field" data-panel="local"><span>Nom de l'imprimerie *</span><input name="imprimeur" required></label>
+          <label class="field"><span>Prix constaté (TTC) *</span><input name="prix" type="number" step="0.01" min="0" required></label>
+
+          <label class="field field--full" data-panel="local"><span>Ville</span><input name="ville" placeholder="Ex. : Lyon"></label>
+
+          <label class="field field--full"><span>Détails de la configuration (format, papier, finition, quantité)</span><textarea name="details"></textarea></label>
+
+          <div class="field field--full" data-panel="online">
+            <span>Capture d'écran ou devis (recommandé)</span>
+            <label class="drop" id="drop-online"><input type="file" id="file-online" accept=".pdf,.jpg,.jpeg,.png"><b>Cliquez ou glissez un fichier ici</b><small>PDF, JPG, PNG — 50 Mo max.</small></label>
+          </div>
+          <div class="field field--full" data-panel="local" hidden>
+            <span>Devis ou facture de l'imprimeur local *</span>
+            <label class="drop" id="drop-local"><input type="file" id="file-local" accept=".pdf,.jpg,.jpeg,.png" required><b>Cliquez ou glissez un fichier ici</b><small>PDF, JPG, PNG — 50 Mo max. Obligatoire pour un imprimeur local.</small></label>
+          </div>
+
+          <label class="field"><span>Votre nom *</span><input name="nom" required></label>
+          <label class="field"><span>Votre e-mail *</span><input name="email" type="email" required></label>
+        </div>
+        <label class="gcheck"><input type="checkbox" required><span>J'atteste que ces informations sont exactes et concernent un produit strictement identique.</span></label>
+        <button class="btn btn--cyan btn--block" style="margin-top:18px">Envoyer ma demande <span class="arrow">→</span></button>
+        <div class="form__ok" id="ok" role="status"></div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<script>
+(() => {
+  const params = new URLSearchParams(location.search);
+  if (params.get("produit")) document.getElementById("g-produit").value = params.get("produit");
+
+  const tabs = document.querySelectorAll("[data-tab]"), form = document.getElementById("g-form");
+  const select = (name) => {
+    tabs.forEach((t) => t.setAttribute("aria-selected", t.dataset.tab === name));
+    form.querySelectorAll("[data-panel]").forEach((el) => {
+      el.hidden = el.dataset.panel !== name;
+      el.querySelectorAll("input, textarea").forEach((i) => { i.disabled = el.hidden; });
+    });
+  };
+  tabs.forEach((t) => t.addEventListener("click", () => select(t.dataset.tab)));
+  select("online");
+
+  ["online", "local"].forEach((id) => {
+    const drop = document.getElementById("drop-" + id), file = document.getElementById("file-" + id), label = drop.querySelector("b");
+    const show = () => { if (file.files[0]) label.textContent = file.files[0].name; };
+    file.addEventListener("change", show);
+    ["dragover", "dragenter"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("is-over"); }));
+    ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("is-over"); }));
+    drop.addEventListener("drop", (e) => { if (e.dataTransfer.files.length) { file.files = e.dataTransfer.files; show(); } });
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    const ok = document.getElementById("ok");
+    /* Maquette : aucune demande n'est envoyée tant que ce formulaire n'est pas relié à un serveur et à une boîte mail. */
+    ok.textContent = "Maquette : ce formulaire n'est pas encore relié au serveur ni à une boîte mail, aucune demande n'a été envoyée.";
+    ok.classList.add("is-on");
+  });
+})();
+</script>
+</body>
+</html>
