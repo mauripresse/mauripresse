@@ -56,7 +56,7 @@
 (() => {
   const id = new URLSearchParams(location.search).get("c");
   const i = Math.max(0, CATS.findIndex((x) => x.id === id)), c = CATS[i];
-  const conf = c.items.filter((it) => typeof it !== "string").length;
+  const conf = c.items.filter(isConf).length;
 
   document.title = c.name + " · Mauri Presse";
   document.getElementById("c-crumb").textContent = c.name;
@@ -67,13 +67,13 @@
   document.getElementById("c-count").textContent = String(i + 1).padStart(2, "0");
   document.getElementById("c-devis").href = "contact.html?produit=" + encodeURIComponent(c.name);
 
-  document.getElementById("c-items").innerHTML = c.items.map((it) => {
-    const k = typeof it !== "string";
-    return `<a class="item" href="${itemHref(it)}">
-      <div><h3>${esc(itemName(it))}</h3><p>${k ? "Configuration en ligne, prix immédiat." : "Format, quantité et finitions sur mesure."}</p></div>
-      <div class="item__meta">${k ? `<span>dès <b>${eur(computePrice(it.p, 0, [it.o || 0], "std"))}</b> HT</span><span class="pill">24h</span>` : `<span>Sur devis</span><span class="pill pill--soft">Devis →</span>`}</div>
-    </a>`;
-  }).join("");
+document.getElementById("c-items").innerHTML = c.items.map((it) => {
+  const k = isConf(it), from = itemFrom(it);
+  return `<a class="item" href="${itemHref(it)}">
+    <div><h3>${esc(itemName(it))}</h3><p>${k ? "Configuration en ligne, prix immédiat." : "Format, quantité et finitions sur mesure."}</p></div>
+    <div class="item__meta"><span>${from ? `dès <b>${eur(from)}</b> HT` : "Sur devis"}</span>${k ? '<span class="pill">24h</span>' : '<span class="pill pill--soft">Devis →</span>'}</div>
+  </a>`;
+}).join("");
 
   document.getElementById("c-others").innerHTML = CATS.filter((x) => x.id !== c.id).map((x) => `<a href="categorie.html?c=${x.id}">${esc(x.name)}</a>`).join("");
 })();

@@ -51,112 +51,99 @@ const SHOP = {
   ],
 };
 
-/* Modes de livraison (multiplicateur appliqué au prix de base) */
-const DELIVERY = [
-  { id: "std", label: "Standard", sub: "3 – 4 jours", short: "3 – 4 jours", mult: 1, days: 4 },
-  { id: "exp", label: "Express", sub: "24 / 48 h", short: "Express 24/48h", mult: 1.25, days: 2 },
-  { id: "day", label: "Retrait atelier", sub: "Jour même · Paris 10e", short: "Jour même", mult: 1.35, days: 0 },
-];
-
-/* Produits configurables en ligne */
+/* Produits configurables en ligne.
+   Données recopiées telles quelles du site officiel mauripresse.com (relevé du 13/11/2026) :
+   formats, options, quantités, délais et prix HT. Rien n'est estimé ici. */
 const PRODUCTS = {
+  /* Fiche produit officielle : /produit/cartes-de-visite-cartes-de-visite-classiques
+     Prix fixés par quantité et par délai ; les options n'ont pas de supplément. */
   cartes: {
     name: "Cartes de visite classiques",
     cat: "Cartes de visite", catId: "cartes-de-visite",
     img: PH(PHOTOS.cartes),
-    desc: "Le support incontournable de votre communication professionnelle. Papier couché 350 g, formats standards et finitions personnalisées.",
-    qty: [100, 250, 500, 1000, 2500, 5000, 10000],
-    base: [22.8, 28.8, 33.6, 45.6, 78, 132, 234],
-    defQty: 500,
+    desc: "Support incontournable de votre communication professionnelle. Formats sur-mesure et finitions personnalisées haut de gamme.",
+    qty: [100, 250, 500],
+    defQty: 100, defDeliv: "j5",
+    deliv: [
+      { id: "day", label: "Livraison jour même", sub: "Same day", short: "Jour même", days: 0, prices: [30, 50, 80] },
+      { id: "j5", label: "Livraison 5 jours", sub: "Standard", short: "5 jours", days: 5, prices: [25, 40, 60] },
+    ],
     groups: [
-      { id: "format", label: "Format fini", options: [
-        { label: "8,5 × 5,5 cm", hint: "Standard carte bancaire" },
-        { label: "9 × 5 cm", hint: "Allongé" },
-        { label: "8,5 × 5 cm", hint: "Format italien" },
-        { label: "5,5 × 5,5 cm", hint: "Carré", mult: 1.05 },
+      { id: "format", label: "Format & dimensions", options: [
+        { label: "8,50 × 5,50 cm", hint: "Standard" },
+        { label: "9,00 × 5,00 cm", hint: "Standard" },
+        { label: "8,50 × 5,00 cm", hint: "Standard" },
+      ]},
+      { id: "orientation", label: "Orientation", options: [
+        { label: "Verticale" }, { label: "Horizontale" },
+      ]},
+      { id: "papier", label: "Papier", options: [
+        { label: "Classic demimatt – Couché mat" },
+        { label: "Classic gloss – Couché brillant" },
+      ]},
+      { id: "grammage", label: "Type de papier & grammage", options: [
+        { label: "Classic Demimatt – Couché mat (170 g)" },
+        { label: "Classic Gloss – Couché brillant (170 g)" },
+        { label: "Papier couché épais (350 g)" },
+        { label: "Papier recyclé extra-blanc (160 g)" },
+      ]},
+      { id: "finition", label: "Pelliculage & finition", options: [
+        { label: "Sans pelliculage (standard)" },
+        { label: "Pelliculage mat soft-touch", hint: "Toucher velours" },
+        { label: "Pelliculage brillant", hint: "Couleurs éclatantes" },
+        { label: "Vernis sélectif 3D / dorure or" },
+      ]},
+    ],
+  },
+
+  /* Calculateur officiel : /calculator
+     Prix HT = base(quantité) × délai × options, + 3,50 € si contrôle par un graphiste. */
+  classic: {
+    name: "Cartes de Visite Classic",
+    cat: "Cartes de visite", catId: "cartes-de-visite",
+    img: PH(PHOTOS.hero),
+    desc: "Support incontournable de votre communication professionnelle. Papier couché 350 g, formats standards et finitions personnalisées.",
+    qty: [100, 250, 500, 1000, 2500, 5000, 10000],
+    base: [19, 24, 28, 38, 65, 110, 195],
+    defQty: 500, defDeliv: "standard",
+    deliv: [
+      { id: "eco", label: "Livraison éco", sub: "5 – 6 jours · meilleur prix", short: "Éco 5-6 jours", days: 6, mult: 1 },
+      { id: "standard", label: "Livraison standard", sub: "3 – 4 jours", short: "3 – 4 jours", days: 4, mult: 1.1 },
+      { id: "express", label: "Livraison express", sub: "24 / 48 h", short: "Express 24/48h", days: 2, mult: 1.25 },
+      { id: "pickup", label: "Retrait atelier", sub: "Même jour · Paris 10e", short: "Jour même", days: 0, mult: 1.35 },
+    ],
+    groups: [
+      { id: "format", label: "Format & dimensions", options: [
+        { label: "8,5 × 5,5 cm", hint: "Standard CB" },
+        { label: "9,0 × 5,0 cm", hint: "Allongé", mult: 1.05 },
+        { label: "8,5 × 5,0 cm", hint: "Format italien" },
+        { label: "5,5 × 5,5 cm", hint: "Format carré", mult: 1.1 },
       ]},
       { id: "orientation", label: "Orientation", options: [
         { label: "Horizontale" }, { label: "Verticale" },
       ]},
-      { id: "impression", label: "Impression", options: [
-        { label: "Recto seul" },
-        { label: "Recto / verso identiques", mult: 1.15 },
-        { label: "Recto / verso différents", mult: 1.2 },
+      { id: "impression", label: "Indications d'impression", options: [
+        { label: "Impression sur le recto" },
+        { label: "Recto/verso identiques", mult: 1.2 },
+        { label: "Recto/verso différents", mult: 1.25 },
       ]},
-      { id: "papier", label: "Papier & grammage", options: [
-        { label: "Couché demi-mat 350 g", hint: "Aspect satiné, tenue en main rigide et soignée." },
-        { label: "Couché brillant 350 g", hint: "Finition glacée, couleurs vives et contrastées." },
-        { label: "Kraft brun naturel 300 g", hint: "Papier recyclé non blanchi, esprit vintage.", mult: 1.1 },
+      { id: "papier", label: "Type de papier & grammage", options: [
+        { label: "Couché demi-mat 350 g", hint: "Aspect satiné haut de gamme, tenue en main rigide et soignée." },
+        { label: "Couché brillant 350 g", hint: "Finition glacée renforçant la vivacité et le contraste des couleurs." },
+        { label: "Kraft brun naturel 300 g", hint: "Papier recyclé non blanchi, style vintage & éco-responsable.", mult: 1.15 },
       ]},
       { id: "finition", label: "Finition & pelliculage", options: [
         { label: "Sans pelliculage" },
-        { label: "Mat soft-touch", hint: "Toucher velours", mult: 1.15 },
-        { label: "Pelliculage brillant", hint: "Couleurs éclatantes", mult: 1.12 },
-        { label: "Vernis sélectif 3D / dorure or", hint: "Finition Deluxe", mult: 1.6 },
+        { label: "Mat soft-touch", hint: "Toucher velours", mult: 1.2 },
+        { label: "Pelliculage brillant", mult: 1.15 },
       ]},
       { id: "coins", label: "Découpe des coins", options: [
-        { label: "Coins carrés" },
-        { label: "Coins arrondis", hint: "Rayon 4 mm", mult: 1.08 },
+        { label: "Coins carrés standards" },
+        { label: "Coins arrondis", hint: "Rayon 4 mm", mult: 1.12 },
       ]},
-      { id: "controle", label: "Vérification du fichier", options: [
-        { label: "Contrôle automatique", hint: "Dimensions et format — inclus." },
-        { label: "Contrôle par un graphiste + BAT", hint: "Polices, fonds perdus, colorimétrie CMJN.", add: 3.5 },
-      ]},
-    ],
-  },
-  flyers: {
-    name: "Flyers & tracts",
-    cat: "Flyers & tracts", catId: "flyers-tracts",
-    img: PH(PHOTOS.flyers),
-    desc: "Flyers du A6 au A3 sur papier couché brillant ou mat, 135 g ou 170 g. Idéal pour vos événements, ouvertures et opérations commerciales.",
-    qty: [100, 250, 500, 1000, 2500, 5000, 10000],
-    base: [14.9, 22.9, 31.9, 44.9, 79, 129, 219],
-    defQty: 500,
-    groups: [
-      { id: "format", label: "Format", options: [
-        { label: "A6", hint: "10,5 × 14,8 cm" },
-        { label: "10 × 15 cm", hint: "Carte postale" },
-        { label: "DL", hint: "10 × 21 cm", mult: 1.1 },
-        { label: "A5", hint: "14,8 × 21 cm", mult: 1.35 },
-        { label: "A4", hint: "21 × 29,7 cm", mult: 1.9 },
-        { label: "A3", hint: "29,7 × 42 cm", mult: 3.2 },
-      ]},
-      { id: "impression", label: "Impression", options: [
-        { label: "Recto seul" }, { label: "Recto / verso", mult: 1.18 },
-      ]},
-      { id: "papier", label: "Papier & grammage", options: [
-        { label: "Couché brillant 135 g" },
-        { label: "Couché mat 135 g" },
-        { label: "Couché brillant 170 g", mult: 1.12 },
-        { label: "Couché mat 170 g", mult: 1.12 },
-      ]},
-      { id: "controle", label: "Vérification du fichier", options: [
-        { label: "Contrôle automatique", hint: "Dimensions et format — inclus." },
-        { label: "Contrôle par un graphiste + BAT", hint: "Polices, fonds perdus, colorimétrie CMJN.", add: 3.5 },
-      ]},
-    ],
-  },
-  rollup: {
-    name: "Roll-up & kakémono",
-    cat: "Roll up kakemono", catId: "roll-up-kakemono",
-    img: PH(PHOTOS.rollup),
-    desc: "Structure aluminium rétractable avec bâche haute résolution anti-froissement. Montage en quelques secondes pour salons, vitrines et événements.",
-    qty: [1, 2, 5, 10],
-    base: [49, 94, 225, 430],
-    defQty: 1,
-    groups: [
-      { id: "format", label: "Format du visuel", options: [
-        { label: "85 × 200 cm", hint: "Le standard salon" },
-        { label: "100 × 200 cm", mult: 1.2 },
-        { label: "120 × 200 cm", mult: 1.45 },
-      ]},
-      { id: "structure", label: "Structure", options: [
-        { label: "Aluminium standard", hint: "Housse de transport incluse." },
-        { label: "Aluminium premium", hint: "Pied large, usage intensif.", mult: 1.35 },
-      ]},
-      { id: "controle", label: "Vérification du fichier", options: [
-        { label: "Contrôle automatique", hint: "Dimensions et format — inclus." },
-        { label: "Contrôle par un graphiste + BAT", hint: "Résolution, fonds perdus, colorimétrie.", add: 3.5 },
+      { id: "controle", label: "Vérification de fichier", options: [
+        { label: "Vérification standard automatisée", hint: "Contrôle basique des dimensions et du format (gratuit)." },
+        { label: "Contrôle professionnel par un graphiste + BAT numérique", hint: "Vérification manuelle des polices, fonds perdus, colorimétrie CMJN.", add: 3.5 },
       ]},
     ],
   },
@@ -166,15 +153,15 @@ const PRODUCTS = {
    Un produit avec `p` ouvre le configurateur ; les autres partent en devis. */
 const CATS = [
   { id: "reprographie", name: "Reprographie", blurb: "Copies, impressions et reliures minute.", items: ["Photocopie", "Impression", "Reliures", "Scan et numérisation", "Plastification"] },
-  { id: "cartes-de-visite", name: "Cartes de visite", blurb: "Classiques, pelliculées, Deluxe ou PVC.", items: [{ n: "Cartes de visite classiques", p: "cartes" }, "Cartes de visite pelliculées", "Cartes de fidélité", "Cartes de visite finitions Deluxe", "Cartes de visite en PVC", "Cartes de correspondance", "Cartes postales"] },
-  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, en 24 h si besoin.", items: [{ n: "Flyer 10×15 cm", p: "flyers", o: 1 }, { n: "Flyer A6", p: "flyers", o: 0 }, { n: "Flyer DL 10×21 cm", p: "flyers", o: 2 }, { n: "Flyer A5", p: "flyers", o: 3 }, { n: "Flyer A4", p: "flyers", o: 4 }, { n: "Flyer A3", p: "flyers", o: 5 }] },
+  { id: "cartes-de-visite", name: "Cartes de visite", blurb: "Classiques, pelliculées, Deluxe ou PVC.", items: [{ n: "Cartes de visite classiques", p: "cartes" }, { n: "Cartes de Visite Classic", p: "classic" }, "Cartes de visite pelliculées", "Cartes de fidélité", "Cartes de visite finitions Deluxe", "Cartes de visite en PVC", "Cartes de correspondance", "Cartes postales"] },
+  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, pour vos événements et opérations commerciales.", items: [{ n: "Flyers & Brochures", from: 14.9 }, "Flyer 10×15 cm", "Flyer A6", "Flyer DL 10×21 cm", "Flyer A5", "Flyer A4", "Flyer A3"] },
   { id: "depliants-plaquettes", name: "Dépliants & plaquettes", blurb: "1, 2 ou 3 plis pour vos présentations.", items: ["Dépliant 1 pli", "Dépliant 2 plis", "Dépliant 3 plis"] },
   { id: "catalogue-brochures", name: "Catalogues & brochures", blurb: "Agrafé, spirale, dos carré collé.", items: ["Brochure agrafée", "Spirale métallique", "Dos carré collé", "Couverture rigide"] },
   { id: "affiche-poster", name: "Affiches & posters", blurb: "À l'unité ou en série, jusqu'à l'Abribus.", items: ["Affiches à l'unité", "Affiches petit format", "Affiche grand format", "Affiche Abribus", "Affiche dos bleu", "Affiche fluo", "Affiche autocollante", "Affiche backlight"] },
   { id: "papeterie-bureautique", name: "Papeterie & bureautique", blurb: "En-têtes, administratif, plaques gravées.", items: ["Bureautique", "Administratif", "Plaque gravure"] },
   { id: "etiquettes-autocollants", name: "Étiquettes & autocollants", blurb: "Rouleaux, holographiques, imperméables.", items: ["Étiquettes en rouleau standards", "Étiquettes en plastique", "Étiquettes en papier", "Étiquettes avec finitions spéciales", "Étiquettes holographiques", "Étiquettes Premium", "Étiquettes imperméables", "Étiquettes repositionnables"] },
   { id: "vinyle-adhesif", name: "Vinyle adhésif", blurb: "Vitrines, murs, sols et véhicules.", items: ["Adhésifs pour vitrines", "Adhésifs muraux", "Adhésifs pour voitures et motos", "Covering voiture", "Adhésif pour sols", "Lettrage adhésif", "Adhésif vinyle transparent", "Adhésifs dépoli", "Adhésifs microperforé", "Vitrophanie"] },
-  { id: "roll-up-kakemono", name: "Roll-up & kakémono", blurb: "Structures rétractables prêtes à poser.", items: [{ n: "Roll-up & kakémono", p: "rollup" }] },
+  { id: "roll-up-kakemono", name: "Roll-up & kakémono", blurb: "Structures rétractables prêtes à poser.", items: [{ n: "Roll-Up Stand & Kakemono", from: 49 }] },
   { id: "signaletique-enseignes", name: "Signalétique & enseignes", blurb: "Enseignes, bâches et plaques pro.", items: ["Enseignes extérieures", "Bâches & banderoles PVC", "Plaques professionnelles laiton / alu"] },
   { id: "support-rigide", name: "Supports rigides", blurb: "Panneaux rigides sur mesure.", items: ["Panneaux & supports rigides"] },
   { id: "plv-expo", name: "PLV & expo", blurb: "Stands, présentoirs et PLV.", items: ["PLV, stands & expo"] },
@@ -185,24 +172,27 @@ const CATS = [
 const eur = (n) => n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const itemName = (it) => (typeof it === "string" ? it : it.n);
-const itemHref = (it) => {
-  if (typeof it === "string") return "contact.html?produit=" + encodeURIComponent(it);
-  return "produit.html?p=" + it.p + (it.o != null ? "&format=" + it.o : "");
-};
-const fromPrice = (key) => Math.min(...PRODUCTS[key].base);
+/* Un article est « configurable » s'il a un calculateur (p) ; sinon il part en devis.
+   `from` = prix « dès » affiché sur le site officiel pour un article sans calculateur. */
+const isConf = (it) => typeof it === "object" && !!it.p;
+const itemHref = (it) => (isConf(it) ? "produit.html?p=" + it.p : "contact.html?produit=" + encodeURIComponent(itemName(it)));
+const delivOf = (key, id) => { const p = PRODUCTS[key]; return p.deliv.find((x) => x.id === id) || p.deliv.find((x) => x.id === p.defDeliv) || p.deliv[0]; };
 
-/* Prix HT d'une configuration : base(quantité) × options × livraison + suppléments */
+/* Prix HT d'une configuration, selon les règles du site officiel :
+   - grille fixe (prices) : prix(quantité, délai), options sans supplément ;
+   - calculateur (base)   : base(quantité) × délai × options + suppléments. */
 function computePrice(key, qtyIndex, choices, deliveryId) {
-  const p = PRODUCTS[key];
-  let price = p.base[qtyIndex], add = 0;
+  const p = PRODUCTS[key], d = delivOf(key, deliveryId);
+  let price = d.prices ? d.prices[qtyIndex] : p.base[qtyIndex] * d.mult, add = 0;
   p.groups.forEach((g, i) => {
     const o = g.options[choices?.[i] ?? 0] || g.options[0];
     if (o.mult) price *= o.mult;
     if (o.add) add += o.add;
   });
-  const d = DELIVERY.find((x) => x.id === deliveryId) || DELIVERY[0];
-  return Math.round((price * d.mult + add) * 100) / 100;
+  return Math.round((price + add) * 100) / 100;
 }
+const fromPrice = (key) => Math.min(...PRODUCTS[key].deliv.map((d) => computePrice(key, 0, null, d.id)));
+const itemFrom = (it) => (isConf(it) ? fromPrice(it.p) : (typeof it === "object" && it.from) || null);
 
 /* Pictogrammes des familles (tracés SVG, viewBox 24) */
 const CAT_ICONS = {

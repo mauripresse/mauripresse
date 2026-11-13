@@ -85,11 +85,10 @@
   const p = PRODUCTS[key];
   const state = {
     q: Math.max(0, p.qty.indexOf(p.defQty)),
-    d: DELIVERY.some((x) => x.id === params.get("d")) ? params.get("d") : "std",
+    d: delivOf(key, params.get("d")).id,
     c: p.groups.map(() => 0),
   };
   if (params.has("q") && p.qty[+params.get("q")] != null) state.q = +params.get("q");
-  if (params.has("format") && p.groups[0].options[+params.get("format")]) state.c[0] = +params.get("format");
 
   document.title = p.name + " · Mauri Presse";
   document.getElementById("p-name").textContent = p.name;
@@ -119,19 +118,20 @@
   function render() {
     /* Grille */
     document.getElementById("grid").innerHTML =
-      `<thead><tr><th>Quantité</th>${DELIVERY.map((d) => `<th><b>${d.label}</b>${d.sub}</th>`).join("")}</tr></thead><tbody>` +
-      p.qty.map((q, qi) => `<tr><td>${q.toLocaleString("fr-FR")} ex.</td>${DELIVERY.map((d) => {
+      `<thead><tr><th>Quantité</th>${p.deliv.map((d) => `<th><b>${d.label}</b>${d.sub}</th>`).join("")}</tr></thead><tbody>` +
+      p.qty.map((q, qi) => `<tr><td>${q.toLocaleString("fr-FR")} ex.</td>${p.deliv.map((d) => {
         const v = computePrice(key, qi, state.c, d.id);
         return `<td><button type="button" data-q="${qi}" data-d="${d.id}" class="${qi === state.q && d.id === state.d ? "is-on" : ""}" aria-pressed="${qi === state.q && d.id === state.d}">${eur(v)}<small>${(v / q).toLocaleString("fr-FR", { maximumFractionDigits: 3 })} €/ex.</small></button></td>`;
       }).join("")}</tr>`).join("") + "</tbody>";
 
     /* Récapitulatif */
-    const d = DELIVERY.find((x) => x.id === state.d), ht = computePrice(key, state.q, state.c, state.d), qty = p.qty[state.q];
+    const d = delivOf(key, state.d), ht = computePrice(key, state.q, state.c, state.d), qty = p.qty[state.q];
     const rows = [["Produit", p.name], ...p.groups.map((g, i) => [g.label, g.options[state.c[i]].label]), ["Quantité", qty.toLocaleString("fr-FR") + " ex."], ["Délai", d.label + " · " + d.sub]];
     document.getElementById("recap-list").innerHTML = rows.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
     document.getElementById("recap-date").innerHTML = d.days === 0 ? "📍 <b>Retrait à l'atelier</b>, sous réserve de validation des fichiers." : `🚚 Livraison estimée <b>${deliveryDate(d.days)}</b>`;
     p.groups.forEach((g, i) => { const e = document.querySelector(`[data-val="${i}"]`); if (e) e.textContent = g.options[state.c[i]].label; });
     document.getElementById("r-ht").textContent = eur(ht);
+    document.getElementById("guarantee-link").href = "garantie.html?" + new URLSearchParams({ produit: p.name, prix: ht.toFixed(2), config: rows.slice(1).map(([k, v]) => k + " : " + v).join(" | ") });
     document.getElementById("r-tva").textContent = eur(ht * 0.2);
     document.getElementById("r-ttc").textContent = eur(ht * 1.2);
     document.getElementById("bb-ttc").textContent = eur(ht * 1.2);
@@ -147,14 +147,13 @@
     state.q = +b.dataset.q; state.d = b.dataset.d; render();
   });
   document.getElementById("add").addEventListener("click", () => {
-    const d = DELIVERY.find((x) => x.id === state.d);
+    const d = delivOf(key, state.d);
     Cart.add({
       name: p.name,
       detail: [p.qty[state.q].toLocaleString("fr-FR") + " ex.", ...p.groups.map((g, i) => g.options[state.c[i]].label), d.label].join(" · "),
       price: computePrice(key, state.q, state.c, state.d),
     });
   });
-  document.getElementById("guarantee-link").href = "garantie.html?produit=" + encodeURIComponent(p.name);
   document.body.classList.add("has-buybar");
   document.getElementById("bb-add").addEventListener("click", () => document.getElementById("add").click());
   /* Téléphone : un groupe ouvert à la fois, on passe au suivant après chaque choix */

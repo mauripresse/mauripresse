@@ -23,7 +23,7 @@
   }
 
   /* ---------- Prix dégressifs (grille réelle des cartes de visite) ---------- */
-  const P = PRODUCTS.cartes, range = $("dg-range"), chart = $("dg-chart");
+  const P = PRODUCTS.classic, range = $("dg-range"), chart = $("dg-chart");
   const unit = (i) => P.base[i] / P.qty[i], maxU = unit(0);
   const short = (q) => (q >= 1000 ? String(q / 1000).replace(".", ",") + "k" : q);
   $("dg-ticks").innerHTML = P.qty.map((q) => `<span>${short(q)}</span>`).join("");
@@ -36,7 +36,7 @@
     $("dg-qty").textContent = P.qty[i].toLocaleString("fr-FR") + " ex.";
     $("dg-unit").textContent = unit(i).toLocaleString("fr-FR", { minimumFractionDigits: 3, maximumFractionDigits: 3 }) + " €";
     $("dg-total").textContent = eur(P.base[i]);
-    $("dg-go").href = "produit.html?p=cartes&q=" + i;
+    $("dg-go").href = "produit.html?p=classic&d=eco&q=" + i;
     $("dg-save").textContent = i ? "−" + Math.round((1 - unit(i) / maxU) * 100) + " % à l'unité par rapport à 100 ex." : "";
     range.style.setProperty("--fill", (i / (P.qty.length - 1)) * 100 + "%");
     chart.querySelectorAll(".bar").forEach((b) => b.classList.toggle("is-on", +b.dataset.i === i));

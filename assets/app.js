@@ -220,7 +220,7 @@ const header = `
       sub.innerHTML = `<div class="wrap sub__grid">
         <div><span class="mono" style="color:var(--cyan)">${String(CATS.indexOf(c) + 1).padStart(2, "0")}</span><h4>${esc(c.name)}</h4><p>${esc(c.blurb)}</p>
           <a class="btn btn--sm" href="categorie.html?c=${c.id}">Voir toute la famille <span class="arrow">→</span></a></div>
-        <ul>${c.items.map((it) => `<li><a href="${itemHref(it)}">${esc(itemName(it))}${typeof it !== "string" ? ' <span class="pill">24h</span>' : ""}</a></li>`).join("")}</ul>
+        <ul>${c.items.map((it) => `<li><a href="${itemHref(it)}">${esc(itemName(it))}${isConf(it) ? ' <span class="pill">24h</span>' : ""}</a></li>`).join("")}</ul>
       </div>`;
       sub.classList.add("is-open");
     }));
@@ -266,7 +266,7 @@ document.querySelector("[data-search-toggle]").addEventListener("click", () => {
 
     /* Apparition au défilement */
     /* Apparition en cascade des grilles et listes */
-    document.querySelectorAll(".bento, .socials, .fams, .stats, .fxlist, .cats, .products, .works, .steps, .items, .specs, .info, .chips, #p-lines, .hero__facts").forEach((box) => {
+    document.querySelectorAll(".bento, .shop, .socials, .fams, .stats, .fxlist, .cats, .products, .works, .steps, .items, .specs, .info, .chips, #p-lines, .hero__facts").forEach((box) => {
       box.classList.add("stagger");
       [...box.children].forEach((el, i) => el.style.setProperty("--i", Math.min(i, 11)));
     });

@@ -64,14 +64,14 @@
   const params = new URLSearchParams(location.search);
   const filter = document.getElementById("filter"), express = document.getElementById("express"), clear = document.getElementById("clear");
   const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
-  const row = (it, c) => {
-    const k = typeof it !== "string";
-    return `<a class="rrow" href="${itemHref(it)}" data-name="${esc(norm(itemName(it) + " " + c.name))}" data-x="${k ? 1 : 0}">
-      <span class="rrow__ico">${catIcon(c.id)}</span>
-      <div><h3>${esc(itemName(it))}</h3><p>${k ? "Configuration en ligne, prix immédiat" : "Format, quantité et finitions sur mesure"}</p></div>
-      ${k ? `<span class="rrow__p">dès <b>${eur(computePrice(it.p, 0, [it.o || 0], "std"))}</b> HT<span class="pill">24h</span></span>` : `<span class="rrow__p"><span class="pill pill--soft">Sur devis →</span></span>`}
-    </a>`;
-  };
+const row = (it, c) => {
+  const k = isConf(it), from = itemFrom(it);
+  return `<a class="rrow" href="${itemHref(it)}" data-name="${esc(norm(itemName(it) + " " + c.name))}" data-x="${k ? 1 : 0}">
+    <span class="rrow__ico">${catIcon(c.id)}</span>
+    <div><h3>${esc(itemName(it))}</h3><p>${k ? "Configuration en ligne, prix immédiat" : "Format, quantité et finitions sur mesure"}</p></div>
+    <span class="rrow__p">${from ? `dès <b>${eur(from)}</b> HT` : ""}${k ? '<span class="pill">24h</span>' : '<span class="pill pill--soft">Sur devis →</span>'}</span>
+  </a>`;
+};
 
   document.getElementById("cnav-track").innerHTML = CATS.map((c) => `<a href="#${c.id}" data-nav="${c.id}">${esc(c.name)}</a>`).join("");
   document.getElementById("cgroups").innerHTML = CATS.map((c, i) => `

@@ -54,29 +54,21 @@
     </div>
   </section>
 
-  <!-- BANNIÈRE PROMO -->
-  <section class="section section--tight">
-    <div class="wrap">
-      <div class="promo reveal">
-        <a class="promo__item" href="catalogue.html?express=1">
-          <span class="promo__ico"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></span>
-          <span><b>Livraison en 24h</b><small>Partout en France</small></span>
-        </a>
-        <a class="promo__item" href="index.html#acces">
-          <span class="promo__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
-          <span><b>Retrait le jour même</b><small>Atelier Paris 10<sup>e</sup></small></span>
-        </a>
-        <a class="promo__item" href="garantie.html">
-          <span class="promo__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
-          <span><b>Prix le plus bas garanti</b><small>Remboursé si moins cher</small></span>
-        </a>
-        <a class="promo__item" href="contact.html">
-          <span class="promo__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-4.5"/></svg></span>
-          <span><b>Satisfait ou réimprimé</b><small>Sur tous nos tirages</small></span>
-        </a>
+<!-- BANNIÈRE -->
+<section class="section section--tight">
+  <div class="wrap">
+    <a class="banner reveal" href="catalogue.html?express=1">
+      <img src="https://images.unsplash.com/photo-1693031630369-bd429a57f115?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
+      <div class="banner__txt">
+        <span class="banner__tag">Mauri Presse Express</span>
+        <h2>Commandé aujourd'hui,<br><em>livré en moins de 24h.</em></h2>
+        <p>Impression prioritaire dans notre atelier de Paris 10<sup>e</sup>. Retrait sur place le jour même.</p>
+        <span class="btn btn--yellow">Voir les produits express <span class="arrow">→</span></span>
       </div>
-    </div>
-  </section>
+      <div class="banner__stamp" aria-hidden="true"><div>24h<small>CHRONO</small></div></div>
+    </a>
+  </div>
+</section>
 
   <!-- BANDEAU -->
   <div class="ticker" aria-hidden="true"><div class="ticker__track" id="ticker"></div></div>
@@ -91,27 +83,17 @@
     </div>
   </section>
 
-  <!-- CATÉGORIES -->
-  <section class="section">
-    <div class="wrap">
-      <div class="section__head reveal">
-        <div><span class="eyebrow eyebrow--cyan">Le catalogue</span><h2>Tout ce qui <span class="h-under">s'imprime.</span></h2></div>
-        <p>De la photocopie minute au covering de véhicule : choisissez une famille de produits, configurez en ligne ou demandez un devis.</p>
-      </div>
-      <div class="bento" id="cats"></div>
+<!-- CATÉGORIES -->
+<section class="section" id="catalogue">
+  <div class="wrap">
+    <div class="section__head reveal">
+      <div><span class="eyebrow eyebrow--cyan">Le catalogue</span><h2>Que voulez-vous <span class="h-under">imprimer ?</span></h2></div>
+      <a class="btn btn--ghost" href="catalogue.html">Tout le catalogue <span class="arrow">→</span></a>
     </div>
-  </section>
-
-  <!-- BEST-SELLERS -->
-  <section class="section section--tight">
-    <div class="wrap">
-      <div class="section__head reveal">
-        <div><span class="eyebrow">Les plus demandés</span><h2>Configurez, <span class="h-accent">c'est chiffré.</span></h2></div>
-        <a class="btn btn--ghost" href="catalogue.html">Tous les produits <span class="arrow">→</span></a>
-      </div>
-      <div class="products reveal" id="best"></div>
-    </div>
-  </section>
+    <div class="shop" id="cats"></div>
+    <div class="shop__more reveal"><a class="btn" href="catalogue.html">Voir les 14 familles de produits <span class="arrow">→</span></a></div>
+  </div>
+</section>
 
   <!-- PRIX DÉGRESSIFS (ordinateur) -->
   <section class="section desk">
@@ -300,72 +282,40 @@
   document.getElementById("ticker").innerHTML = html + html;
 })();
 
-/* Grille des catégories */
+/* Catalogue de l'accueil : huit familles, une photo et un prix chacune */
 (() => {
-  const svg = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
-  const ICON = {
-    "reprographie": '<rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h2"/>',
-    "depliants-plaquettes": '<path d="M3 6l6-2v15l-6 2zM9 4l6 2v15l-6-2M15 6l6-2v15l-6 2"/>',
-    "catalogue-brochures": '<path d="M12 6c-2-1.500-5-2-8-1.500v13c3-.5 6 0 8 1.500 2-1.500 5-2 8-1.500v-13c-3-.5-6 0-8 1.500zM12 6v13"/>',
-    "affiche-poster": '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 16l4-4 3 3 2-2 5 5"/><circle cx="14.500" cy="8" r="1.500"/>',
-    "papeterie-bureautique": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
-    "etiquettes-autocollants": '<path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="8" cy="8" r="1.500"/>',
-    "vinyle-adhesif": '<path d="M4 4h16v10l-6 6H4z"/><path d="M20 14h-4a2 2 0 0 0-2 2v4"/>',
-    "signaletique-enseignes": '<path d="M12 3v18M5 6h11l3 2.500-3 2.500H5zM8 21h8"/>',
-    "support-rigide": '<path d="M12 3l9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5"/>',
-    "plv-expo": '<path d="M4 9l1.500-5h13L20 9M4 9v11h16V9M4 9h16M9 20v-6h6v6"/>',
-    "objets-packaging": '<path d="M5 8h14l-1 13H6zM9 8V6a3 3 0 0 1 6 0v2"/>',
-  };
-  const fix = (d) => d.replace(/(\d+\.\d*?)0+(?=[^\d]|$)/g, "$1").replace(/\.(?=[^\d]|$)/g, "");
-  const n = (c) => `${c.items.length} produit${c.items.length > 1 ? "s" : ""}`;
-  const photo = (id, cls, tag, price) => {
-    const c = CATS.find((x) => x.id === id), img = catPhoto(id, 1000);
-    return `<a class="tile tile--photo ${cls}" href="categorie.html?c=${id}"><img src="${img}" alt="" loading="lazy">
-      <span class="tag ${tag === "24h" ? "tag--magenta" : ""}">${tag}</span>
-      <div class="tile__txt"><h3>${esc(c.name)}</h3><p>${esc(c.blurb)}</p><span class="tile__price">dès <b>${eur(price)}</b> HT</span></div><span class="tile__go">→</span></a>`;
-  };
-  const PHOTO = ["cartes-de-visite", "roll-up-kakemono", "flyers-tracts"];
-  const tiles = CATS.filter((c) => !PHOTO.includes(c.id)).map((c, i) => `
-    <a class="tile t${(i % 4) + 1}${i >= 4 ? " tile--more" : ""}" href="categorie.html?c=${c.id}">
-      <span class="tile__ico">${svg(fix(ICON[c.id] || ""))}</span>
-      <div class="tile__txt"><h3>${esc(c.name)}</h3><p>${n(c)}</p></div><span class="tile__go">→</span>
-    </a>`);
-  document.getElementById("cats").innerHTML =
-    photo("cartes-de-visite", "tile--xl", "Top vente", fromPrice("cartes")) + tiles.slice(0, 4).join("") +
-    photo("flyers-tracts", "tile--wide", "24h", fromPrice("flyers")) + tiles.slice(4, 6).join("") +
-    tiles.slice(6, 8).join("") + photo("roll-up-kakemono", "tile--wide", "24h", fromPrice("rollup")) +
-    tiles.slice(8).join("") +
-    `<a class="tile tile--all" href="catalogue.html"><div class="tile__txt"><h3>Tout le catalogue, de A à Z</h3><p>Recherchez parmi tous nos supports d'impression.</p></div><span class="tile__go">→</span></a>`;
+  const SHOW = ["cartes-de-visite", "flyers-tracts", "affiche-poster", "etiquettes-autocollants", "roll-up-kakemono", "vinyle-adhesif", "signaletique-enseignes", "objets-packaging"];
+  const FROM = { "cartes-de-visite": fromPrice("classic"), "flyers-tracts": 14.9, "roll-up-kakemono": 49 }; /* prix « dès » du site officiel */
+  document.getElementById("cats").innerHTML = SHOW.map((id, i) => {
+    const c = CATS.find((x) => x.id === id), k = FROM[id];
+    return `<a class="shopcard${i >= 6 ? " shopcard--extra" : ""}" href="categorie.html?c=${id}">
+      <div class="shopcard__img"><img src="${catPhoto(id, 700)}" alt="" loading="lazy">${id === "cartes-de-visite" ? '<span class="tag tag--magenta">24h</span>' : ""}</div>
+      <div class="shopcard__body">
+        <h3>${esc(c.name)}</h3>
+        <p>${esc(c.blurb)}</p>
+        <div class="shopcard__foot">${k ? `<span class="shopcard__price">dès <b>${eur(k)}</b> HT</span>` : `<span class="shopcard__price">Sur devis</span>`}<span class="shopcard__go">→</span></div>
+      </div>
+    </a>`;
+  }).join("");
 })();
 
-/* Best-sellers */
-const BEST = [["cartes", "Top vente", ""], ["rollup", "24h", "tag--magenta"], ["flyers", "24h", "tag--magenta"]];
-document.getElementById("best").innerHTML = BEST.map(([k, tag, cls]) => {
-  const p = PRODUCTS[k];
-  return `<a class="pcard" href="produit.html?p=${k}">
-    <div class="pcard__img"><img src="${p.img}" alt="${esc(p.name)}" loading="lazy"><span class="tag ${cls}">${tag}</span></div>
-    <div class="pcard__body"><span class="mono" style="color:var(--indigo)">${esc(p.cat)}</span><h3>${esc(p.name)}</h3><p>${esc(p.desc)}</p>
-      <div class="pcard__foot"><div class="price"><small>dès · HT</small><b>${eur(fromPrice(k))}</b></div><span class="btn btn--sm">Configurer <span class="arrow">→</span></span></div>
-    </div></a>`;
-}).join("");
-
-/* Calculateur express du hero */
+/* Calculateur express du hero (mêmes prix que le configurateur) */
 (() => {
   const qp = document.getElementById("qp"), qq = document.getElementById("qq"), qd = document.getElementById("qd");
   qp.innerHTML = Object.entries(PRODUCTS).map(([k, p]) => `<option value="${k}">${esc(p.name)}</option>`).join("");
-  qd.innerHTML = DELIVERY.map((d) => `<option value="${d.id}">${d.short}</option>`).join("");
-  const fillQty = () => {
+  const fill = () => {
     const p = PRODUCTS[qp.value];
     qq.innerHTML = p.qty.map((q, i) => `<option value="${i}" ${q === p.defQty ? "selected" : ""}>${q.toLocaleString("fr-FR")} ex.</option>`).join("");
+    qd.innerHTML = p.deliv.map((d) => `<option value="${d.id}" ${d.id === p.defDeliv ? "selected" : ""}>${d.short}</option>`).join("");
   };
   const update = () => {
     document.getElementById("qprice").textContent = eur(computePrice(qp.value, +qq.value, null, qd.value));
-    if (window.bump) bump(document.getElementById("qprice"));
     document.getElementById("qgo").href = `produit.html?p=${qp.value}&q=${qq.value}&d=${qd.value}`;
+    if (window.bump) bump(document.getElementById("qprice"));
   };
-  qp.addEventListener("change", () => { fillQty(); update(); });
+  qp.addEventListener("change", () => { fill(); update(); });
   qq.addEventListener("change", update); qd.addEventListener("change", update);
-  fillQty(); update();
+  fill(); update();
 })();
 </script>
 <script src="assets/home.js"></script>
