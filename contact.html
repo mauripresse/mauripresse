@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Devis sur mesure & contact · Mauri Presse</title>
+<meta name="description" content="Demandez un devis d'impression personnalisé à Mauri Presse, imprimerie à Paris 10e. Réponse rapide de notre équipe PAO.">
+<link rel="icon" href="https://mauripresse.com/images/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+
+<main>
+  <section class="pagehead"><div class="wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><span>Devis & contact</span></nav>
+    <h1>Parlons de votre <span class="h-accent">projet.</span></h1>
+    <p>Décrivez-nous ce que vous voulez imprimer : format, quantité, finitions, date souhaitée. Notre équipe PAO vous répond avec un prix et un délai.</p>
+  </div></section>
+
+  <div class="wrap contact">
+    <div class="quick mob">
+      <a class="btn" href="tel:0147707924">Appeler l'atelier</a>
+      <a class="btn btn--ghost" href="https://api.whatsapp.com/send?phone=33783460217&text=Bonjour%20Mauri%20Presse" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+    <div>
+      <span class="eyebrow eyebrow--cyan">L'atelier</span>
+      <div class="info" style="margin-top:18px">
+        <div><span class="k">Adresse</span><span>24 Rue de Chabrol<br>75010 Paris</span></div>
+        <div><span class="k">Téléphone</span><span><a href="tel:0147707924">01 47 70 79 24</a></span></div>
+        <div><span class="k">E-mail</span><span><a href="mailto:mauripresse24@gmail.com">mauripresse24@gmail.com</a></span></div>
+        <div><span class="k">Horaires</span><span>Lundi au samedi<br>9h – 19h30</span></div>
+        <div><span class="k">Urgences</span><span>Sur devis, de 20h à 23h et le dimanche<br><a href="tel:0783460217">07 83 46 02 17</a></span></div>
+        <div><span class="k">Réseaux</span><span class="sdots sdots--ink" data-social="dots"></span></div>
+        <div><span class="k">Accès</span><span>Métro Gare du Nord, Gare de l'Est, Poissonnière<br><a href="index.html#acces">Voir le plan</a></span></div>
+      </div>
+      <div class="hero__cta">
+        <a class="btn btn--ghost" href="https://api.whatsapp.com/send?phone=33783460217&text=Bonjour%20Mauri%20Presse" target="_blank" rel="noopener">Écrire sur WhatsApp</a>
+      </div>
+    </div>
+
+    <!-- TODO intégration : brancher ce formulaire sur le traitement serveur existant de /contact -->
+    <form class="form" id="devis" novalidate>
+      <h2>Demande de devis</h2>
+      <div class="fgrid">
+        <label class="field"><span>Nom & prénom *</span><input name="nom" required autocomplete="name"></label>
+        <label class="field"><span>E-mail *</span><input name="email" type="email" required autocomplete="email"></label>
+        <label class="field"><span>Téléphone</span><input name="tel" type="tel" autocomplete="tel"></label>
+        <label class="field"><span>Société / organisation</span><input name="societe" autocomplete="organization"></label>
+        <label class="field field--full"><span>Produit concerné</span><input name="produit" id="f-produit" placeholder="Ex. : adhésifs pour vitrine, brochure agrafée…"></label>
+        <label class="field field--full"><span>Votre projet (format, quantité, finitions, date souhaitée)</span><textarea name="message" id="f-message"></textarea></label>
+        <div class="field field--full">
+          <span>Fichier ou maquette (optionnel)</span>
+          <label class="drop" id="drop"><input type="file" name="fichier" id="file" accept=".pdf,.ai,.psd,.zip,.jpg,.jpeg,.png"><b id="drop-label">Cliquez ou glissez un fichier ici</b><small>PDF, AI, PSD, ZIP, JPG, PNG — 50 Mo max.</small></label>
+        </div>
+      </div>
+      <button class="btn btn--cyan btn--block" style="margin-top:22px">Envoyer ma demande <span class="arrow">→</span></button>
+      <div class="form__ok" id="ok" role="status"></div>
+    </form>
+  </div>
+</main>
+
+<script>
+(() => {
+  const params = new URLSearchParams(location.search);
+  if (params.get("produit")) document.getElementById("f-produit").value = params.get("produit");
+  if (params.get("panier") && window.Cart) {
+    const c = Cart.get();
+    if (c.length) {
+      document.getElementById("f-produit").value = "Commande panier";
+      document.getElementById("f-message").value = c.map((l) => `• ${l.name} — ${l.detail} — ${eur(l.price)} HT`).join("\n");
+    }
+  }
+  const drop = document.getElementById("drop"), file = document.getElementById("file"), label = document.getElementById("drop-label");
+  const show = () => { if (file.files[0]) label.textContent = file.files[0].name; };
+  file.addEventListener("change", show);
+  ["dragover", "dragenter"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("is-over"); }));
+  ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("is-over"); }));
+  drop.addEventListener("drop", (e) => { if (e.dataTransfer.files.length) { file.files = e.dataTransfer.files; show(); } });
+
+  document.getElementById("devis").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const f = e.target, ok = document.getElementById("ok");
+    if (!f.checkValidity()) { f.reportValidity(); return; }
+    /* Maquette : aucun envoi réel tant que le formulaire n'est pas relié au serveur. */
+    ok.textContent = "Maquette : le formulaire n'est pas encore relié au serveur, aucune demande n'a été envoyée.";
+    ok.classList.add("is-on");
+  });
+})();
+</script>
+</body>
+</html>

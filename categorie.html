@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catégorie · Mauri Presse</title>
+<link rel="icon" href="https://mauripresse.com/images/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+
+<main>
+  <section class="pagehead"><div class="wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><a href="catalogue.html">Catalogue</a><span>/</span><span id="c-crumb"></span></nav>
+    <div class="chead">
+      <div>
+        <h1 id="c-name"></h1>
+        <p id="c-blurb"></p>
+        <div class="badges" id="c-badges"></div>
+      </div>
+      <div class="chead__img crop"><img id="c-img" src="" alt=""></div>
+    </div>
+  </div></section>
+
+  <section class="section section--tight"><div class="wrap">
+    <div class="cgroup__head"><span id="c-count"></span><h2>Choisissez votre produit</h2></div>
+    <div class="items items--lg" id="c-items"></div>
+  </div></section>
+
+  <section class="section section--tight"><div class="wrap">
+    <div class="urgent">
+      <div>
+        <h2>Un format ou une finition qui n'est pas dans la liste&nbsp;?</h2>
+        <p>Nous imprimons aussi sur mesure. Décrivez votre projet, l'équipe PAO vous répond avec un prix et un délai.</p>
+      </div>
+      <div class="urgent__cta">
+        <a class="btn" id="c-devis" href="contact.html">Demander un devis <span class="arrow">→</span></a>
+        <a class="btn btn--ghost" href="tel:0147707924">01 47 70 79 24</a>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="section section--tight"><div class="wrap">
+    <div class="cgroup__head"><h2>Les autres familles</h2></div>
+    <div class="chips" id="c-others"></div>
+  </div></section>
+</main>
+
+<script>
+(() => {
+  const id = new URLSearchParams(location.search).get("c");
+  const i = Math.max(0, CATS.findIndex((x) => x.id === id)), c = CATS[i];
+  const IMGS = { "cartes-de-visite": "business_cards.jpg", "flyers-tracts": "hero_slide2.jpg", "depliants-plaquettes": "hero_slide2.jpg", "catalogue-brochures": "hero_slide2.jpg", "affiche-poster": "hero_slide2.jpg", "roll-up-kakemono": "hero_slide3.jpg", "signaletique-enseignes": "hero_slide3.jpg", "plv-expo": "hero_slide3.jpg", "support-rigide": "hero_slide3.jpg", "objets-packaging": "packaging_boxes.jpg" };
+  const conf = c.items.filter((it) => typeof it !== "string").length;
+
+  document.title = c.name + " · Mauri Presse";
+  document.getElementById("c-crumb").textContent = c.name;
+  document.getElementById("c-name").textContent = c.name;
+  document.getElementById("c-blurb").textContent = c.blurb + " Imprimé dans notre atelier de Paris 10e, à retirer sur place ou livré partout en France.";
+  const img = document.getElementById("c-img"); img.src = IMG + (IMGS[c.id] || "hero_banner.jpg"); img.alt = c.name;
+  document.getElementById("c-badges").innerHTML = (conf ? '<span class="badge">⚡ Prix en ligne & express 24h</span>' : '<span class="badge">✎ Chiffré sur devis</span>') + '<span class="badge">📍 Retrait Paris 10<sup>e</sup></span><span class="badge">✓ Contrôle des fichiers inclus</span>';
+  document.getElementById("c-count").textContent = String(i + 1).padStart(2, "0");
+  document.getElementById("c-devis").href = "contact.html?produit=" + encodeURIComponent(c.name);
+
+  document.getElementById("c-items").innerHTML = c.items.map((it) => {
+    const k = typeof it !== "string";
+    return `<a class="item" href="${itemHref(it)}">
+      <div><h3>${esc(itemName(it))}</h3><p>${k ? "Configuration en ligne, prix immédiat." : "Format, quantité et finitions sur mesure."}</p></div>
+      <div class="item__meta">${k ? `<span>dès <b>${eur(computePrice(it.p, 0, [it.o || 0], "std"))}</b> HT</span><span class="pill">24h</span>` : `<span>Sur devis</span><span class="pill pill--soft">Devis →</span>`}</div>
+    </a>`;
+  }).join("");
+
+  document.getElementById("c-others").innerHTML = CATS.filter((x) => x.id !== c.id).map((x) => `<a href="categorie.html?c=${x.id}">${esc(x.name)}</a>`).join("");
+})();
+</script>
+</body>
+</html>

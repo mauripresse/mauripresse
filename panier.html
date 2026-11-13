@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Votre panier · Mauri Presse</title>
+<link rel="icon" href="https://mauripresse.com/images/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+
+<main>
+  <section class="pagehead"><div class="wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><span>Panier</span></nav>
+    <h1>Votre <span class="h-accent">panier.</span></h1>
+    <ol class="stepper" aria-label="Étapes de commande"><li class="is-on">Panier</li><li>Coordonnées & fichiers</li><li>Confirmation de l'atelier</li></ol>
+  </div></section>
+
+  <div class="wrap config" id="cart-page">
+    <div>
+      <div id="p-lines"></div>
+      <a class="btn btn--ghost btn--sm" href="catalogue.html" style="margin-top:22px">← Continuer mes achats</a>
+    </div>
+    <aside class="recap" id="p-recap" aria-live="polite">
+      <h3>Récapitulatif</h3>
+      <div class="recap__sum" style="margin-top:16px">
+        <div><span id="p-n"></span><span id="p-ht"></span></div>
+        <div><span>Livraison</span><span>Offerte</span></div>
+        <div><span>TVA (20 %)</span><span id="p-tva"></span></div>
+      </div>
+      <div class="recap__ttc"><span>Total TTC</span><b id="p-ttc"></b></div>
+      <a class="btn btn--cyan btn--block" href="contact.html?panier=1" style="margin-top:14px">Valider ma commande <span class="arrow">→</span></a>
+      <ul class="assure"><li>Vos fichiers sont vérifiés avant impression</li><li>Retrait à l'atelier ou livraison</li><li>Une question ? 01 47 70 79 24</li></ul>
+    </aside>
+  </div>
+</main>
+
+<script>
+(() => {
+  function draw() {
+    const c = Cart.get(), ht = c.reduce((s, l) => s + l.price, 0);
+    document.getElementById("p-recap").style.display = c.length ? "" : "none";
+    document.getElementById("p-lines").innerHTML = c.length
+      ? c.map((l, i) => `<article class="cline"><span class="cline__n">${String(i + 1).padStart(2, "0")}</span>
+          <div><h3>${esc(l.name)}</h3><p>${esc(l.detail)}</p></div>
+          <div class="cline__p"><b>${eur(l.price)}</b><small>HT</small><button data-rm="${i}">Retirer</button></div></article>`).join("")
+      : `<div class="cempty"><h2>Votre panier est vide.</h2><p>Configurez un produit pour obtenir un prix immédiat, ou demandez un devis sur mesure.</p>
+          <div class="hero__cta"><a class="btn" href="catalogue.html">Voir le catalogue <span class="arrow">→</span></a><a class="btn btn--ghost" href="contact.html">Demander un devis</a></div></div>`;
+    document.getElementById("p-n").textContent = c.length + " article" + (c.length > 1 ? "s" : "") + " · HT";
+    document.getElementById("p-ht").textContent = eur(ht);
+    document.getElementById("p-tva").textContent = eur(ht * 0.2);
+    document.getElementById("p-ttc").textContent = eur(ht * 1.2);
+  }
+  const base = Cart.render.bind(Cart);
+  Cart.render = function () { base(); draw(); };
+})();
+</script>
+</body>
+</html>

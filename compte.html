@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mon compte · Mauri Presse</title>
+<link rel="icon" href="https://mauripresse.com/images/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+
+<main>
+  <section class="pagehead"><div class="wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><span>Mon compte</span></nav>
+    <h1>Mon <span class="h-accent">compte.</span></h1>
+    <p>Connectez-vous pour retrouver vos commandes, ou créez votre compte en une minute.</p>
+  </div></section>
+
+  <div class="wrap contact">
+    <div>
+      <span class="eyebrow eyebrow--cyan">Besoin d'aide ?</span>
+      <div class="info" style="margin-top:18px">
+        <div><span class="k">Téléphone</span><span><a href="tel:0147707924">01 47 70 79 24</a></span></div>
+        <div><span class="k">E-mail</span><span><a href="mailto:mauripresse24@gmail.com">mauripresse24@gmail.com</a></span></div>
+        <div><span class="k">Atelier</span><span>24 Rue de Chabrol, 75010 Paris<br>Lundi au samedi, 9h – 19h30</span></div>
+      </div>
+      <p style="margin-top:22px;color:var(--ink-soft);max-width:40ch">Pas envie de créer un compte ? Vous pouvez aussi <a href="contact.html" style="text-decoration:underline;color:var(--ink)">demander un devis</a> directement.</p>
+    </div>
+
+    <!-- TODO intégration : brancher ces formulaires sur l'authentification existante de /mon-compte -->
+    <div class="form">
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-tab="login">Connexion</button>
+        <button role="tab" aria-selected="false" data-tab="signup">Créer un compte</button>
+      </div>
+
+      <form id="login" novalidate>
+        <div class="fgrid">
+          <label class="field field--full"><span>E-mail</span><input name="email" type="email" required autocomplete="email"></label>
+          <label class="field field--full"><span>Mot de passe</span><input name="password" type="password" required autocomplete="current-password"></label>
+        </div>
+        <button class="btn btn--cyan btn--block" style="margin-top:22px">Se connecter <span class="arrow">→</span></button>
+      </form>
+
+      <form id="signup" novalidate hidden>
+        <div class="fgrid">
+          <label class="field"><span>Nom & prénom *</span><input name="nom" required autocomplete="name"></label>
+          <label class="field"><span>Société</span><input name="societe" autocomplete="organization"></label>
+          <label class="field"><span>E-mail *</span><input name="email" type="email" required autocomplete="email"></label>
+          <label class="field"><span>Téléphone</span><input name="tel" type="tel" autocomplete="tel"></label>
+          <label class="field field--full"><span>Mot de passe *</span><input name="password" type="password" required minlength="8" autocomplete="new-password"></label>
+        </div>
+        <button class="btn btn--cyan btn--block" style="margin-top:22px">Créer mon compte <span class="arrow">→</span></button>
+      </form>
+      <div class="form__ok" id="ok" role="status"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+(() => {
+  const tabs = document.querySelectorAll("[data-tab]"), ok = document.getElementById("ok");
+  tabs.forEach((t) => t.addEventListener("click", () => {
+    tabs.forEach((x) => x.setAttribute("aria-selected", x === t));
+    document.getElementById("login").hidden = t.dataset.tab !== "login";
+    document.getElementById("signup").hidden = t.dataset.tab !== "signup";
+    ok.classList.remove("is-on");
+  }));
+  ["login", "signup"].forEach((id) => document.getElementById(id).addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!e.target.checkValidity()) { e.target.reportValidity(); return; }
+    /* Maquette : aucune donnée n'est envoyée tant que le compte n'est pas relié au serveur. */
+    ok.textContent = "Maquette : l'espace client n'est pas encore relié au serveur, rien n'a été envoyé.";
+    ok.classList.add("is-on");
+  }));
+})();
+</script>
+</body>
+</html>
