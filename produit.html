@@ -26,7 +26,16 @@
 
   <div class="wrap config">
     <div>
-      <div class="phero__img crop" style="margin:14px 14px 36px;aspect-ratio:16/8"><img id="p-img" src="" alt=""></div>
+<div class="pv">
+  <div class="pv__stage" data-pv></div>
+  <div class="pv__bar">
+    <span class="pv__note"><b>Aperçu en direct</b> — il change avec vos choix. Rendu indicatif.</span>
+    <span class="pv__actions">
+      <label class="btn btn--ghost btn--sm"><input type="file" id="pv-file" accept="image/*" hidden>Essayer avec mon visuel</label>
+      <button type="button" class="btn btn--ghost btn--sm" id="pv-reset" hidden>Retirer mon visuel</button>
+    </span>
+  </div>
+</div>
 
       <form id="options"></form>
 
@@ -57,6 +66,7 @@
 
     <aside class="recap" aria-live="polite">
       <h3>Votre configuration <span class="live">Prix en direct</span></h3>
+      <div class="pv__stage pv__stage--mini" data-pv></div>
       <dl id="recap-list"></dl>
       <div class="recap__date" id="recap-date"></div>
       <div class="recap__sum">
@@ -94,7 +104,65 @@
   document.getElementById("p-name").textContent = p.name;
   document.getElementById("p-desc").textContent = p.desc;
   const cc = document.getElementById("crumb-cat"); cc.textContent = p.cat; cc.href = "categorie.html?c=" + p.catId;
-  const img = document.getElementById("p-img"); img.src = p.img; img.alt = p.name;
+
+/* ---------- Aperçu visuel : une carte dessinée qui suit les options choisies ---------- */
+const stages = document.querySelectorAll("[data-pv]");
+stages.forEach((st) => { st.innerHTML = `
+  <div class="pvc" data-paper="mat" data-finish="none" data-corners="square" data-sides="recto">
+    <div class="pvc__card pvc__card--back"><div class="pvc__face pvc__face--back"><span class="pvc__logo">VN</span><span class="pvc__site">votre-site.fr</span></div></div>
+    <div class="pvc__card pvc__card--front">
+      <div class="pvc__face">
+        <span class="pvc__band"><span class="pvc__logo">VN</span></span>
+        <span class="pvc__txt"><b>Votre Nom</b><i>Votre métier · Votre entreprise</i><em>01 23 45 67 89<br>contact@votre-site.fr</em></span>
+      </div>
+      <i class="pvc__sheen"></i>
+    </div>
+  </div>
+  <div class="pv__chips"></div>`; });
+const optOf = (id) => { const i = p.groups.findIndex((g) => g.id === id); return i < 0 ? "" : p.groups[i].options[state.c[i]].label; };
+let userImg = null;
+function updatePreview() {
+  const fmt = optOf("format"), m = fmt.match(/([\d,]+)\s*×\s*([\d,]+)/);
+  let w = m ? parseFloat(m[1].replace(",", ".")) : 8.5, h = m ? parseFloat(m[2].replace(",", ".")) : 5.5;
+  const ori = optOf("orientation").toLowerCase();
+  if (ori.startsWith("vert")) [w, h] = [Math.min(w, h), Math.max(w, h)];
+  if (ori.startsWith("horiz")) [w, h] = [Math.max(w, h), Math.min(w, h)];
+  const paperTxt = (optOf("grammage") + " " + optOf("papier")).toLowerCase(), fin = optOf("finition").toLowerCase(), imp = optOf("impression").toLowerCase();
+  const paper = /recycl/.test(paperTxt) ? "recycle" : /kraft/.test(paperTxt) ? "kraft" : /brillant|gloss/.test(optOf("grammage") || optOf("papier")) ? "brillant" : "mat";
+  const finish = /soft/.test(fin) ? "soft" : /dorure|vernis/.test(fin) ? "or" : /brillant/.test(fin) ? "brillant" : "none";
+  const sides = /identiques/.test(imp) ? "same" : /diff/.test(imp) ? "diff" : "recto";
+  const thick = /350|300/.test(paperTxt) ? 4 : 2;
+  const chips = [fmt, optOf("grammage") || optOf("papier"), optOf("finition"), optOf("coins"), optOf("impression")].filter(Boolean);
+  stages.forEach((st) => {
+    const c = st.querySelector(".pvc");
+    c.style.setProperty("--ar", (w / h).toFixed(4));
+    c.style.setProperty("--edge", thick + "px");
+    c.classList.toggle("pvc--portrait", w / h < 1.15);
+    Object.assign(c.dataset, { paper, finish, sides, corners: /arrondi/i.test(optOf("coins")) ? "round" : "square" });
+    c.classList.toggle("has-img", !!userImg);
+    c.style.setProperty("--img", userImg ? `url("${userImg}")` : "none");
+    c.classList.remove("is-pop"); void c.offsetWidth; c.classList.add("is-pop");
+    st.querySelector(".pv__chips").innerHTML = chips.map((t) => `<span>${esc(t)}</span>`).join("");
+  });
+}
+document.getElementById("pv-file").addEventListener("change", (e) => {
+  const file = e.target.files[0]; if (!file) return;
+  if (userImg) URL.revokeObjectURL(userImg);
+  userImg = URL.createObjectURL(file); /* reste dans le navigateur : rien n'est envoyé */
+  document.getElementById("pv-reset").hidden = false; updatePreview();
+});
+document.getElementById("pv-reset").addEventListener("click", () => {
+  if (userImg) URL.revokeObjectURL(userImg);
+  userImg = null; document.getElementById("pv-file").value = ""; document.getElementById("pv-reset").hidden = true; updatePreview();
+});
+/* Légère inclinaison de la carte sous la souris */
+stages.forEach((st) => {
+  st.addEventListener("mousemove", (e) => {
+    const r = st.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+    st.style.setProperty("--rx", (-y * 14).toFixed(1) + "deg"); st.style.setProperty("--ry", (x * 18).toFixed(1) + "deg"); st.style.setProperty("--sx", ((x + 0.5) * 100).toFixed(0) + "%");
+  });
+  st.addEventListener("mouseleave", () => { st.style.setProperty("--rx", "0deg"); st.style.setProperty("--ry", "0deg"); });
+});
   document.getElementById("grid-n").textContent = p.groups.length + 1;
 
   const extra = (o) => (o.mult ? "+" + Math.round((o.mult - 1) * 100) + " %" : o.add ? "+" + eur(o.add) + " HT" : "");
@@ -140,7 +208,7 @@
   }
 
   document.getElementById("options").addEventListener("change", (e) => {
-    if (e.target.name) { state.c[+e.target.name.slice(1)] = +e.target.value; render(); }
+    if (e.target.name) { state.c[+e.target.name.slice(1)] = +e.target.value; render(); updatePreview(); }
   });
   document.getElementById("grid").addEventListener("click", (e) => {
     const b = e.target.closest("button"); if (!b) return;
@@ -165,7 +233,7 @@
     setTimeout(() => { f.classList.remove("is-open"); const nx = f.nextElementSibling; if (nx && nx.classList.contains("acc")) nx.classList.add("is-open"); }, 240);
   });
   if (mob()) document.querySelectorAll("details.faq[open]").forEach((d) => d.removeAttribute("open"));
-  render();
+  render(); updatePreview();
 })();
 </script>
 </body>
