@@ -6,9 +6,13 @@ document.documentElement.classList.add("js");
   const cat = (id) => CATS.find((c) => c.id === id);
   const icon = {
     search: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+phone: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>',
+arrow: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+searchBig: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+doc: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></svg>',
     bolt: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>',
-    user: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
-    bag: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
+    user: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
+    bag: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
     wa: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.1-5.4A8.5 8.5 0 1 1 21 11.5Z"/></svg>',
   };
 
@@ -24,37 +28,77 @@ document.documentElement.classList.add("js");
   const on = openNow();
   const status = on == null ? "" : on ? '<span><i class="dot"></i><strong>Atelier ouvert</strong> jusqu\'à 19h30</span>' : '<span><i class="dot dot--off"></i><strong>Atelier fermé</strong> · urgences au ' + SHOP.urgent + "</span>";
 
-  const header = `
-  <div class="topbar"><div class="wrap">
-    <div class="topbar__left">${status}<span>Lun – Sam · 9h – 19h30</span><span>${SHOP.address}</span></div>
-    <a href="${SHOP.telHref}"><strong>${SHOP.tel}</strong></a>
-  </div></div>
-  <header class="header">
-    <div class="wrap header__main">
-      <a class="logo" href="index.html" aria-label="Mauri Presse — accueil"><img src="${IMG}mauri_logo.png" alt="Mauri Presse" width="195" height="40"></a>
-      <form class="search" action="catalogue.html" role="search">
-        <label class="sr" for="q">Rechercher un produit</label>
-        <input id="q" name="q" type="search" placeholder="Que cherchez-vous ? Roll-up, flyers, étiquettes…" autocomplete="off">
-        <button aria-label="Rechercher">${icon.search}</button>
-        <div class="suggest" data-suggest role="listbox" aria-label="Suggestions"></div>
-      </form>
-      <div class="header__actions">
-        <a class="hlink hlink--express" href="catalogue.html?express=1">${icon.bolt}<span class="lbl">Express 24h</span></a>
-        <a class="hlink" href="contact.html"><span class="lbl">Devis sur mesure</span></a>
-        <a class="hlink hlink--acc" href="compte.html" aria-label="Mon compte">${icon.user}<span class="lbl">Compte</span></a>
-        <button class="hlink" data-cart-open aria-label="Ouvrir le panier">${icon.bag}<span class="lbl">Panier</span><span class="cart-count" data-cart-count>0</span></button>
-      </div>
+/* Page courante : sert à indiquer où l'on se trouve dans le menu */
+const PAGE = (location.pathname.split("/").pop() || "index.html").replace(/\?.*$/, "");
+const QS = new URLSearchParams(location.search);
+const CUR = PAGE === "categorie.html" ? (cat(QS.get("c")) || CATS[0]).id
+: PAGE === "produit.html" ? (PRODUCTS[QS.get("p")] || PRODUCTS.cartes).catId
+: null;
+const ALL_ON = PAGE === "catalogue.html" && QS.get("express") !== "1";
+const EXPRESS_ON = PAGE === "catalogue.html" && QS.get("express") === "1";
+const cur = (cond) => (cond ? ' aria-current="page"' : "");
+let ORDER = [...TOP, ...CATS.map((c) => c.id).filter((id) => !TOP.includes(id))];
+if (CUR && ORDER.indexOf(CUR) > 4) ORDER = [CUR, ...ORDER.filter((id) => id !== CUR)];
+
+const header = `
+<div class="topbar"><div class="wrap">
+<div class="topbar__left">${status}<span class="tb-more">Lun – Sam · 9h – 19h30</span><span class="tb-more">${SHOP.address}</span></div>
+<div class="topbar__right"><span class="tb-more">Urgences soir & dimanche : <a href="${SHOP.urgentHref}">${SHOP.urgent}</a></span><a href="${SHOP.telHref}" class="tb-tel">${icon.phone}<strong>${SHOP.tel}</strong></a></div>
+</div></div>
+<header class="header">
+<div class="wrap header__main">
+  <button class="hicon hicon--menu" type="button" data-menu-open aria-label="Ouvrir le menu" aria-expanded="false"><span class="burger"><i></i><i></i><i></i></span></button>
+  <a class="logo" href="index.html" aria-label="Mauri Presse — accueil"><img src="${IMG}mauri_logo.png" alt="Mauri Presse" width="195" height="40"></a>
+  <form class="search" action="catalogue.html" role="search">
+    <label class="sr" for="q">Rechercher un produit</label>
+    ${icon.search}
+    <input id="q" name="q" type="search" placeholder="Que voulez-vous imprimer ?" autocomplete="off">
+    <button class="search__go" aria-label="Rechercher">${icon.arrow}</button>
+    <div class="suggest" data-suggest role="listbox" aria-label="Suggestions"></div>
+  </form>
+  <nav class="header__actions" aria-label="Raccourcis">
+    <a class="hpill hpill--express" href="catalogue.html?express=1"${cur(EXPRESS_ON)}>${icon.bolt}<span>Express 24h</span></a>
+    <a class="hpill hpill--quote" href="contact.html"${cur(PAGE === "contact.html")}>Devis sur mesure</a>
+    <button class="hicon hicon--search" type="button" data-search-toggle aria-label="Rechercher">${icon.searchBig}</button>
+    <a class="hicon" href="compte.html" aria-label="Mon compte"${cur(PAGE === "compte.html")}>${icon.user}<span class="hicon__lbl">Compte</span></a>
+    <button class="hicon hicon--cart" type="button" data-cart-open aria-label="Ouvrir le panier"${cur(PAGE === "panier.html")}>${icon.bag}<span class="hicon__lbl">Panier</span><span class="cart-count" data-cart-count>0</span></button>
+  </nav>
+</div>
+<nav class="nav" aria-label="Catégories"><div class="wrap">
+  <button class="nav__all${ALL_ON ? " is-current" : ""}" data-mega-toggle aria-expanded="false"><i class="bars"></i>Tous les produits</button>
+  <div class="nav__links">${ORDER.map((id) => `<a href="categorie.html?c=${id}" data-cat="${id}"${id === CUR ? ' class="is-current" aria-current="page"' : ""}>${esc(cat(id).name)}</a>`).join("")}</div>
+</div></nav>
+<div class="sub" data-sub></div>
+<div class="mega" data-mega><div class="wrap mega__grid">
+  ${CATS.map((c, i) => `<div${c.id === CUR ? ' class="is-current"' : ""}><h4><span>${String(i + 1).padStart(2, "0")}</span><a href="categorie.html?c=${c.id}">${esc(c.name)}</a></h4><ul>${c.items.slice(0, 6).map((it) => `<li><a href="${itemHref(it)}">${esc(itemName(it))}</a></li>`).join("")}${c.items.length > 6 ? `<li><a href="categorie.html?c=${c.id}">Tout voir →</a></li>` : ""}</ul></div>`).join("")}
+</div></div>
+</header>
+<div class="mmenu" data-menu aria-hidden="true">
+<div class="mmenu__veil" data-menu-close></div>
+<aside class="mmenu__panel" role="dialog" aria-label="Menu">
+  <div class="mmenu__head">
+    <img src="${IMG}mauri_logo.png" alt="Mauri Presse" width="156" height="32">
+    <button class="x" type="button" data-menu-close aria-label="Fermer le menu">✕</button>
+  </div>
+  <div class="mmenu__body">
+    <div class="mmenu__quick">
+      <a class="mq mq--express" href="catalogue.html?express=1"${cur(EXPRESS_ON)}>${icon.bolt}<span>Express 24h</span></a>
+      <a class="mq" href="contact.html"${cur(PAGE === "contact.html")}>${icon.doc}<span>Devis</span></a>
+      <a class="mq" href="compte.html"${cur(PAGE === "compte.html")}>${icon.user}<span>Compte</span></a>
     </div>
-    <nav class="nav" aria-label="Catégories"><div class="wrap">
-      <button class="nav__all" data-mega-toggle aria-expanded="false"><i class="bars"></i>Tous les produits</button>
-      <div class="nav__links">${[...TOP, ...CATS.map((c) => c.id).filter((id) => !TOP.includes(id))].map((id) => `<a href="categorie.html?c=${id}" data-cat="${id}">${esc(cat(id).name)}</a>`).join("")}</div>
-      <div class="nav__urgent">Urgence soir & dimanche · <a href="${SHOP.urgentHref}">${SHOP.urgent}</a></div>
-    </div></nav>
-    <div class="sub" data-sub></div>
-    <div class="mega" data-mega><div class="wrap mega__grid">
-      ${CATS.map((c, i) => `<div><h4><span>${String(i + 1).padStart(2, "0")}</span><a href="categorie.html?c=${c.id}">${esc(c.name)}</a></h4><ul>${c.items.slice(0, 6).map((it) => `<li><a href="${itemHref(it)}">${esc(itemName(it))}</a></li>`).join("")}${c.items.length > 6 ? `<li><a href="categorie.html?c=${c.id}">Tout voir →</a></li>` : ""}</ul></div>`).join("")}
-    </div></div>
-  </header>`;
+    <a class="mall${ALL_ON ? " is-current" : ""}" href="catalogue.html"${cur(ALL_ON)}><span>Tous les produits</span><span>→</span></a>
+    <p class="mmenu__label">Nos familles</p>
+    <ul class="mcats">${CATS.map((c) => `<li><a href="categorie.html?c=${c.id}"${c.id === CUR ? ' class="is-current" aria-current="page"' : ""}><span class="mcats__ico">${catIcon(c.id)}</span><span>${esc(c.name)}</span><em>${c.items.length}</em></a></li>`).join("")}</ul>
+  </div>
+  <div class="mmenu__foot">
+    ${status ? `<p>${status}</p>` : ""}
+    <div class="mmenu__call">
+      <a class="btn" href="${SHOP.telHref}">${icon.phone} Appeler</a>
+      <a class="btn btn--ghost" href="${SHOP.wa}" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+  </div>
+</aside>
+</div>`;
 
   const footer = `
   <footer class="footer"><div class="wrap">
@@ -172,7 +216,24 @@ document.documentElement.classList.add("js");
     }));
     hdr.addEventListener("mouseleave", hideSub);
     tog.addEventListener("mouseenter", hideSub);
-    hdr.querySelector(".header__main").addEventListener("mouseenter", hideSub);
+hdr.querySelector(".header__main").addEventListener("mouseenter", hideSub);
+
+/* Menu téléphone */
+const menu = document.querySelector("[data-menu]"), mOpen = document.querySelector("[data-menu-open]");
+const setMenu = (v) => {
+  menu.classList.toggle("is-open", v);
+  menu.setAttribute("aria-hidden", !v);
+  mOpen.setAttribute("aria-expanded", v);
+  document.documentElement.classList.toggle("no-scroll", v);
+};
+mOpen.addEventListener("click", () => setMenu(true));
+menu.addEventListener("click", (e) => { if (e.target.closest("[data-menu-close]") || e.target.closest("a")) setMenu(false); });
+
+/* Loupe téléphone : déplie la barre de recherche */
+document.querySelector("[data-search-toggle]").addEventListener("click", () => {
+  const on = hdr.classList.toggle("is-search");
+  if (on) setTimeout(() => document.getElementById("q").focus(), 60);
+});
 
     /* Suggestions de recherche */
     const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
@@ -191,7 +252,7 @@ document.documentElement.classList.add("js");
     q.addEventListener("focus", () => { if (sug.innerHTML && q.value.trim().length > 1) sug.classList.add("is-open"); });
     document.addEventListener("click", (e) => { if (!e.target.closest(".search")) hideSug(); });
 
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") { setMega(false); Cart.close(); hideSub(); hideSug(); } });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") { setMega(false); Cart.close(); hideSub(); hideSug(); setMenu(false); hdr.classList.remove("is-search"); } });
 
     /* Apparition au défilement */
     /* Apparition en cascade des grilles et listes */
@@ -213,7 +274,7 @@ document.documentElement.classList.add("js");
         bar.style.transform = `scaleX(${max > 0 ? Math.min(1, y / max) : 0})`;
         if (stamp && y < 1400) stamp.style.transform = `rotate(${10 + y * 0.18}deg)`;
         if (himg && y < 1400) himg.style.transform = `translateY(${y * 0.06}px) scale(1.12)`;
-        const busy = mega.classList.contains("is-open") || document.activeElement === document.getElementById("q");
+        const busy = mega.classList.contains("is-open") || head.classList.contains("is-search") || document.activeElement === document.getElementById("q");
         head.classList.toggle("header--away", window.innerWidth <= 720 && !busy && y > 220 && y > last + 4);
         if (y < last - 4 || y <= 220) head.classList.remove("header--away");
         last = y;

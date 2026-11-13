@@ -36,7 +36,7 @@
       </div>
 
       <div class="hero__visual">
-        <div class="hero__img crop"><img src="https://mauripresse.com/images/business_cards.jpg" alt="Cartes de visite noires avec dorure or imprimées par Mauri Presse" fetchpriority="high"></div>
+        <div class="hero__img crop"><img src="https://images.unsplash.com/photo-1718670013921-2f144aba173a?auto=format&fit=crop&w=1400&q=75" alt="Cartes de visite imprimées posées sur un comptoir en marbre" fetchpriority="high"></div>
         <div class="hero__stamp" aria-hidden="true"><div>24h<small>EXPRESS</small></div></div>
 
         <form class="quote" id="quote" aria-label="Estimation de prix rapide">
@@ -154,7 +154,7 @@
   <!-- ATELIER -->
   <section class="section section--tight">
     <div class="wrap atelier">
-      <div class="atelier__img crop reveal"><img src="https://mauripresse.com/images/hero_banner.jpg" alt="L'atelier d'impression Mauri Presse" loading="lazy"></div>
+      <div class="atelier__img crop reveal"><img src="https://images.unsplash.com/photo-1503694978374-8a2fa686963a?auto=format&fit=crop&w=1200&q=75" alt="Presse offset en cours d'impression" loading="lazy"></div>
       <div class="reveal">
         <span class="eyebrow eyebrow--cyan">L'atelier</span>
         <h2>De vrais imprimeurs, <span class="h-under">à deux pas</span> de la Gare du Nord.</h2>
@@ -178,9 +178,9 @@
         <p>Dorure à chaud, soft-touch, impression textile, packaging sur mesure : des finitions réalisées avec précision dans notre atelier.</p>
       </div>
       <div class="works reveal">
-        <a class="work" href="contact.html?produit=Cartes%20de%20visite%20finitions%20Deluxe"><img src="https://mauripresse.com/images/business_cards.jpg" alt="" loading="lazy"><div class="work__txt"><span class="mono">Papeterie de luxe</span><h3>Dorure à chaud & soft-touch</h3><p>Carton épais, pelliculage velours, tranches et marquages dorés.</p></div></a>
-        <a class="work" href="contact.html?produit=Textile%20personnalis%C3%A9"><img src="https://mauripresse.com/images/custom_tshirts.jpg" alt="" loading="lazy"><div class="work__txt"><span class="mono">Textile</span><h3>Impression direct-to-film</h3><p>Couleurs éclatantes sur coton épais.</p></div></a>
-        <a class="work" href="contact.html?produit=Packaging%20%26%20bo%C3%AEtes"><img src="https://mauripresse.com/images/packaging_boxes.jpg" alt="" loading="lazy"><div class="work__txt"><span class="mono">Packaging</span><h3>Boîtes personnalisées</h3><p>Impression intérieure et extérieure, marquage métallisé.</p></div></a>
+        <a class="work" href="contact.html?produit=Cartes%20de%20visite%20finitions%20Deluxe"><img src="https://images.unsplash.com/photo-1715154470884-1c2be0b0129f?auto=format&fit=crop&w=900&q=75" alt="" loading="lazy"><div class="work__txt"><span class="mono">Colorimétrie</span><h3>Des couleurs contrôlées</h3><p>Chaque tirage est vérifié sur charte CMJN avant de partir.</p></div></a>
+        <a class="work" href="contact.html?produit=Textile%20personnalis%C3%A9"><img src="https://images.unsplash.com/photo-1456456496250-d5e7c0a9b44d?auto=format&fit=crop&w=900&q=75" alt="" loading="lazy"><div class="work__txt"><span class="mono">Textile</span><h3>T-shirts & sweats personnalisés</h3><p>Votre logo imprimé sur textile, en petite ou grande série.</p></div></a>
+        <a class="work" href="contact.html?produit=Packaging%20%26%20bo%C3%AEtes"><img src="https://images.unsplash.com/photo-1595246007497-15e0ed4b8d96?auto=format&fit=crop&w=900&q=75" alt="" loading="lazy"><div class="work__txt"><span class="mono">Packaging</span><h3>Boîtes personnalisées</h3><p>Boîtes, étuis et emballages à vos couleurs.</p></div></a>
       </div>
     </div>
   </section>
@@ -295,8 +295,8 @@
   const fix = (d) => d.replace(/(\d+\.\d*?)0+(?=[^\d]|$)/g, "$1").replace(/\.(?=[^\d]|$)/g, "");
   const n = (c) => `${c.items.length} produit${c.items.length > 1 ? "s" : ""}`;
   const photo = (id, cls, tag, price) => {
-    const c = CATS.find((x) => x.id === id), img = { "cartes-de-visite": "business_cards.jpg", "roll-up-kakemono": "hero_slide3.jpg", "flyers-tracts": "hero_slide2.jpg" }[id];
-    return `<a class="tile tile--photo ${cls}" href="categorie.html?c=${id}"><img src="${IMG}${img}" alt="" loading="lazy">
+    const c = CATS.find((x) => x.id === id), img = catPhoto(id, 1000);
+    return `<a class="tile tile--photo ${cls}" href="categorie.html?c=${id}"><img src="${img}" alt="" loading="lazy">
       <span class="tag ${tag === "24h" ? "tag--magenta" : ""}">${tag}</span>
       <div class="tile__txt"><h3>${esc(c.name)}</h3><p>${esc(c.blurb)}</p><span class="tile__price">dès <b>${eur(price)}</b> HT</span></div><span class="tile__go">→</span></a>`;
   };

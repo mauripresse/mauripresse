@@ -3,7 +3,40 @@
    Les grilles Flyers et Roll-up ainsi que les majorations d'options sont
    INDICATIVES et doivent être remplacées par les vrais tarifs de l'atelier. */
 
-const IMG = "https://mauripresse.com/images/";
+const IMG = "https://mauripresse.com/images/"; /* logo uniquement */
+
+/* Photos libres de droits (Unsplash, licence gratuite), choisies pour correspondre à chaque produit */
+const PH = (id, w = 1200) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=75`;
+const PHOTOS = {
+  hero: "1718670013921-2f144aba173a",          // cartes de visite sur marbre
+  atelier: "1503694978374-8a2fa686963a",       // presse offset en marche
+  grandformat: "1693031630369-bd429a57f115",   // imprimante grand format
+  cmyk: "1715154470884-1c2be0b0129f",          // compte-fils sur charte CMJN
+  papiers: "1750537735437-847075c29538",       // stock de papiers colorés
+  cartes: "1718670013988-c6e3edb92345",        // carte de visite noire
+  flyers: "1563097013-a1df1d1fd1c7",           // flyer tendu à la main
+  depliants: "1769893715447-8f12c382e49c",     // dépliants pliés
+  brochures: "1658863025658-4a259cc68fc9",     // brochures et livres imprimés
+  affiches: "1563050860-87d45eaaeabb",         // mur d'affiches
+  papeterie: "1520764588094-8fc067746a8e",     // papeterie d'entreprise
+  etiquettes: "1773904215704-139e9ff8c894",    // impression d'autocollants
+  vinyle: "1701921729931-28722c1b747e",        // adhésif sur vitrine
+  rollup: "1761225646548-bc92fea0dc72",        // stand avec visuel imprimé
+  signaletique: "1577980158219-1d4fb3ec8378",  // enseigne de façade
+  rigide: "1543487945-139a97f387d5",           // affiche encadrée
+  plv: "1761195689615-9469b65dac01",           // salon professionnel
+  packaging: "1595246007497-15e0ed4b8d96",     // boîtes personnalisées
+  textile: "1456456496250-d5e7c0a9b44d",       // sérigraphie textile
+  reprographie: "1650094980833-7373de26feb6",  // copieur
+  sacs: "1548863227-3af567fc3b27",             // tote bag imprimé
+};
+const CAT_PHOTO = {
+  "reprographie": "reprographie", "cartes-de-visite": "cartes", "flyers-tracts": "flyers", "depliants-plaquettes": "depliants",
+  "catalogue-brochures": "brochures", "affiche-poster": "affiches", "papeterie-bureautique": "papeterie", "etiquettes-autocollants": "etiquettes",
+  "vinyle-adhesif": "vinyle", "roll-up-kakemono": "rollup", "signaletique-enseignes": "signaletique", "support-rigide": "rigide",
+  "plv-expo": "plv", "objets-packaging": "packaging",
+};
+const catPhoto = (id, w) => PH(PHOTOS[CAT_PHOTO[id]] || PHOTOS.atelier, w);
 
 const SHOP = {
   tel: "01 47 70 79 24", telHref: "tel:0147707924",
@@ -30,7 +63,7 @@ const PRODUCTS = {
   cartes: {
     name: "Cartes de visite classiques",
     cat: "Cartes de visite", catId: "cartes-de-visite",
-    img: IMG + "business_cards.jpg",
+    img: PH(PHOTOS.cartes),
     desc: "Le support incontournable de votre communication professionnelle. Papier couché 350 g, formats standards et finitions personnalisées.",
     qty: [100, 250, 500, 1000, 2500, 5000, 10000],
     base: [22.8, 28.8, 33.6, 45.6, 78, 132, 234],
@@ -74,7 +107,7 @@ const PRODUCTS = {
   flyers: {
     name: "Flyers & tracts",
     cat: "Flyers & tracts", catId: "flyers-tracts",
-    img: IMG + "hero_slide2.jpg",
+    img: PH(PHOTOS.flyers),
     desc: "Flyers du A6 au A3 sur papier couché brillant ou mat, 135 g ou 170 g. Idéal pour vos événements, ouvertures et opérations commerciales.",
     qty: [100, 250, 500, 1000, 2500, 5000, 10000],
     base: [14.9, 22.9, 31.9, 44.9, 79, 129, 219],
@@ -106,7 +139,7 @@ const PRODUCTS = {
   rollup: {
     name: "Roll-up & kakémono",
     cat: "Roll up kakemono", catId: "roll-up-kakemono",
-    img: IMG + "hero_slide3.jpg",
+    img: PH(PHOTOS.rollup),
     desc: "Structure aluminium rétractable avec bâche haute résolution anti-froissement. Montage en quelques secondes pour salons, vitrines et événements.",
     qty: [1, 2, 5, 10],
     base: [49, 94, 225, 430],
