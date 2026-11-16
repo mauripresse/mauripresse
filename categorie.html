@@ -33,13 +33,21 @@
     <div class="items items--lg" id="c-items"></div>
   </div></section>
 
+<section class="section section--tight" id="fmt-block" hidden><div class="wrap">
+  <div class="fmtblock">
+    <div><span class="eyebrow eyebrow--cyan">Les formats à l'échelle</span><h2 id="fmt-title"></h2><p id="fmt-lead"></p>
+      <a class="btn btn--cyan" id="fmt-go" href="#">Choisir mon format <span class="arrow">→</span></a></div>
+    <div class="fmtblock__pic flyline" id="fmt-line"></div>
+  </div>
+</div></section>
+
 <section class="section section--tight" id="ru-block" hidden><div class="wrap">
   <div class="rusec rusec--page">
-    <div class="rusec__head"><div><span class="eyebrow eyebrow--yellow">Exemples de roll-up</span><h2>Imprimé en 24h, <em>livré dans la journée.</em></h2>
+    <div class="rusec__head"><div><span class="eyebrow eyebrow--yellow">5 tailles · à l'échelle</span><h2>Imprimé en 24h, <em>livré dans la journée.</em></h2>
       <p class="rusec__lead">Livraison le jour même à Paris et en Île-de-France (payante, tarif selon votre adresse) ou retrait gratuit à l'atelier.</p></div>
-      <div class="rusec__price"><small>À partir de</small><b>79,99 €</b><span>HT · 85 × 200 cm</span></div></div>
-    <div class="rusec__gallery" id="ru-gallery"></div>
-    <div class="hero__cta"><a class="btn btn--yellow" href="contact.html?produit=Roll-Up%20Stand%20%26%20Kakemono">Commander mon roll-up <span class="arrow">→</span></a><a class="btn btn--light" href="contact.html?produit=Livraison%20jour%20m%C3%AAme%20roll-up">Tarif de livraison</a></div>
+      <div class="rusec__price"><small>À partir de</small><b>79,99 €</b><span>HT · 80 × 200 cm · 5 tailles</span></div></div>
+    <div class="rusec__line" id="ru-gallery"></div>
+    <div class="hero__cta"><a class="btn btn--yellow" href="format.html?p=rollup">Choisir ma taille <span class="arrow">→</span></a><a class="btn btn--light" href="contact.html?produit=Livraison%20jour%20m%C3%AAme%20roll-up">Tarif de livraison</a></div>
     <p class="rusec__note">Visuels d'exemple : votre roll-up est imprimé avec votre propre maquette.</p>
   </div>
 </div></section>
@@ -79,17 +87,30 @@
   document.getElementById("c-devis").href = "contact.html?produit=" + encodeURIComponent(c.name);
 
 document.getElementById("c-items").innerHTML = c.items.map((it) => {
-  const k = isConf(it), xp = isExpress(it), from = itemFrom(it);
+  const k = isConf(it) || !!(typeof it === "object" && it.f), xp = isExpress(it), from = itemFrom(it);
   return `<a class="item" href="${itemHref(it)}">
-    <div><h3>${esc(itemName(it))}</h3><p>${k ? "Configuration en ligne, prix immédiat." : "Format, quantité et finitions sur mesure."}</p></div>
+    <div><h3>${esc(itemName(it))}</h3><p>${isConf(it) ? "Configuration en ligne, prix immédiat." : k ? "Choisissez votre taille en ligne, aperçu à l'échelle." : "Format, quantité et finitions sur mesure."}</p></div>
     <div class="item__meta"><span>${from ? `dès <b>${eur(from)}</b> HT` : "Sur devis"}</span>${xp ? '<span class="pill">24h</span>' : ""}${k ? "" : '<span class="pill pill--soft">Devis →</span>'}</div>
   </a>`;
 }).join("");
 
 if (c.id === "roll-up-kakemono") {
   document.getElementById("ru-block").hidden = false;
-  document.getElementById("ru-gallery").innerHTML = ROLLUPS.map((r, n) => `<figure class="rusec__item">${rollupHTML(n)}<figcaption>${r.title}</figcaption></figure>`).join("");
+  const g = document.getElementById("ru-gallery"); g.innerHTML = rollupLineup();
+  g.addEventListener("click", (e) => { const b = e.target.closest("[data-i]"); if (b) location.href = "format.html?p=rollup&t=" + b.dataset.i; });
 }
+
+const FK = { "flyers-tracts": "flyers", "depliants-plaquettes": "depliants" }[c.id];
+if (FK) {
+  const F = FORMATS[FK], line = document.getElementById("fmt-line");
+  document.getElementById("fmt-block").hidden = false;
+  document.getElementById("fmt-title").textContent = F.sizes.length + " formats, du plus petit au plus grand.";
+  document.getElementById("fmt-lead").textContent = "Cliquez sur un format pour le configurer : aperçu à l'échelle, papier, quantité et délai.";
+  document.getElementById("fmt-go").href = "format.html?p=" + FK;
+  line.innerHTML = FK === "flyers" ? flyerLineup() : lineupHTML(F.sizes.map((s) => ({ w: s.w, h: s.h, label: s.label, sub: s.pli, inner: `<span class="fo${s.zig ? " fo--zig" : ""}" style="--w:${s.w};--h:${s.h};width:100%;height:100%">${"<i></i>".repeat(s.folds + 1)}</span>`, cls: "is-sheet" })));
+  line.addEventListener("click", (e) => { const b = e.target.closest("[data-i]"); if (b) location.href = "format.html?p=" + FK + "&t=" + b.dataset.i; });
+}
+document.querySelector("main").insertAdjacentHTML("beforeend", `<div class="wrap">${reviewsHTML(c.id)}</div>`);
 
 document.getElementById("c-others").innerHTML = CATS.filter((x) => x.id !== c.id).map((x) => `<a href="categorie.html?c=${x.id}">${esc(x.name)}</a>`).join("");
 })();

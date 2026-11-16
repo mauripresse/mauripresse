@@ -43,6 +43,11 @@ const SHOP = {
   urgent: "07 83 46 02 17", urgentHref: "tel:0783460217",
   wa: "https://api.whatsapp.com/send?phone=33783460217&text=Bonjour%20Mauri%20Presse",
   mail: "mauripresse24@gmail.com",
+  /* Réception des formulaires (FormSubmit). Après activation, on peut remplacer l'adresse par la clé fournie. */
+  formKey: "",
+  /* Paiement en ligne : à remplir quand les comptes existent (sinon seul le paiement à l'atelier est proposé).
+     paypal = identifiant PayPal.me ; stripe = lien de paiement Stripe (Payment Link). */
+  pay: { paypal: "", stripe: "" },
   address: "24 Rue de Chabrol, 75010 Paris",
   social: [
     { id: "instagram", name: "Instagram", handle: "@mauripresse", url: "https://www.instagram.com/mauripresse/" },
@@ -154,14 +159,14 @@ const PRODUCTS = {
 const CATS = [
   { id: "reprographie", name: "Reprographie", blurb: "Copies, impressions et reliures minute.", items: ["Photocopie", "Impression", "Reliures", "Scan et numérisation", "Plastification"] },
   { id: "cartes-de-visite", name: "Cartes de visite", blurb: "Classiques, pelliculées, Deluxe ou PVC.", items: [{ n: "Cartes de visite classiques", p: "cartes" }, { n: "Cartes de Visite Classic", p: "classic" }, "Cartes de visite pelliculées", "Cartes de fidélité", "Cartes de visite finitions Deluxe", "Cartes de visite en PVC", "Cartes de correspondance", "Cartes postales"] },
-  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, pour vos événements et opérations commerciales.", items: [{ n: "Flyers & Brochures", from: 14.9 }, "Flyer 10×15 cm", "Flyer A6", "Flyer DL 10×21 cm", "Flyer A5", "Flyer A4", "Flyer A3"] },
-  { id: "depliants-plaquettes", name: "Dépliants & plaquettes", blurb: "1, 2 ou 3 plis pour vos présentations.", items: ["Dépliant 1 pli", "Dépliant 2 plis", "Dépliant 3 plis"] },
+  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, pour vos événements et opérations commerciales.", items: [{ n: "Flyers & tracts", from: 14.9, f: "flyers" }, { n: "Flyer A6", f: "flyers", t: 0 }, { n: "Flyer 10×15 cm", f: "flyers", t: 1 }, { n: "Flyer DL 10×21 cm", f: "flyers", t: 2 }, { n: "Flyer A5", f: "flyers", t: 3 }, { n: "Flyer A4", f: "flyers", t: 4 }, { n: "Flyer A3", f: "flyers", t: 5 }] },
+  { id: "depliants-plaquettes", name: "Dépliants & plaquettes", blurb: "1, 2 ou 3 plis pour vos présentations.", items: [{ n: "Dépliant 1 pli", f: "depliants", t: 0 }, { n: "Dépliant 2 plis roulés", f: "depliants", t: 2 }, { n: "Dépliant 2 plis accordéon", f: "depliants", t: 3 }] },
   { id: "catalogue-brochures", name: "Catalogues & brochures", blurb: "Agrafé, spirale, dos carré collé.", items: ["Brochure agrafée", "Spirale métallique", "Dos carré collé", "Couverture rigide"] },
   { id: "affiche-poster", name: "Affiches & posters", blurb: "À l'unité ou en série, jusqu'à l'Abribus.", items: ["Affiches à l'unité", "Affiches petit format", "Affiche grand format", "Affiche Abribus", "Affiche dos bleu", "Affiche fluo", "Affiche autocollante", "Affiche backlight"] },
   { id: "papeterie-bureautique", name: "Papeterie & bureautique", blurb: "En-têtes, administratif, plaques gravées.", items: ["Bureautique", "Administratif", "Plaque gravure"] },
   { id: "etiquettes-autocollants", name: "Étiquettes & autocollants", blurb: "Rouleaux, holographiques, imperméables.", items: ["Étiquettes en rouleau standards", "Étiquettes en plastique", "Étiquettes en papier", "Étiquettes avec finitions spéciales", "Étiquettes holographiques", "Étiquettes Premium", "Étiquettes imperméables", "Étiquettes repositionnables"] },
   { id: "vinyle-adhesif", name: "Vinyle adhésif", blurb: "Vitrines, murs, sols et véhicules.", items: ["Adhésifs pour vitrines", "Adhésifs muraux", "Adhésifs pour voitures et motos", "Covering voiture", "Adhésif pour sols", "Lettrage adhésif", "Adhésif vinyle transparent", "Adhésifs dépoli", "Adhésifs microperforé", "Vitrophanie"] },
-  { id: "roll-up-kakemono", name: "Roll-up & kakémono", blurb: "Imprimé en 24h, livré dans la journée.", items: [{ n: "Roll-Up Stand & Kakemono", from: 79.99, x: 1 }] },
+  { id: "roll-up-kakemono", name: "Roll-up & kakémono", blurb: "Imprimé en 24h, livré dans la journée.", items: [{ n: "Roll-up 60 × 160 cm · Mini", f: "rollup", t: 0, x: 1 }, { n: "Roll-up 80 × 200 cm · Classique", from: 79.99, f: "rollup", t: 1, x: 1 }, { n: "Roll-up 100 × 200 cm · Large", f: "rollup", t: 2, x: 1 }, { n: "Roll-up 120 × 200 cm · XL", f: "rollup", t: 3, x: 1 }, { n: "Roll-up 150 × 200 cm · XXL", f: "rollup", t: 4, x: 1 }] },
   { id: "signaletique-enseignes", name: "Signalétique & enseignes", blurb: "Enseignes, bâches et plaques pro.", items: ["Enseignes extérieures", "Bâches & banderoles PVC", "Plaques professionnelles laiton / alu"] },
   { id: "support-rigide", name: "Supports rigides", blurb: "Panneaux rigides sur mesure.", items: ["Panneaux & supports rigides"] },
   { id: "plv-expo", name: "PLV & expo", blurb: "Stands, présentoirs et PLV.", items: ["PLV, stands & expo"] },
@@ -175,7 +180,7 @@ const itemName = (it) => (typeof it === "string" ? it : it.n);
 /* Un article est « configurable » s'il a un calculateur (p) ; sinon il part en devis.
    `from` = prix « dès » affiché sur le site officiel pour un article sans calculateur. */
 const isConf = (it) => typeof it === "object" && !!it.p;
-const itemHref = (it) => (isConf(it) ? "produit.html?p=" + it.p : "contact.html?produit=" + encodeURIComponent(itemName(it)));
+const itemHref = (it) => (isConf(it) ? "produit.html?p=" + it.p : typeof it === "object" && it.f ? "format.html?p=" + it.f + (it.t != null ? "&t=" + it.t : "") : "contact.html?produit=" + encodeURIComponent(itemName(it)));
 const delivOf = (key, id) => { const p = PRODUCTS[key]; return p.deliv.find((x) => x.id === id) || p.deliv.find((x) => x.id === p.defDeliv) || p.deliv[0]; };
 
 /* Prix HT d'une configuration, selon les règles du site officiel :
@@ -248,14 +253,17 @@ async function sendMail(subject, data, file) {
   if (data.email) fd.append("_replyto", data.email);
   Object.entries(data).forEach(([k, v]) => { if (v !== "" && v != null) fd.append(k, v); });
   if (file) fd.append("attachment", file);
-  const r = await fetch("https://formsubmit.co/ajax/" + SHOP.mail, { method: "POST", body: fd, headers: { Accept: "application/json" } });
+  const ctrl = new AbortController(), t = setTimeout(() => ctrl.abort(), 20000); /* jamais plus de 20 s d'attente */
+  const r = await fetch("https://formsubmit.co/ajax/" + (SHOP.formKey || SHOP.mail), { method: "POST", body: fd, headers: { Accept: "application/json" }, signal: ctrl.signal }).finally(() => clearTimeout(t));
   const j = await r.json().catch(() => ({}));
   if (!r.ok || String(j.success) === "false") throw new Error(j.message || "Envoi impossible");
   return j;
 }
 const formData = (form) => Object.fromEntries([...new FormData(form)].filter(([, v]) => typeof v === "string"));
-const mailError = (el) => {
-  el.innerHTML = `L'envoi n'a pas abouti. Réessayez, ou écrivez-nous à <a href="mailto:${SHOP.mail}">${SHOP.mail}</a> / ${SHOP.tel}.`;
+const mailError = (el, subject, data) => {
+  const body = data ? Object.entries(data).map(([k, v]) => `${k} : ${v}`).join("\n").slice(0, 1800) : "";
+  const href = `mailto:${SHOP.mail}?subject=${encodeURIComponent(subject || "Demande")}&body=${encodeURIComponent(body)}`;
+  el.innerHTML = `L'envoi automatique n'a pas abouti. <a class="btn btn--cyan btn--sm" href="${href}">Envoyer par e-mail (message déjà rédigé)</a> ou appelez le ${SHOP.tel}.`;
   el.classList.add("is-on", "is-err");
 };
 
@@ -288,3 +296,121 @@ const Account = {
     this.save(u);
   },
 };
+
+/* ---------- Produits « au format » : roll-up, flyers, dépliants ----------
+   Le client choisit une taille (dessinée à l'échelle) et ses options.
+   Un prix n'est affiché que s'il est connu ; sinon la demande part en devis. */
+const RU_SIZES = [
+  { w: 60, h: 160, name: "Mini", use: "Comptoir, vitrine" },
+  { w: 80, h: 200, name: "Classique", use: "Le plus commandé", price: 79.99, star: true },
+  { w: 100, h: 200, name: "Large", use: "Salon, accueil" },
+  { w: 120, h: 200, name: "XL", use: "Fond de stand" },
+  { w: 150, h: 200, name: "XXL", use: "Mur d'image, scène" },
+];
+const FORMATS = {
+  rollup: {
+    name: "Roll-up", catId: "roll-up-kakemono", cat: "Roll-up & kakémono", kind: "rollup",
+    desc: "Structure aluminium rétractable, bâche haute définition anti-froissement, housse de transport incluse. Imprimé en 24h dans notre atelier.",
+    sizes: RU_SIZES.map((s) => ({ label: `${s.w} × ${s.h} cm`, w: s.w, h: s.h, name: s.name, hint: s.use, price: s.price, star: s.star })),
+    defSize: 1,
+    groups: [
+      { id: "structure", label: "Structure", options: [{ label: "Standard aluminium", hint: "Housse incluse" }, { label: "Premium pied large", hint: "Plus stable, bâche interchangeable", quote: true }] },
+      { id: "bache", label: "Bâche", options: [{ label: "Polyester anti-froissement 210 g", hint: "Aspect mat, ne gondole pas" }, { label: "PVC opaque 440 g", hint: "Anti-reflets, très couvrant", quote: true }] },
+    ],
+    qty: [1, 2, 3, 5, 10], unit: "roll-up",
+    deliv: [
+      { id: "pickup", label: "Retrait à l'atelier", sub: "Prêt en 24h · gratuit" },
+      { id: "day", label: "Livraison jour même", sub: "Paris & IDF · tarif selon l'adresse", paid: true },
+      { id: "france", label: "Livraison France", sub: "48 – 72 h" },
+    ],
+  },
+  flyers: {
+    name: "Flyers & tracts", catId: "flyers-tracts", cat: "Flyers & tracts", kind: "sheet", from: 14.9,
+    desc: "Pour vos ouvertures, événements et opérations commerciales. Papier brillant ou mat, recto ou recto/verso, du A6 au A3.",
+    sizes: [
+      { label: "A6", w: 10.5, h: 14.8, hint: "10,5 × 14,8 cm" },
+      { label: "10 × 15 cm", w: 10, h: 15, hint: "Format carte postale" },
+      { label: "DL", w: 10, h: 21, hint: "10 × 21 cm · format enveloppe" },
+      { label: "A5", w: 14.8, h: 21, hint: "14,8 × 21 cm · le plus commandé", star: true },
+      { label: "A4", w: 21, h: 29.7, hint: "21 × 29,7 cm" },
+      { label: "A3", w: 29.7, h: 42, hint: "29,7 × 42 cm · affichette" },
+    ],
+    defSize: 3,
+    groups: [
+      { id: "papier", label: "Papier", options: [{ label: "Couché brillant 135 g", hint: "Le classique des flyers" }, { label: "Couché mat 170 g", hint: "Plus épais, aspect soigné" }, { label: "Couché 350 g rigide", hint: "Effet carton" }, { label: "Recyclé 120 g" }] },
+      { id: "impression", label: "Impression", options: [{ label: "Recto" }, { label: "Recto/verso" }] },
+    ],
+    qty: [100, 250, 500, 1000, 2500, 5000], unit: "ex.",
+    deliv: [
+      { id: "pickup", label: "Retrait à l'atelier", sub: "Jour même possible · gratuit" },
+      { id: "day", label: "Livraison jour même", sub: "Paris & IDF · tarif selon l'adresse", paid: true },
+      { id: "france", label: "Livraison France", sub: "3 – 5 jours" },
+    ],
+  },
+  depliants: {
+    name: "Dépliants & plaquettes", catId: "depliants-plaquettes", cat: "Dépliants & plaquettes", kind: "fold",
+    desc: "1 ou 2 plis, roulé ou accordéon : présentez votre activité, vos tarifs ou votre menu. Pliage fait à l'atelier.",
+    sizes: [
+      { label: "A5 fermé", w: 29.7, h: 21, fw: 14.8, folds: 1, pli: "1 pli", hint: "A4 ouvert · 4 pages" },
+      { label: "A4 fermé", w: 42, h: 29.7, fw: 21, folds: 1, pli: "1 pli", hint: "A3 ouvert · 4 pages" },
+      { label: "DL roulé", w: 29.7, h: 21, fw: 10, folds: 2, pli: "2 plis roulés", hint: "A4 ouvert · 6 volets · le plus commandé", star: true },
+      { label: "DL accordéon", w: 29.7, h: 21, fw: 10, folds: 2, pli: "2 plis accordéon", zig: true, hint: "A4 ouvert · 6 volets en Z" },
+      { label: "Carré 15 cm", w: 30, h: 15, fw: 15, folds: 1, pli: "1 pli", hint: "30 × 15 cm ouvert" },
+    ],
+    defSize: 2,
+    groups: [
+      { id: "papier", label: "Papier", options: [{ label: "Couché brillant 135 g" }, { label: "Couché mat 170 g", hint: "Le plus choisi" }, { label: "Couché mat 250 g", hint: "Plus rigide, rainage inclus" }] },
+    ],
+    qty: [100, 250, 500, 1000, 2500], unit: "ex.",
+    deliv: [
+      { id: "pickup", label: "Retrait à l'atelier", sub: "Sous 24 – 48 h · gratuit" },
+      { id: "day", label: "Livraison jour même", sub: "Paris & IDF · tarif selon l'adresse", paid: true },
+      { id: "france", label: "Livraison France", sub: "3 – 5 jours" },
+    ],
+  },
+};
+/* Roll-up dessiné à l'échelle (taille réelle en cm → --w / --h) */
+const rollupSized = (i, s) => `<div class="rusz" style="--w:${s.w};--h:${s.h}">${rollupHTML(i)}</div>`;
+/* Silhouette humaine de 1,70 m, pour comparer les tailles */
+const PERSON_SVG = '<svg class="person" viewBox="0 0 40 170" aria-hidden="true"><circle cx="20" cy="12" r="10"/><path d="M8 28h24l3 60h-7l-1 80h-9l-1-55-1 55h-9l-1-80H5z"/></svg>';
+
+/* ---------- Avis clients (avis Google réels de Mauri Presse, relevés le 16/11/2026) ---------- */
+const REVIEWS = {
+  rating: "4,9", count: 77,
+  url: "https://www.google.com/maps/place/Mauri+Presse/@48.8768922,2.353372,17z",
+  list: [
+    { name: "Sarah O.", when: "octobre 2026", text: "Vraiment génial : les impressions sont de très belle qualité et l'équipe est très pro et très agréable !" },
+    { name: "Alicia T.", when: "août 2026", text: "Service et qualité au rendez-vous ! Merci encore, les stickers ont fait sensation ! Je recommande à 100%", tag: "etiquettes-autocollants" },
+    { name: "Louise R.", when: "mai 2026", text: "Le rendu de mes menus de mariage est super ! L'accompagnement de l'équipe était très à l'écoute et aidant.", tag: "flyers-tracts" },
+  ],
+};
+function reviewsHTML(catId) {
+  const l = [...REVIEWS.list].sort((a, b) => (b.tag === catId) - (a.tag === catId));
+  const stars = '<span class="stars" aria-label="5 étoiles sur 5">★★★★★</span>';
+  return `<section class="revs" aria-labelledby="revs-t">
+    <div class="revs__head">
+      <div><span class="eyebrow eyebrow--cyan">Avis clients</span><h2 id="revs-t">Ils ont imprimé chez nous.</h2></div>
+      <a class="revs__score" href="${REVIEWS.url}" target="_blank" rel="noopener"><b>${REVIEWS.rating}</b><span>${stars}<small>${REVIEWS.count} avis Google</small></span></a>
+    </div>
+    <div class="revs__list">${l.map((r) => `<figure class="rev">${stars}<blockquote>« ${esc(r.text)} »</blockquote><figcaption><b>${esc(r.name)}</b><span>Avis Google · ${esc(r.when)}</span></figcaption></figure>`).join("")}</div>
+    <div class="revs__foot"><a class="btn btn--ghost btn--sm" href="${REVIEWS.url}" target="_blank" rel="noopener">Voir les ${REVIEWS.count} avis sur Google <span class="arrow">→</span></a><a class="btn btn--ghost btn--sm" href="${REVIEWS.url}" target="_blank" rel="noopener">Laisser un avis</a></div>
+  </section>`;
+}
+
+/* ---------- Alignement à l'échelle (roll-up, flyers) ----------
+   Chaque élément a sa taille réelle en cm (--w, --h) ; l'échelle --k s'adapte à la largeur disponible. */
+function lineupHTML(items, sel = -1) {
+  const sum = items.reduce((a, b) => a + b.w, 0);
+  return `<div class="lineup${sel >= 0 ? " has-sel" : ""}" style="--sum:${sum};--gaps:${items.length - 1}">${items.map((it, i) => {
+    const tag = it.static ? "span" : "button";
+    return `<${tag}${it.static ? ' aria-hidden="true"' : ` type="button" data-i="${i}" aria-label="${esc(it.label + " " + (it.sub || ""))}"`} class="lineup__it${i === sel ? " is-on" : ""}${it.cls ? " " + it.cls : ""}">
+      <span class="lineup__lbl"><b>${it.label}</b>${it.sub ? `<small>${it.sub}</small>` : ""}</span>
+      <span class="lineup__shape" style="--w:${it.w};--h:${it.h}">${it.inner}</span></${tag}>`;
+  }).join("")}</div>`;
+}
+const rollupLineup = (sel = -1) => lineupHTML([
+  ...RU_SIZES.map((s, i) => ({ w: s.w, h: s.h, label: `${s.w} × ${s.h}`, sub: s.name + (s.price ? " · " + eur(s.price) : ""), inner: rollupHTML(i), cls: "is-ru" })),
+  { w: 42, h: 170, label: "1,70 m", sub: "repère", inner: PERSON_SVG, cls: "is-person", static: true },
+], sel);
+const sheetArt = '<span class="sheet"><i></i><i></i><i></i><i></i></span>';
+const flyerLineup = (sel = -1) => lineupHTML(FORMATS.flyers.sizes.map((s) => ({ w: s.w, h: s.h, label: s.label, sub: s.hint.split(" · ")[0], inner: sheetArt, cls: "is-sheet" })), sel);

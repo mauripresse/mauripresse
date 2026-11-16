@@ -127,7 +127,7 @@
       ok.textContent = "Demande envoyée ✓ L'atelier vérifie l'offre et vous répond par e-mail avec votre réduction de 5 %.";
       ok.classList.add("is-on");
       form.reset(); (document.getElementById("g-drop-label").textContent = "Soumettre une preuve du devis ou une facture de la commande.");
-    } catch (err) { mailError(ok); }
+    } catch (err) { mailError(ok, "Prix le plus bas — " + (produit || "demande") + " — " + d.nom, d); }
     btn.disabled = false; btn.innerHTML = label;
   });
 })();

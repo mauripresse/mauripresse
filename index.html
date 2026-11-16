@@ -30,17 +30,17 @@
             <h2>Le roll-up imprimé en 24h, <em>livré dans la journée.</em></h2>
             <p class="rusec__lead">Le support star des salons, vitrines et événements. Structure aluminium rétractable, bâche haute définition anti-froissement, housse de transport incluse.</p>
           </div>
-          <div class="rusec__price"><small>À partir de</small><b>79,99 €</b><span>HT · 85 × 200 cm</span></div>
+          <div class="rusec__price"><small>À partir de</small><b>79,99 €</b><span>HT · 80 × 200 cm · 5 tailles</span></div>
         </div>
-        <div class="rusec__gallery" data-rollups-gallery></div>
+        <div class="rusec__line" data-rollups-gallery></div>
         <ul class="rusec__facts">
           <li><b>Imprimé en 24h</b><span>dans notre atelier de Paris 10<sup>e</sup></span></li>
           <li><b>Livré le jour même</b><span>à Paris et en Île-de-France · livraison payante, tarif selon l'adresse</span></li>
           <li><b>Retrait gratuit</b><span>à l'atelier, 24 rue de Chabrol</span></li>
           <li><b>Contrôle PAO</b><span>vos fichiers vérifiés avant impression</span></li>
         </ul>
-        <div class="hero__cta"><a class="btn btn--yellow" href="contact.html?produit=Roll-Up%20Stand%20%26%20Kakemono">Commander mon roll-up <span class="arrow">→</span></a><a class="btn btn--light" href="contact.html?produit=Livraison%20jour%20m%C3%AAme%20roll-up">Tarif de livraison</a></div>
-        <p class="rusec__note">Visuels d'exemple : votre roll-up est imprimé avec votre propre maquette.</p>
+        <div class="hero__cta"><a class="btn btn--yellow" href="format.html?p=rollup">Choisir ma taille <span class="arrow">→</span></a><a class="btn btn--light" href="contact.html?produit=Livraison%20jour%20m%C3%AAme%20roll-up">Tarif de livraison</a></div>
+        <p class="rusec__note">Tailles dessinées à l'échelle à côté d'une personne de 1,70 m. Visuels d'exemple : votre roll-up est imprimé avec votre maquette.</p>
       
   </div>
 </article>
@@ -63,8 +63,9 @@
     <h2>Flyers, tracts et dépliants<br><em>du A6 au A3.</em></h2>
     <p>Pour vos ouvertures, événements et opérations commerciales. Papier brillant ou mat, recto ou recto/verso.</p>
     <span class="hcar__price">dès <b>14,90 €</b> HT</span>
-    <div class="hcar__cta"><a class="btn btn--yellow" href="contact.html?produit=Flyers%20%26%20Brochures">Demander mes flyers <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=flyers-tracts">Voir les flyers</a></div>
+    <div class="hcar__cta"><a class="btn btn--yellow" href="format.html?p=flyers">Choisir mon format <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=flyers-tracts">Voir les flyers</a></div>
   </div>
+  <div class="hcar__formats"><span class="hcar__formats-t">6 formats · à l'échelle</span><div class="flyline" data-flyers-line></div></div>
 </article>
 <article class="hcar__slide hcar__slide--garantie" role="group" aria-roledescription="diapositive" aria-label="4 sur 5">
   <img class="hcar__bg" src="https://images.unsplash.com/photo-1761586631743-768b1b75ecdc?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
@@ -251,6 +252,9 @@
     <div class="chipsrow chipsrow--rev" id="chips-b"></div>
   </section>
 
+  <!-- AVIS CLIENTS -->
+  <div class="wrap reveal" data-reviews></div>
+
   <!-- URGENCE -->
   <section class="section section--tight">
     <div class="wrap">
@@ -381,7 +385,10 @@
   go(0); play();
 
   /* Galerie de la section roll-up */
-  document.querySelectorAll("[data-rollups-gallery]").forEach((el) => { el.innerHTML = ROLLUPS.map((r, i) => `<figure class="rusec__item">${rollupHTML(i)}<figcaption>${r.title}</figcaption></figure>`).join(""); });
+  const link = (el, p) => el.addEventListener("click", (e) => { const b = e.target.closest("[data-i]"); if (b) location.href = `format.html?p=${p}&t=${b.dataset.i}`; });
+  document.querySelectorAll("[data-reviews]").forEach((el) => { el.innerHTML = reviewsHTML(); });
+  document.querySelectorAll("[data-rollups-gallery]").forEach((el) => { el.innerHTML = rollupLineup(); link(el, "rollup"); });
+  document.querySelectorAll("[data-flyers-line]").forEach((el) => { el.innerHTML = flyerLineup(); link(el, "flyers"); });
 })();
 
 /* Calculateur express du hero (mêmes prix que le configurateur) */

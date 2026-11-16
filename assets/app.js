@@ -35,9 +35,10 @@ const PAGE = (location.pathname.split("/").pop() || "index.html").replace(/\?.*$
 const QS = new URLSearchParams(location.search);
 const CUR = PAGE === "categorie.html" ? (cat(QS.get("c")) || CATS[0]).id
 : PAGE === "produit.html" ? (PRODUCTS[QS.get("p")] || PRODUCTS.cartes).catId
+: PAGE === "format.html" ? (FORMATS[QS.get("p")] || FORMATS.rollup).catId
 : null;
 const ALL_ON = PAGE === "catalogue.html" && QS.get("express") !== "1";
-const EXPRESS_ON = PAGE === "categorie.html" && QS.get("c") === "roll-up-kakemono";
+const EXPRESS_ON = (PAGE === "categorie.html" && QS.get("c") === "roll-up-kakemono") || (PAGE === "format.html" && QS.get("p") === "rollup");
 const cur = (cond) => (cond ? ' aria-current="page"' : "");
 let ORDER = [...TOP, ...CATS.map((c) => c.id).filter((id) => !TOP.includes(id))];
 if (CUR && ORDER.indexOf(CUR) > 4) ORDER = [CUR, ...ORDER.filter((id) => id !== CUR)];
@@ -59,7 +60,7 @@ const header = `
     <div class="suggest" data-suggest role="listbox" aria-label="Suggestions"></div>
   </form>
   <nav class="header__actions" aria-label="Raccourcis">
-    <a class="hpill hpill--express" href="categorie.html?c=roll-up-kakemono"${cur(EXPRESS_ON)}>${icon.bolt}<span>Roll-up 24h</span></a>
+    <a class="hpill hpill--express" href="format.html?p=rollup"${cur(EXPRESS_ON)}>${icon.bolt}<span>Roll-up 24h</span></a>
     <a class="hpill hpill--quote" href="contact.html"${cur(PAGE === "contact.html")}>Devis sur mesure</a>
     <button class="hicon hicon--search" type="button" data-search-toggle aria-label="Rechercher">${icon.searchBig}</button>
     <a class="hicon" href="compte.html" aria-label="Mon compte"${cur(PAGE === "compte.html")}>${icon.user}<span class="hicon__lbl">Compte</span></a>
@@ -84,7 +85,7 @@ const header = `
   </div>
   <div class="mmenu__body">
     <div class="mmenu__quick">
-      <a class="mq mq--express" href="categorie.html?c=roll-up-kakemono"${cur(EXPRESS_ON)}>${icon.bolt}<span>Roll-up 24h</span></a>
+      <a class="mq mq--express" href="format.html?p=rollup"${cur(EXPRESS_ON)}>${icon.bolt}<span>Roll-up 24h</span></a>
       <a class="mq" href="contact.html"${cur(PAGE === "contact.html")}>${icon.doc}<span>Devis</span></a>
       <a class="mq" href="compte.html"${cur(PAGE === "compte.html")}>${icon.user}<span>Se connecter</span></a>
       <a class="mq" href="compte.html?onglet=creer">${icon.userPlus}<span>Créer un compte</span></a>

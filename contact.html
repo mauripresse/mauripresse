@@ -85,41 +85,66 @@
   /* Client connecté : coordonnées pré-remplies */
   const me = Account.current(), f = document.getElementById("devis");
   if (me) [["nom", me.nom], ["email", me.email], ["tel", me.tel], ["societe", me.societe]].forEach(([k, v]) => { if (v && !f[k].value) f[k].value = v; });
+  /* Configuration venant d'une page produit (taille, options…) */
+  if (params.get("config")) document.getElementById("f-message").value = params.get("config").split(" | ").join("\n") + "\n\n";
 
   /* Commande depuis le panier */
   const cart = params.get("panier") && window.Cart ? Cart.get() : [];
   const order = cart.length > 0, btn = f.querySelector("button");
+  const cartHT = cart.reduce((s, l) => s + l.price, 0);
+  const pays = [{ id: "atelier", label: "Au retrait à l'atelier", hint: "CB ou espèces, 24 rue de Chabrol" }];
+  if (SHOP.pay.stripe) pays.push({ id: "carte", label: "Carte bancaire en ligne", hint: "Paiement sécurisé Stripe" });
+  if (SHOP.pay.paypal) pays.push({ id: "paypal", label: "PayPal", hint: "Compte PayPal ou carte" });
   if (order) {
-    const ht = cart.reduce((s, l) => s + l.price, 0);
     f.querySelector("h2").textContent = "Finaliser ma commande";
-    btn.innerHTML = `Envoyer ma commande · ${eur(ht * 1.2)} TTC <span class="arrow">→</span>`;
-    btn.insertAdjacentHTML("beforebegin", `<p class="form__pay"><b>Paiement :</b> rien n'est débité en ligne. L'atelier vérifie vos fichiers, vous confirme la commande par e-mail ou téléphone, puis vous réglez au retrait (CB, espèces) ou par le lien de paiement qu'on vous envoie.</p>`);
+    btn.innerHTML = `Envoyer ma commande · ${eur(cartHT * 1.2)} TTC <span class="arrow">→</span>`;
+    btn.insertAdjacentHTML("beforebegin", `<div class="field field--full" style="margin-top:20px"><span>Paiement</span><div class="opts">${pays.map((p, i) => `
+      <label class="opt"><input type="radio" name="paiement" value="${p.label}" data-pay="${p.id}" ${i === 0 ? "checked" : ""}><span><b>${p.label}</b><small>${p.hint}</small></span></label>`).join("")}</div></div>
+      <p class="form__pay">L'atelier vérifie vos fichiers avant impression. ${pays.length > 1 ? "Le paiement en ligne s'ouvre juste après l'envoi de la commande." : "Vous réglez au retrait, ou par le lien de paiement que l'atelier vous envoie."}</p>`);
+  }
+
+  /* Récapitulatif affiché à la fin : la demande reste sous les yeux du client */
+  const LABELS = { nom: "Nom", email: "E-mail", tel: "Téléphone", societe: "Société", produit: "Produit", message: "Projet", total: "Total", paiement: "Paiement" };
+  function recap(d, num, sent, payId) {
+    const lines = Object.keys(LABELS).filter((k) => d[k]).map((k) => [LABELS[k], d[k]]);
+    if (file.files[0]) lines.push(["Fichier", file.files[0].name + (sent ? "" : " (à joindre à votre e-mail)")]);
+    const body = `${order ? "Commande" : "Demande de devis"} ${num}\n\n` + lines.map(([k, v]) => `${k} : ${v}`).join("\n");
+    const mailto = `mailto:${SHOP.mail}?subject=${encodeURIComponent((order ? "Commande " : "Demande de devis ") + num)}&body=${encodeURIComponent(body.slice(0, 1800))}`;
+    const total = order ? cartHT * 1.2 : 0;
+    const payBtn = payId === "paypal" ? `<a class="btn btn--cyan" href="https://www.paypal.com/paypalme/${encodeURIComponent(SHOP.pay.paypal)}/${total.toFixed(2)}EUR" target="_blank" rel="noopener">Payer ${eur(total)} avec PayPal <span class="arrow">→</span></a>`
+      : payId === "carte" ? `<a class="btn btn--cyan" href="${SHOP.pay.stripe}${SHOP.pay.stripe.includes("?") ? "&" : "?"}prefilled_email=${encodeURIComponent(d.email)}&client_reference_id=${encodeURIComponent(num)}" target="_blank" rel="noopener">Payer ${eur(total)} par carte <span class="arrow">→</span></a>` : "";
+    f.hidden = true;
+    f.insertAdjacentHTML("afterend", `<div class="form qdone" id="qdone">
+      <span class="qdone__badge${sent ? "" : " is-warn"}">${sent ? "✓ Envoyé à l'atelier" : "⚠ Envoi automatique indisponible"}</span>
+      <h2>${order ? "Votre commande" : "Votre demande de devis"} <span>${num}</span></h2>
+      <p class="qdone__lead">${sent ? (order ? "L'atelier a bien reçu votre commande : nous vous recontactons pour confirmer." : "L'atelier a bien reçu votre demande et vous répond avec un prix et un délai, en général dans la journée.") + ` Une copie est enregistrée${me ? " dans votre compte" : ""}.`
+        : "Votre demande n'a pas pu partir automatiquement. Cliquez sur « Envoyer par e-mail » : le message est déjà rédigé, il suffit de l'envoyer."}</p>
+      <dl class="qdone__list">${lines.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
+      <div class="qdone__btns">${payBtn}${sent ? "" : `<a class="btn btn--cyan" href="${mailto}">Envoyer par e-mail <span class="arrow">→</span></a>`}
+        <button class="btn btn--ghost" type="button" onclick="window.print()">Imprimer / PDF</button>
+        ${me ? '<a class="btn btn--ghost" href="compte.html">Mon compte</a>' : ""}<a class="btn btn--ghost" href="contact.html">Nouvelle demande</a></div>
+      <p class="qdone__help">Une question ? <a href="tel:0147707924">01 47 70 79 24</a> · <a href="${SHOP.wa}" target="_blank" rel="noopener">WhatsApp</a></p>
+    </div>`);
+    document.getElementById("qdone").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   f.addEventListener("submit", async (e) => {
     e.preventDefault();
     const ok = document.getElementById("ok");
     if (!f.checkValidity()) { f.reportValidity(); return; }
-    const d = formData(f), label = btn.innerHTML;
-    btn.disabled = true; btn.textContent = "Envoi en cours…";
+    const d = formData(f), label = btn.innerHTML, payId = (f.querySelector("[data-pay]:checked") || {}).dataset?.pay;
+    const now = new Date(), num = "MP-" + now.toISOString().slice(2, 10).replace(/-/g, "") + "-" + String(Math.floor(Math.random() * 9000) + 1000);
+    d.numero = num;
+    if (order) d.total = `${eur(cartHT)} HT · ${eur(cartHT * 1.2)} TTC`;
+    btn.disabled = true; btn.textContent = "Envoi en cours… (quelques secondes)";
     ok.classList.remove("is-on", "is-err");
-    try {
-      if (order) {
-        const ht = cart.reduce((s, l) => s + l.price, 0);
-        d.total = `${eur(ht)} HT · ${eur(ht * 1.2)} TTC`;
-      }
-      await sendMail((order ? "Nouvelle commande — " : "Demande de devis — ") + d.nom, d, file.files[0]);
-      if (order) {
-        Account.addOrder({ type: "Commande", detail: d.message, total: d.total });
-        localStorage.removeItem("mp_cart"); Cart.render();
-      } else Account.addOrder({ type: "Devis", detail: (d.produit ? d.produit + " — " : "") + d.message });
-      ok.textContent = order
-        ? "Commande envoyée à l'atelier ✓ Nous vous recontactons rapidement pour confirmer et organiser le paiement."
-        : "Demande envoyée ✓ L'atelier vous répond avec un prix et un délai, en général dans la journée.";
-      ok.classList.add("is-on");
-      f.reset();
-    } catch (err) { mailError(ok); }
+    let sent = true;
+    try { await sendMail((order ? "Nouvelle commande " : "Demande de devis ") + num + " — " + d.nom, d, file.files[0]); }
+    catch (err) { sent = false; }
+    Account.addOrder({ type: (order ? "Commande " : "Devis ") + num, detail: (d.produit ? d.produit + " — " : "") + d.message, total: d.total });
+    if (order && sent) { localStorage.removeItem("mp_cart"); Cart.render(); }
     btn.disabled = false; btn.innerHTML = label;
+    recap(d, num, sent, payId);
   });
 })();
 </script>
