@@ -2012,3 +2012,8 @@ button.lineup__it:hover { transform: translateY(-4px); }
 @media (max-width: 720px) { .rusec__line.is-fly .lineup { --g: 8px; } .rusec__line.is-fly .lineup__lbl b { font-size: 10px; padding: 2px 6px; } }
 .dep__pics { --k: min(calc((100cqw - 60px) / 40), 9px); }
 @media (max-width: 720px) { .dep__pics { --k: 2.6px; } }
+/* Flyers de la bannière : remplissent l'espace (limités par la hauteur de l'écran) */
+@media (min-width: 721px) {
+  .rusec__line.is-fly { padding: 18px 16px 18px; margin: 20px 0 18px; }
+  .rusec__line.is-fly .lineup { --kmax: max(8px, min(15px, calc((100vh - 470px) / 42))); --g: 18px; }
+}
