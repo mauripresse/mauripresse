@@ -30,7 +30,7 @@
             <h2>Le roll-up imprimé en 24h, <em>livré dans la journée.</em></h2>
             <p class="rusec__lead">Le support star des salons, vitrines et événements. Structure aluminium rétractable, bâche haute définition anti-froissement, housse de transport incluse.</p>
           </div>
-          <div class="rusec__price"><small>À partir de</small><b>49,00 €</b><span>HT · 85 × 200 cm</span></div>
+          <div class="rusec__price"><small>À partir de</small><b>79,99 €</b><span>HT · 85 × 200 cm</span></div>
         </div>
         <div class="rusec__gallery" data-rollups-gallery></div>
         <ul class="rusec__facts">
@@ -45,7 +45,7 @@
   </div>
 </article>
 <article class="hcar__slide hcar__slide--cartes" role="group" aria-roledescription="diapositive" aria-label="2 sur 5">
-  <img class="hcar__bg" src="https://images.unsplash.com/photo-1718670013988-c6e3edb92345?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
+  <img class="hcar__bg" src="https://images.unsplash.com/photo-1718670013921-2f144aba173a?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
   
   <div class="hcar__txt">
     <span class="hcar__tag">Cartes de visite</span>
@@ -56,7 +56,7 @@
   </div>
 </article>
 <article class="hcar__slide hcar__slide--flyers" role="group" aria-roledescription="diapositive" aria-label="3 sur 5">
-  <img class="hcar__bg" src="https://images.unsplash.com/photo-1769893715447-8f12c382e49c?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
+  <img class="hcar__bg" src="https://images.unsplash.com/photo-1642530026057-56d62e6adf29?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
   
   <div class="hcar__txt">
     <span class="hcar__tag">Flyers & tracts</span>
@@ -67,7 +67,7 @@
   </div>
 </article>
 <article class="hcar__slide hcar__slide--garantie" role="group" aria-roledescription="diapositive" aria-label="4 sur 5">
-  <img class="hcar__bg" src="https://images.unsplash.com/photo-1715154470884-1c2be0b0129f?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
+  <img class="hcar__bg" src="https://images.unsplash.com/photo-1761586631743-768b1b75ecdc?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
   
   <div class="hcar__txt">
     <span class="hcar__tag">Prix les plus bas de France</span>
@@ -78,7 +78,7 @@
   </div>
 </article>
 <article class="hcar__slide hcar__slide--livraison" role="group" aria-roledescription="diapositive" aria-label="5 sur 5">
-  <img class="hcar__bg" src="https://images.unsplash.com/photo-1503694978374-8a2fa686963a?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
+  <img class="hcar__bg" src="https://images.unsplash.com/photo-1791297972819-dc62f8fe2375?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
   
   <div class="hcar__txt">
     <span class="hcar__tag">Livraison jour même</span>
@@ -338,8 +338,8 @@
 
 /* Catalogue de l'accueil : huit familles, une photo et un prix chacune */
 (() => {
-  const SHOW = ["roll-up-kakemono", "cartes-de-visite", "flyers-tracts", "affiche-poster", "etiquettes-autocollants", "vinyle-adhesif", "signaletique-enseignes", "objets-packaging"];
-  const FROM = { "cartes-de-visite": fromPrice("classic"), "flyers-tracts": 14.9, "roll-up-kakemono": 49 }; /* prix « dès » du site officiel */
+  const SHOW = ["roll-up-kakemono", "cartes-de-visite", "flyers-tracts", "affiche-poster", "etiquettes-autocollants", "vinyle-adhesif", "signaletique-enseignes", "objets-packaging", "plv-expo"];
+  const FROM = { "cartes-de-visite": fromPrice("classic"), "flyers-tracts": 14.9, "roll-up-kakemono": 79.99 }; /* prix « dès » du site officiel */
   document.getElementById("cats").innerHTML = SHOW.map((id, i) => {
     const c = CATS.find((x) => x.id === id), k = FROM[id];
     return `<a class="shopcard${i === 0 ? " shopcard--big" : ""}${i >= 7 ? " shopcard--extra" : ""}" href="categorie.html?c=${id}">

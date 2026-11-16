@@ -1681,3 +1681,23 @@ body { overflow-x: clip; }
   .rusec--slide .rusec__facts li { padding-top: 14px; }
   .rusec--slide .hero__cta { margin-top: 18px; }
 }
+/* Carte roll-up : la photo occupe toute la hauteur, plus d'espace vide */
+.shopcard--big .shopcard__body { flex: 0 0 auto; }
+.shopcard--big .shopcard__foot { margin-top: 14px; }
+.form__ok.is-err { background: #fff1f3; border-color: var(--magenta, #e0006f); }
+.form__ok a { text-decoration: underline; }
+.form__pay { margin-top: 18px; padding: 14px 16px; border-radius: 12px; background: var(--paper-2); font-size: 14px; color: var(--ink-soft); }
+.form__pay b { color: var(--ink); }
+button[disabled] { opacity: .65; cursor: wait; }
+/* Espace client connecté */
+.acct { display: grid; gap: 18px; }
+.acct__head { display: flex; align-items: center; gap: 14px; }
+.acct__av { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: #fff; font: 700 20px var(--display, inherit); }
+.acct__head h2 { font-size: 24px; }
+.acct__head p { color: var(--ink-soft); font-size: 14px; }
+.acct__list { display: grid; gap: 10px; }
+.acct__order { padding: 14px 16px; border: 1.5px solid var(--line, #e5e3dc); border-radius: 14px; font-size: 14px; }
+.acct__order b { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.acct__order p { color: var(--ink-soft); white-space: pre-line; }
+.acct__empty { color: var(--ink-soft); font-size: 14px; }
+.acct__btns { display: flex; flex-wrap: wrap; gap: 10px; }

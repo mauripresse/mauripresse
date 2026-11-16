@@ -44,7 +44,6 @@
       </div>
     </div>
 
-    <!-- TODO intégration : brancher ce formulaire sur le traitement serveur existant de /contact -->
     <form class="form" id="devis" novalidate>
       <h2>Demande de devis</h2>
       <div class="fgrid">
@@ -83,13 +82,44 @@
   ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("is-over"); }));
   drop.addEventListener("drop", (e) => { if (e.dataTransfer.files.length) { file.files = e.dataTransfer.files; show(); } });
 
-  document.getElementById("devis").addEventListener("submit", (e) => {
+  /* Client connecté : coordonnées pré-remplies */
+  const me = Account.current(), f = document.getElementById("devis");
+  if (me) [["nom", me.nom], ["email", me.email], ["tel", me.tel], ["societe", me.societe]].forEach(([k, v]) => { if (v && !f[k].value) f[k].value = v; });
+
+  /* Commande depuis le panier */
+  const cart = params.get("panier") && window.Cart ? Cart.get() : [];
+  const order = cart.length > 0, btn = f.querySelector("button");
+  if (order) {
+    const ht = cart.reduce((s, l) => s + l.price, 0);
+    f.querySelector("h2").textContent = "Finaliser ma commande";
+    btn.innerHTML = `Envoyer ma commande · ${eur(ht * 1.2)} TTC <span class="arrow">→</span>`;
+    btn.insertAdjacentHTML("beforebegin", `<p class="form__pay"><b>Paiement :</b> rien n'est débité en ligne. L'atelier vérifie vos fichiers, vous confirme la commande par e-mail ou téléphone, puis vous réglez au retrait (CB, espèces) ou par le lien de paiement qu'on vous envoie.</p>`);
+  }
+
+  f.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const f = e.target, ok = document.getElementById("ok");
+    const ok = document.getElementById("ok");
     if (!f.checkValidity()) { f.reportValidity(); return; }
-    /* Maquette : aucun envoi réel tant que le formulaire n'est pas relié au serveur. */
-    ok.textContent = "Maquette : le formulaire n'est pas encore relié au serveur, aucune demande n'a été envoyée.";
-    ok.classList.add("is-on");
+    const d = formData(f), label = btn.innerHTML;
+    btn.disabled = true; btn.textContent = "Envoi en cours…";
+    ok.classList.remove("is-on", "is-err");
+    try {
+      if (order) {
+        const ht = cart.reduce((s, l) => s + l.price, 0);
+        d.total = `${eur(ht)} HT · ${eur(ht * 1.2)} TTC`;
+      }
+      await sendMail((order ? "Nouvelle commande — " : "Demande de devis — ") + d.nom, d, file.files[0]);
+      if (order) {
+        Account.addOrder({ type: "Commande", detail: d.message, total: d.total });
+        localStorage.removeItem("mp_cart"); Cart.render();
+      } else Account.addOrder({ type: "Devis", detail: (d.produit ? d.produit + " — " : "") + d.message });
+      ok.textContent = order
+        ? "Commande envoyée à l'atelier ✓ Nous vous recontactons rapidement pour confirmer et organiser le paiement."
+        : "Demande envoyée ✓ L'atelier vous répond avec un prix et un délai, en général dans la journée.";
+      ok.classList.add("is-on");
+      f.reset();
+    } catch (err) { mailError(ok); }
+    btn.disabled = false; btn.innerHTML = label;
   });
 })();
 </script>

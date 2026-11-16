@@ -13,19 +13,19 @@ const PHOTOS = {
   grandformat: "1693031630369-bd429a57f115",   // imprimante grand format
   cmyk: "1715154470884-1c2be0b0129f",          // compte-fils sur charte CMJN
   papiers: "1750537735437-847075c29538",       // stock de papiers colorés
-  cartes: "1718670013988-c6e3edb92345",        // carte de visite noire
-  flyers: "1563097013-a1df1d1fd1c7",           // flyer tendu à la main
+  cartes: "1777652918753-d66882b15391", // deux cartes de visite sur bois
+  flyers: "1784217066842-508f135591ff", // flyer imprimé sur table
   depliants: "1769893715447-8f12c382e49c",     // dépliants pliés
   brochures: "1658863025658-4a259cc68fc9",     // brochures et livres imprimés
-  affiches: "1563050860-87d45eaaeabb",         // mur d'affiches
+  affiches: "1572188863110-46d457c9234d", // affiches encadrées
   papeterie: "1520764588094-8fc067746a8e",     // papeterie d'entreprise
-  etiquettes: "1773904215704-139e9ff8c894",    // impression d'autocollants
-  vinyle: "1701921729931-28722c1b747e",        // adhésif sur vitrine
+  etiquettes: "1758799012068-9235d4181456", // mur d'autocollants
+  vinyle: "1769437541941-22aaaef1247c", // lettrage adhésif sur vitrine
   rollup: "1761225646548-bc92fea0dc72",        // stand avec visuel imprimé
-  signaletique: "1577980158219-1d4fb3ec8378",  // enseigne de façade
+  signaletique: "1754326450638-840ba690a379", // enseigne suspendue
   rigide: "1543487945-139a97f387d5",           // affiche encadrée
   plv: "1761195689615-9469b65dac01",           // salon professionnel
-  packaging: "1595246007497-15e0ed4b8d96",     // boîtes personnalisées
+  packaging: "1648587456176-4969b0124b12", // emballages kraft personnalisés
   textile: "1456456496250-d5e7c0a9b44d",       // sérigraphie textile
   reprographie: "1650094980833-7373de26feb6",  // copieur
   sacs: "1548863227-3af567fc3b27",             // tote bag imprimé
@@ -161,7 +161,7 @@ const CATS = [
   { id: "papeterie-bureautique", name: "Papeterie & bureautique", blurb: "En-têtes, administratif, plaques gravées.", items: ["Bureautique", "Administratif", "Plaque gravure"] },
   { id: "etiquettes-autocollants", name: "Étiquettes & autocollants", blurb: "Rouleaux, holographiques, imperméables.", items: ["Étiquettes en rouleau standards", "Étiquettes en plastique", "Étiquettes en papier", "Étiquettes avec finitions spéciales", "Étiquettes holographiques", "Étiquettes Premium", "Étiquettes imperméables", "Étiquettes repositionnables"] },
   { id: "vinyle-adhesif", name: "Vinyle adhésif", blurb: "Vitrines, murs, sols et véhicules.", items: ["Adhésifs pour vitrines", "Adhésifs muraux", "Adhésifs pour voitures et motos", "Covering voiture", "Adhésif pour sols", "Lettrage adhésif", "Adhésif vinyle transparent", "Adhésifs dépoli", "Adhésifs microperforé", "Vitrophanie"] },
-  { id: "roll-up-kakemono", name: "Roll-up & kakémono", blurb: "Imprimé en 24h, livré dans la journée.", items: [{ n: "Roll-Up Stand & Kakemono", from: 49, x: 1 }] },
+  { id: "roll-up-kakemono", name: "Roll-up & kakémono", blurb: "Imprimé en 24h, livré dans la journée.", items: [{ n: "Roll-Up Stand & Kakemono", from: 79.99, x: 1 }] },
   { id: "signaletique-enseignes", name: "Signalétique & enseignes", blurb: "Enseignes, bâches et plaques pro.", items: ["Enseignes extérieures", "Bâches & banderoles PVC", "Plaques professionnelles laiton / alu"] },
   { id: "support-rigide", name: "Supports rigides", blurb: "Panneaux rigides sur mesure.", items: ["Panneaux & supports rigides"] },
   { id: "plv-expo", name: "PLV & expo", blurb: "Stands, présentoirs et PLV.", items: ["PLV, stands & expo"] },
@@ -236,4 +236,55 @@ const rollupHTML = (i) => {
       <span class="ru__tag">${r.tag}</span><b class="ru__title">${r.title}</b><span class="ru__sub">${r.sub}</span>
       <span class="ru__art"><i></i><i></i><i></i></span><span class="ru__url">${r.url}</span>
     </div><div class="ru__base"></div></div>`;
+};
+
+/* Envoi des formulaires par e-mail à l'atelier (service FormSubmit, sans serveur).
+   Le tout premier envoi déclenche un e-mail d'activation à SHOP.mail : il faut cliquer dessus une fois. */
+async function sendMail(subject, data, file) {
+  const fd = new FormData();
+  fd.append("_subject", subject);
+  fd.append("_template", "table");
+  fd.append("_captcha", "false");
+  if (data.email) fd.append("_replyto", data.email);
+  Object.entries(data).forEach(([k, v]) => { if (v !== "" && v != null) fd.append(k, v); });
+  if (file) fd.append("attachment", file);
+  const r = await fetch("https://formsubmit.co/ajax/" + SHOP.mail, { method: "POST", body: fd, headers: { Accept: "application/json" } });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || String(j.success) === "false") throw new Error(j.message || "Envoi impossible");
+  return j;
+}
+const formData = (form) => Object.fromEntries([...new FormData(form)].filter(([, v]) => typeof v === "string"));
+const mailError = (el) => {
+  el.innerHTML = `L'envoi n'a pas abouti. Réessayez, ou écrivez-nous à <a href="mailto:${SHOP.mail}">${SHOP.mail}</a> / ${SHOP.tel}.`;
+  el.classList.add("is-on", "is-err");
+};
+
+/* Espace client : comptes enregistrés dans ce navigateur (mot de passe chiffré en SHA-256). */
+const Account = {
+  users() { try { return JSON.parse(localStorage.getItem("mp_users") || "{}"); } catch { return {}; } },
+  save(u) { localStorage.setItem("mp_users", JSON.stringify(u)); },
+  async hash(pw) {
+    const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("mauripresse:" + pw));
+    return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
+  },
+  current() { const e = localStorage.getItem("mp_session"); return e ? Object.assign({ email: e }, this.users()[e] || null) : null; },
+  async signup(d) {
+    const u = this.users(), email = d.email.trim().toLowerCase();
+    if (u[email]) throw new Error("Un compte existe déjà avec cet e-mail : connectez-vous.");
+    u[email] = { nom: d.nom, societe: d.societe || "", tel: d.tel || "", hash: await this.hash(d.password), orders: [], since: Date.now() };
+    this.save(u); localStorage.setItem("mp_session", email);
+  },
+  async login(email, pw) {
+    email = email.trim().toLowerCase();
+    const u = this.users()[email];
+    if (!u || u.hash !== await this.hash(pw)) throw new Error("E-mail ou mot de passe incorrect.");
+    localStorage.setItem("mp_session", email);
+  },
+  logout() { localStorage.removeItem("mp_session"); },
+  addOrder(o) {
+    const e = localStorage.getItem("mp_session"), u = this.users();
+    if (!e || !u[e]) return;
+    u[e].orders = [Object.assign({ date: Date.now() }, o), ...(u[e].orders || [])].slice(0, 50);
+    this.save(u);
+  },
 };

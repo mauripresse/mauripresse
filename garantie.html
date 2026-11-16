@@ -35,7 +35,6 @@
       </aside>
 
       <!-- Panneau blanc : le formulaire -->
-      <!-- TODO intégration : brancher ce formulaire sur un vrai traitement (réception + e-mail à l'atelier) -->
       <div class="gmain">
         <h2>Avez-vous trouvé moins cher ? <span class="h-accent">Dites-nous où !</span></h2>
         <p class="gmain__lead">Remplissez le formulaire afin d'envoyer votre demande pour analyse.</p>
@@ -113,13 +112,23 @@
   ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("is-over"); }));
   drop.addEventListener("drop", (e) => { if (e.dataTransfer.files.length) { file.files = e.dataTransfer.files; show(); } });
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!form.checkValidity()) { form.reportValidity(); return; }
-    const ok = document.getElementById("ok");
-    /* Maquette : aucune demande n'est envoyée tant que ce formulaire n'est pas relié à un serveur et à une boîte mail. */
-    ok.textContent = "Maquette : ce formulaire n'est pas encore relié au serveur ni à une boîte mail, aucune demande n'a été envoyée.";
-    ok.classList.add("is-on");
+    const ok = document.getElementById("ok"), btn = form.querySelector("button"), label = btn.innerHTML;
+    const d = formData(form), tab = document.querySelector('[data-tab][aria-selected="true"]').dataset.tab;
+    d.type = tab === "online" ? "Imprimerie en ligne" : "Imprimeur local";
+    if (config) d.configuration = config;
+    if (prix > 0) d.notre_prix = eur(prix) + " HT";
+    btn.disabled = true; btn.textContent = "Envoi en cours…";
+    ok.classList.remove("is-on", "is-err");
+    try {
+      await sendMail("Prix le plus bas — " + (produit || "demande") + " — " + d.nom, d, tab === "local" ? file.files[0] : null);
+      ok.textContent = "Demande envoyée ✓ L'atelier vérifie l'offre et vous répond par e-mail avec votre réduction de 5 %.";
+      ok.classList.add("is-on");
+      form.reset(); (document.getElementById("g-drop-label").textContent = "Soumettre une preuve du devis ou une facture de la commande.");
+    } catch (err) { mailError(ok); }
+    btn.disabled = false; btn.innerHTML = label;
   });
 })();
 </script>

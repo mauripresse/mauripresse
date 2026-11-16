@@ -37,7 +37,6 @@
       <p style="margin-top:22px;color:var(--ink-soft);max-width:40ch">Pas envie de créer un compte ? Vous pouvez aussi <a href="contact.html" style="text-decoration:underline;color:var(--ink)">demander un devis</a> directement.</p>
     </div>
 
-    <!-- TODO intégration : brancher ces formulaires sur l'authentification existante de /mon-compte -->
     <div class="form" id="compte-form">
       <div class="tabs" role="tablist">
         <button role="tab" aria-selected="true" data-tab="login">Connexion</button>
@@ -64,6 +63,8 @@
       </form>
       <div class="form__ok" id="ok" role="status"></div>
     </div>
+
+    <div class="form acct" id="espace" hidden></div>
   </div>
 </main>
 
@@ -79,13 +80,34 @@
   tabs.forEach((t) => t.addEventListener("click", () => select(t.dataset.tab)));
   document.getElementById("go-creer").addEventListener("click", () => select("signup"));
   if (new URLSearchParams(location.search).get("onglet") === "creer") select("signup");
-  ["login", "signup"].forEach((id) => document.getElementById(id).addEventListener("submit", (e) => {
+  /* Espace client connecté : profil + historique des devis et commandes */
+  const espace = document.getElementById("espace"), box = document.getElementById("compte-form");
+  const draw = () => {
+    const me = Account.current();
+    box.hidden = !!me; espace.hidden = !me;
+    document.querySelectorAll(".pagehead .hero__cta").forEach((el) => { el.hidden = !!me; });
+    if (!me) return;
+    const orders = me.orders || [], date = (t) => new Date(t).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+    espace.innerHTML = `
+      <div class="acct__head"><span class="acct__av">${esc((me.nom || "?").trim()[0].toUpperCase())}</span>
+        <div><h2>Bonjour ${esc(me.nom.split(" ")[0])}</h2><p>${esc(me.email)}${me.tel ? " · " + esc(me.tel) : ""}${me.societe ? " · " + esc(me.societe) : ""}</p></div></div>
+      <h3>Mes devis et commandes</h3>
+      <div class="acct__list">${orders.length ? orders.map((o) => `<div class="acct__order"><b><span>${esc(o.type)} du ${date(o.date)}</span>${o.total ? `<span>${esc(o.total)}</span>` : ""}</b><p>${esc(o.detail || "")}</p></div>`).join("")
+        : `<p class="acct__empty">Aucune demande pour l'instant. Vos devis et commandes envoyés depuis ce navigateur apparaîtront ici.</p>`}</div>
+      <div class="acct__btns"><a class="btn btn--cyan" href="catalogue.html">Commander <span class="arrow">→</span></a><a class="btn btn--ghost" href="contact.html">Demander un devis</a><button class="btn btn--ghost" type="button" id="logout">Se déconnecter</button></div>`;
+    document.getElementById("logout").addEventListener("click", () => { Account.logout(); select("login"); draw(); });
+  };
+  const run = (id, fn) => document.getElementById(id).addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (!e.target.checkValidity()) { e.target.reportValidity(); return; }
-    /* Maquette : aucune donnée n'est envoyée tant que le compte n'est pas relié au serveur. */
-    ok.textContent = "Maquette : l'espace client n'est pas encore relié au serveur, rien n'a été envoyé.";
-    ok.classList.add("is-on");
-  }));
+    const f = e.target;
+    ok.classList.remove("is-on", "is-err");
+    if (!f.checkValidity()) { f.reportValidity(); return; }
+    try { await fn(formData(f)); f.reset(); draw(); }
+    catch (err) { ok.textContent = err.message; ok.classList.add("is-on", "is-err"); }
+  });
+  run("login", (d) => Account.login(d.email, d.password));
+  run("signup", (d) => Account.signup(d));
+  draw();
 })();
 </script>
 </body>
