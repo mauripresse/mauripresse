@@ -485,7 +485,7 @@ const flyerLineup = (sel = -1) => lineupHTML(FORMATS.flyers.sizes.map((s) => ({ 
 })();
 
 /* Dessin d'un exemplaire selon la famille (affiche, sticker, vitrine, bâche…) */
-const artHTML = (F, s) => `<span class="sheet sheet--${F.art || "poster"}${s.round ? " is-round" : ""}"><i></i><i></i><i></i><i></i></span>`;
+const artHTML = (F, s) => F.art === "photo" ? flyerEx(s.ex || 0) : `<span class="sheet sheet--${F.art || "poster"}${s.round ? " is-round" : ""}"><i></i><i></i><i></i><i></i></span>`;
 const formatLineup = (key, sel = -1, only, auto) => {
   const F = FORMATS[key], list = F.sizes.map((s, i) => ({ s, i })).filter(({ i }) => !only || only.includes(i));
   const items = list.map(({ s }) => ({ w: s.w, h: s.h, label: s.label, sub: s.hint.split(" · ")[0], inner: artHTML(F, s), cls: "is-sheet" }));
@@ -497,3 +497,30 @@ const formatLineup = (key, sel = -1, only, auto) => {
   /* data-i = index réel de la taille */
   return only ? html.replace(/data-i="(\d+)"/g, (m, n) => `data-i="${list[+n] ? list[+n].i : n}"`) : html;
 };
+
+/* ---------- Exemples réalistes (vraies photos) pour flyers et dépliants ---------- */
+const EX = [
+  { ph: "1504674900247-0877df9cc836", tag: "Nouvelle carte", title: "La Table de Clara", sub: "Cuisine maison · Paris 10e", cta: "Réservez au 01 23 45 67 89", c: "#6b1d2b" },
+  { ph: "1514525253161-7a46d19cd819", tag: "Samedi · 23h", title: "Nuit Électro", sub: "Line-up exclusif · Entrée 10 €", cta: "Billets sur nuitelectro.fr", c: "#e6007e" },
+  { ph: "1517836357463-d25dfeac3438", tag: "1er mois offert", title: "Studio Move", sub: "Coaching · Cross training · Yoga", cta: "Séance d'essai gratuite", c: "#01a0e2" },
+  { ph: "1600585154340-be6161a56a0c", tag: "Estimation gratuite", title: "Maison Lumière", sub: "Achat · Vente · Location", cta: "maison-lumiere.fr", c: "#0f3d33" },
+  { ph: "1540555700478-4be289fbecef", tag: "-20 % ce mois-ci", title: "Atelier Rose", sub: "Soins visage & bien-être", cta: "Prenez rendez-vous", c: "#a8336a" },
+  { ph: "1495474472287-4d71bcdd2085", tag: "Ouverture", title: "Café Chabrol", sub: "Torréfié sur place", cta: "24 rue de Chabrol", c: "#3b2a1e" },
+];
+const exPhoto = (id, w = 600) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=70`;
+/* Flyer imprimé : photo + bandeau de texte, la mise en page s'adapte au format */
+const flyerEx = (n) => { const e = EX[n % EX.length];
+  return `<span class="pf" style="--c:${e.c}"><img src="${exPhoto(e.ph)}" alt="" loading="lazy"><span class="pf__band"><em>${e.tag}</em><b>${e.title}</b><small>${e.sub}</small><i>${e.cta}</i></span></span>`; };
+/* Dépliant : volets intérieurs (photo + texte) ouverts, ou couverture fermée */
+const DEP_EX = [
+  { c: "#6b1d2b", t: ["La Table de Clara", "Nos entrées", "Nos plats"], ph: ["1555396273-367ea4eb4db5", "1504674900247-0877df9cc836", "1414235077428-338989a2e8c0"] },
+  { c: "#0f3d33", t: ["Maison Lumière", "Nos services", "Nos biens"], ph: ["1600585154340-be6161a56a0c", "1560518883-ce09059eeffa", "1600596542815-ffad4c1539a9"] },
+  { c: "#a8336a", t: ["Atelier Rose", "Nos soins", "Nos tarifs"], ph: ["1540555700478-4be289fbecef", "1556228578-8c89e6adf883", "1570172619644-dfd03ed5d881"] },
+];
+function depEx(s, open, n = 0) {
+  const e = DEP_EX[n % DEP_EX.length], k = s.folds + 1;
+  if (!open) return `<span class="fo fo--closed fo--ph" style="--w:${s.fw};--h:${s.h};--c:${e.c}"><i><img src="${exPhoto(e.ph[0], 400)}" alt="" loading="lazy"><b>${e.t[0]}</b></i></span>`;
+  return `<span class="fo fo--open fo--ph${s.zig ? " fo--zig" : ""}" style="--w:${s.w};--h:${s.h};--c:${e.c}">${Array.from({ length: k }, (_, j) => `<i><img src="${exPhoto(e.ph[(j + 1) % 3], 400)}" alt="" loading="lazy"><b>${e.t[(j + 1) % 3]}</b><u></u><u></u><u></u></i>`).join("")}</span>`;
+}
+FORMATS.flyers.art = "photo";
+FORMATS.flyers.sizes.forEach((s, i) => { s.ex = i; });

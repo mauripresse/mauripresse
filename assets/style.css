@@ -1978,3 +1978,37 @@ button.lineup__it:hover { transform: translateY(-4px); }
   .rusec__line.is-cards .lineup { flex-wrap: wrap; row-gap: 18px; --k: min(16px, calc((100cqw - 14px) / 18.5)); --g: 14px; }
   .rusec__line.is-cards { padding: 16px 8px 18px; }
 }
+
+/* ================= Pleine largeur sur grand écran ================= */
+:root { --wrap: 1840px; --gutter: clamp(16px, 3.2vw, 64px); }
+
+/* ================= Exemples réalistes (photos) ================= */
+.pf { position: absolute; inset: 0; container-type: size; display: flex; flex-direction: column; overflow: hidden; border-radius: 2px; background: #fff; box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 14px 28px -10px rgba(0,0,0,.6); }
+.pf img { display: block; width: 100%; height: 58%; object-fit: cover; flex: none; }
+.pf__band { position: relative; flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 2.4cqh; padding: 0 8cqw; background: var(--c); color: #fff; }
+.pf__band::before { content: ""; position: absolute; left: 0; right: 0; top: -6cqh; height: 6.2cqh; background: var(--c); clip-path: polygon(0 100%, 100% 0, 100% 100%); }
+.pf__band em { position: absolute; top: -12cqh; left: 8cqw; font-style: normal; font-family: var(--mono); text-transform: uppercase; letter-spacing: .04em; font-size: min(5cqw, 3.2cqh); padding: 1cqh 3cqw; border-radius: 99px; background: var(--yellow); color: var(--ink); white-space: nowrap; }
+.pf__band b { font-family: var(--display); font-weight: 800; letter-spacing: -0.02em; line-height: .95; font-size: min(13cqw, 8.4cqh); }
+.pf__band small { font-size: min(6cqw, 3.8cqh); opacity: .85; line-height: 1.2; }
+.pf__band i { font-style: normal; align-self: flex-start; font-weight: 700; font-size: min(5.2cqw, 3.2cqh); padding: 1.2cqh 3.4cqw; border-radius: 99px; background: #fff; color: var(--c); white-space: nowrap; }
+/* Format très allongé (DL) : moins de photo, texte plus grand */
+.lineup__shape[style*="--w:10;--h:21"] .pf img { height: 52%; }
+
+/* Dépliants avec photos */
+.fo--ph { background: #fff; }
+.fo--ph i { position: relative; display: flex; flex-direction: column; gap: 4%; padding: 0 0 8%; background: #fff !important; overflow: hidden; container-type: size; }
+.fo--ph i img { width: 100%; height: 52%; object-fit: cover; display: block; }
+.fo--ph i b { margin: 2% 10% 0; font-family: var(--display); font-size: min(11cqw, 7cqh); line-height: 1; color: var(--c); }
+.fo--ph i u { display: block; margin: 0 10%; height: min(2.4cqh, 6px); border-radius: 2px; background: rgba(21,19,58,.16); text-decoration: none; }
+.fo--ph i u:nth-of-type(2) { margin-right: 26%; } .fo--ph i u:nth-of-type(3) { margin-right: 40%; }
+.fo--ph.fo--closed i { padding: 0; }
+.fo--ph.fo--closed i img { position: absolute; inset: 0; height: 100%; }
+.fo--ph.fo--closed i b { position: absolute; left: 0; right: 0; bottom: 0; margin: 0; padding: 14% 10% 12%; color: #fff; background: linear-gradient(transparent, var(--c) 45%); font-size: min(14cqw, 8cqh); }
+.lineup__shape > .fo { width: 100% !important; height: 100% !important; }
+
+/* Flyers de la bannière : plus grands */
+.rusec__line.is-fly .lineup { --kmax: 9.5px; --g: 28px; }
+.rusec__line.is-fly .lineup__lbl b { font-size: 14px; padding: 4px 10px; }
+@media (max-width: 720px) { .rusec__line.is-fly .lineup { --g: 8px; } .rusec__line.is-fly .lineup__lbl b { font-size: 10px; padding: 2px 6px; } }
+.dep__pics { --k: min(calc((100cqw - 60px) / 40), 9px); }
+@media (max-width: 720px) { .dep__pics { --k: 2.6px; } }

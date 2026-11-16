@@ -101,12 +101,7 @@
   /* ---------- Dessins à l'échelle ---------- */
   const maxW = Math.max(...F.sizes.map((s) => s.w)), maxH = Math.max(...F.sizes.map((s) => s.h));
   const sheet = (s, i, on) => `<div class="sh${on ? " is-on" : ""}${s.star ? " is-star" : ""}" data-i="${i}" style="--w:${s.w};--h:${s.h}"><span class="sh__art"><i></i><i></i><i></i></span><b class="sh__lbl">${esc(s.label)}</b></div>`;
-  const fold = (s, open) => {
-    const n = s.folds + 1, panels = Array.from({ length: n }, (_, k) => `<i style="--k:${k}"></i>`).join("");
-    return open
-      ? `<div class="fo fo--open${s.zig ? " fo--zig" : ""}" style="--w:${s.w};--h:${s.h};--n:${n}">${panels}</div>`
-      : `<div class="fo fo--closed" style="--w:${s.fw};--h:${s.h}"><i></i></div>`;
-  };
+  const fold = (s, open, n) => depEx(s, open, n == null ? st.s : n);
   const ruIndex = [0, 1, 2, 3, 4]; /* un visuel d'exemple différent par taille */
   function stage() {
     const el = document.getElementById("fz-stage"), s = F.sizes[st.s];
@@ -127,7 +122,7 @@
   const thumb = (z, i) => F.kind === "rollup"
     ? `<span class="sz__pic sz__pic--ru"><span class="lineup__shape ru-shape" style="--w:${z.w};--h:${z.h}">${rollupHTML(ruIndex[i])}</span></span>`
     : F.kind === "fold"
-      ? `<span class="sz__pic" style="--mw:${maxW};--mh:${maxH}">${fold(z, true)}</span>`
+      ? `<span class="sz__pic" style="--mw:${maxW};--mh:${maxH}">${fold(z, true, i)}</span>`
       : `<span class="sz__pic" style="--mw:${maxW};--mh:${maxH}"><span class="lineup__shape" style="--w:${z.w};--h:${z.h}">${artHTML(F, z)}</span></span>`;
   function sizes() {
     document.getElementById("sizes").innerHTML = F.sizes.map((z, i) => `

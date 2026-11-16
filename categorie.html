@@ -107,7 +107,7 @@ if (FK) {
   document.getElementById("fmt-title").textContent = F.sizes.length + " modèles, du plus petit au plus grand.";
   document.getElementById("fmt-lead").textContent = "Cliquez sur un format pour le configurer : aperçu à l'échelle, papier, quantité et délai.";
   document.getElementById("fmt-go").href = "format.html?p=" + FK;
-  line.innerHTML = FK !== "depliants" ? formatLineup(FK, -1, null, true) : lineupHTML(F.sizes.map((s) => ({ w: s.w, h: s.h, label: s.label, sub: s.pli, inner: `<span class="fo${s.zig ? " fo--zig" : ""}" style="--w:${s.w};--h:${s.h};width:100%;height:100%">${"<i></i>".repeat(s.folds + 1)}</span>`, cls: "is-sheet" })));
+  line.innerHTML = FK !== "depliants" ? formatLineup(FK, -1, null, true) : lineupHTML(F.sizes.map((s, i) => ({ w: s.w, h: s.h, label: s.label, sub: s.pli, inner: depEx(s, true, i), cls: "is-sheet" })));
   line.addEventListener("click", (e) => { const b = e.target.closest("[data-i]"); if (b) location.href = "format.html?p=" + FK + "&t=" + b.dataset.i; });
 }
 document.querySelector("main").insertAdjacentHTML("beforeend", `<div class="wrap">${reviewsHTML(c.id)}</div>`);

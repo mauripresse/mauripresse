@@ -440,9 +440,9 @@
   });
   /* Dépliants : ouvert → fermé, pour 3 pliages */
   document.querySelectorAll("[data-dep-row]").forEach((el) => {
-    el.innerHTML = [0, 2, 3].map((i) => { const s = FORMATS.depliants.sizes[i], n = s.folds + 1;
+    el.innerHTML = [0, 2, 3].map((i, k) => { const s = FORMATS.depliants.sizes[i];
       return `<button type="button" class="dep" data-i="${i}">
-        <span class="dep__pics"><span class="fo fo--open${s.zig ? " fo--zig" : ""}" style="--w:${s.w};--h:${s.h}">${"<i></i>".repeat(n)}</span><span class="dep__arrow">→</span><span class="fo fo--closed" style="--w:${s.fw};--h:${s.h}"><i></i></span></span>
+        <span class="dep__pics">${depEx(s, true, k)}<span class="dep__arrow">→</span>${depEx(s, false, k)}</span>
         <b>${esc(s.pli)}</b><small>${esc(s.hint.split(" · ")[0])} → ${esc(s.label.replace(" roulé", "").replace(" accordéon", ""))}</small></button>`; }).join("");
     link(el, "depliants");
   });
