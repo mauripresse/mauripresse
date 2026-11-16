@@ -1876,3 +1876,70 @@ button.lineup__it:hover { transform: translateY(-4px); }
   .rusec__line .lineup__lbl b { font-size: 10px; padding: 2px 6px; }
 }
 .rusec__line { padding-bottom: 16px; }
+
+/* ================= Modèles dessinés par famille ================= */
+/* Sticker : forme découpée, liseré blanc */
+.sheet--sticker { border-radius: 14%; background: #fff; box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(21,19,58,.18), 0 8px 16px -6px rgba(21,19,58,.45); }
+.sheet--sticker.is-round { border-radius: 50%; }
+.sheet--sticker i:nth-child(1) { inset: 8%; border-radius: inherit; background: conic-gradient(from 200deg, var(--magenta), var(--yellow), var(--cyan), var(--magenta)); }
+.sheet--sticker i:nth-child(2) { left: 22%; right: 22%; top: 44%; height: 12%; border-radius: 99px; background: #fff; }
+.sheet--sticker i:nth-child(3), .sheet--sticker i:nth-child(4) { display: none; }
+/* Vitrine : verre + lettrage */
+.sheet--window { border-radius: 3px; background: linear-gradient(135deg, rgba(160,220,255,.55), rgba(255,255,255,.18) 45%, rgba(160,220,255,.4)); border: 3px solid #2c2a5e; box-shadow: inset 0 0 0 1px rgba(255,255,255,.4), 0 10px 22px -8px rgba(0,0,0,.5); }
+.sheet--window i:nth-child(1) { inset: 22% 12% auto; height: 16%; border-radius: 3px; background: #fff; }
+.sheet--window i:nth-child(2) { left: 12%; right: 40%; top: 44%; height: 6%; border-radius: 2px; background: var(--yellow); }
+.sheet--window i:nth-child(3) { left: 0; right: 0; top: 0; bottom: 0; background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.45) 48%, transparent 56%); }
+.sheet--window i:nth-child(4) { display: none; }
+/* Bâche : œillets aux coins et sur les bords */
+.sheet--banner { border-radius: 2px; background: #fff radial-gradient(circle, #9aa1ab 0 2.5px, transparent 3px) 0 0 / 50px 100% repeat-x; }
+.sheet--banner i:nth-child(1) { inset: 14% 4% 14% 4%; background: linear-gradient(100deg, var(--indigo), var(--cyan) 70%, var(--yellow) 70.5%); border-radius: 2px; }
+.sheet--banner i:nth-child(2) { left: 9%; width: 44%; top: 32%; height: 16%; border-radius: 3px; background: #fff; }
+.sheet--banner i:nth-child(3) { left: 9%; width: 30%; top: 56%; height: 8%; border-radius: 3px; background: rgba(255,255,255,.6); }
+.sheet--banner i:nth-child(4) { display: none; }
+/* Panneau rigide : épaisseur visible */
+.sheet--rigid { border-radius: 2px; box-shadow: 4px 4px 0 #b9bdc6, 5px 5px 0 #8f949e, 0 16px 26px -10px rgba(0,0,0,.55); }
+/* PLV : socle / pieds */
+.sheet--plv { border-radius: 3px 3px 0 0; overflow: visible; }
+.sheet--plv::after { content: ""; position: absolute; left: -6%; right: -6%; bottom: -4%; height: 5%; min-height: 4px; border-radius: 3px; background: linear-gradient(#e6e9ee, #8f949e); }
+.sheet--plv i:nth-child(1) { background: linear-gradient(160deg, var(--magenta), #ff7a59); inset: 0 0 40% 0; }
+/* Packaging : carton kraft + logo */
+.sheet--box { border-radius: 4px; background: linear-gradient(160deg, #d8b27c, #b98a52); }
+.sheet--box i:nth-child(1) { inset: auto 0 72% 0; height: 6%; background: rgba(0,0,0,.12); }
+.sheet--box i:nth-child(2) { left: 34%; right: 34%; top: 38%; aspect-ratio: 1; height: auto; border-radius: 50%; background: var(--ink); }
+.sheet--box i:nth-child(3) { left: 24%; right: 24%; top: 74%; height: 5%; background: rgba(21,19,58,.55); box-shadow: none; }
+.sheet--box i:nth-child(4) { display: none; }
+/* Brochure : couverture + dos + agrafes */
+.sheet--booklet { border-radius: 1px 4px 4px 1px; box-shadow: -3px 0 0 #e9e7f3, -5px 1px 0 #d7d4e6, 0 12px 24px -8px rgba(0,0,0,.55); }
+.sheet--booklet::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 8%; z-index: 1; background: linear-gradient(90deg, rgba(0,0,0,.22), transparent); }
+.sheet--booklet i:nth-child(1) { inset: 0 0 38% 0; background: linear-gradient(150deg, #0f3d33, #1f7a5c); }
+/* Document : page blanche, en-tête et lignes */
+.sheet--doc i:nth-child(1) { left: 10%; top: 8%; width: 18%; aspect-ratio: 1; height: auto; inset: auto; position: absolute; border-radius: 50%; background: var(--cyan); }
+.sheet--doc i:nth-child(1) { left: 10%; top: 8%; }
+.sheet--doc i:nth-child(2) { left: 10%; right: 40%; top: 30%; height: 4%; background: var(--ink); }
+.sheet--doc i:nth-child(3) { left: 10%; right: 12%; top: 42%; height: 2.5%; background: rgba(21,19,58,.22); box-shadow: 0 calc(var(--h) * var(--k) * .07) 0 rgba(21,19,58,.18), 0 calc(var(--h) * var(--k) * .14) 0 rgba(21,19,58,.18), 0 calc(var(--h) * var(--k) * .21) 0 rgba(21,19,58,.18); }
+.sheet--doc i:nth-child(4) { display: none; }
+/* Diapositives flyers et dépliants (même modèle que le roll-up) */
+.rusec__line.is-fly .lineup { --kmax: 6.2px; --kmin: 0px; --g: 22px; }
+.rusec__line.is-fly .lineup__lbl b { font-size: 13px; }
+.rusec--light { background: linear-gradient(160deg, #10275c, #15133a 70%); }
+.deprow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 30px 0 24px; }
+.dep { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 26px 14px 18px; border-radius: 20px; border: 0; color: #fff; font: inherit; cursor: pointer; background: radial-gradient(circle at 50% 20%, #3a3870, #201e4d 75%); transition: transform .3s cubic-bezier(.2,.8,.2,1); container-type: inline-size; }
+.dep:hover { transform: translateY(-5px); }
+.dep__pics { --k: min(calc((100cqw - 60px) / 40), 6px); display: flex; align-items: flex-end; gap: 14px; margin-bottom: 8px; }
+.dep__arrow { align-self: center; opacity: .6; font-size: 20px; }
+.dep b { font-size: 17px; }
+.dep small { font-family: var(--mono); font-size: 11.5px; opacity: .75; }
+@media (max-width: 720px) {
+  .rusec__line.is-fly .lineup { --g: 10px; --kmin: 0px; }
+  .deprow { grid-template-columns: 1fr; gap: 8px; margin: 18px 0 14px; }
+  .dep { flex-direction: row; justify-content: flex-start; gap: 12px; padding: 12px; text-align: left; }
+  .dep__pics { --k: 2.4px; margin: 0; gap: 8px; }
+  .dep b { font-size: 14.5px; display: block; }
+  .dep small { font-size: 10.5px; }
+}
+@media (max-width: 720px) {
+  .dep { display: grid; grid-template-columns: auto 1fr; column-gap: 14px; align-items: center; }
+  .dep__pics { grid-row: 1 / 3; }
+  .dep b { align-self: end; } .dep small { align-self: start; }
+}
+@media (max-width: 720px) { .fz__stage .lineup, .fmtblock .lineup { --g: 10px !important; } }

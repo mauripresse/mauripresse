@@ -88,13 +88,14 @@
   const key = FORMATS[qs.get("p")] ? qs.get("p") : "rollup", F = FORMATS[key];
   const st = { s: qs.has("t") && F.sizes[+qs.get("t")] ? +qs.get("t") : F.defSize, c: F.groups.map(() => 0), q: 0, d: F.deliv[0].id };
 
-  document.title = F.name + " · choisir sa taille · Mauri Presse";
-  document.getElementById("f-name").textContent = F.name;
+  const MODEL = qs.get("n") || "";
+  document.title = (MODEL || F.name) + " · choisir sa taille · Mauri Presse";
+  document.getElementById("f-name").textContent = MODEL || F.name;
   document.getElementById("f-desc").textContent = F.desc;
   const cc = document.getElementById("crumb-cat"); cc.textContent = F.cat; cc.href = "categorie.html?c=" + F.catId;
   document.getElementById("f-badges").innerHTML = (key === "rollup"
     ? ["⚡ Imprimé en 24h", "🚚 Livré dans la journée · Paris & IDF", "📍 Retrait gratuit Paris 10<sup>e</sup>"]
-    : ["📐 " + F.sizes.length + " formats au choix", "🚚 Livraison jour même Paris & IDF", "✓ Contrôle des fichiers inclus"]).map((b) => `<span class="badge">${b}</span>`).join("");
+    : ["📐 " + F.sizes.length + " formats dessinés à l'échelle", "🚚 Livraison jour même Paris & IDF", "✓ Contrôle des fichiers inclus"]).map((b) => `<span class="badge">${b}</span>`).join("");
   document.getElementById("reviews").innerHTML = reviewsHTML(F.catId);
 
   /* ---------- Dessins à l'échelle ---------- */
@@ -114,7 +115,7 @@
       el.innerHTML = rollupLineup(st.s);
       document.getElementById("fz-note").innerHTML = `<b>${s.w} × ${s.h} cm</b> · ${esc(s.name)} — toutes les tailles dessinées à l'échelle, à côté d'une personne de 1,70 m.`;
     } else if (F.kind === "sheet") {
-      el.innerHTML = flyerLineup(st.s);
+      el.innerHTML = formatLineup(key, st.s, null, true);
       document.getElementById("fz-note").innerHTML = `<b>${esc(s.label)}</b> · ${esc(s.hint)} — tous les formats dessinés à l'échelle pour comparer.`;
     } else {
       el.innerHTML = `<div class="folds" style="--sum:${s.w + s.fw}"><figure>${fold(s, true)}<figcaption>Ouvert · ${s.w} × ${s.h} cm</figcaption></figure><span class="folds__arrow">→</span><figure>${fold(s, false)}<figcaption>Fermé · ${s.fw} × ${s.h} cm</figcaption></figure></div>`;
@@ -127,7 +128,7 @@
     ? `<span class="sz__pic sz__pic--ru"><span class="lineup__shape ru-shape" style="--w:${z.w};--h:${z.h}">${rollupHTML(ruIndex[i])}</span></span>`
     : F.kind === "fold"
       ? `<span class="sz__pic" style="--mw:${maxW};--mh:${maxH}">${fold(z, true)}</span>`
-      : `<span class="sz__pic" style="--mw:${maxW};--mh:${maxH}"><span class="lineup__shape" style="--w:${z.w};--h:${z.h}">${sheetArt}</span></span>`;
+      : `<span class="sz__pic" style="--mw:${maxW};--mh:${maxH}"><span class="lineup__shape" style="--w:${z.w};--h:${z.h}">${artHTML(F, z)}</span></span>`;
   function sizes() {
     document.getElementById("sizes").innerHTML = F.sizes.map((z, i) => `
       <button type="button" class="sz${i === st.s ? " is-on" : ""}" data-i="${i}" role="radio" aria-checked="${i === st.s}">
@@ -156,10 +157,10 @@
   const priced = () => { const s = F.sizes[st.s]; return s.price && F.groups.every((g, i) => !g.options[st.c[i]].quote) ? s.price * F.qty[st.q] : null; };
   const rows = () => {
     const s = F.sizes[st.s], d = F.deliv.find((x) => x.id === st.d);
-    return [["Produit", F.name], ["Taille", F.kind === "rollup" ? `${s.w} × ${s.h} cm (${s.name})` : F.kind === "fold" ? `${s.label} · ${s.pli} (${s.w} × ${s.h} cm ouvert)` : `${s.label} · ${s.hint}`],
+    return [["Produit", MODEL ? MODEL : F.name], ["Taille", F.kind === "rollup" ? `${s.w} × ${s.h} cm (${s.name})` : F.kind === "fold" ? `${s.label} · ${s.pli} (${s.w} × ${s.h} cm ouvert)` : `${s.label} · ${s.hint}`],
       ...F.groups.map((g, i) => [g.label, g.options[st.c[i]].label]), ["Quantité", F.qty[st.q].toLocaleString("fr-FR") + " " + F.unit], ["Délai", d.label + " · " + d.sub]];
   };
-  const devisHref = () => "contact.html?" + new URLSearchParams({ produit: F.name + " " + rows()[1][1], config: rows().slice(1).map(([k, v]) => k + " : " + v).join(" | ") });
+  const devisHref = () => "contact.html?" + new URLSearchParams({ produit: (MODEL || F.name) + " " + rows()[1][1], config: rows().slice(1).map(([k, v]) => k + " : " + v).join(" | ") });
 
   function render() {
     stage(); sizes();

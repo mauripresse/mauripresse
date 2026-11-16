@@ -2,7 +2,7 @@
 document.documentElement.classList.add("js");
 
 (function () {
-  const TOP = ["cartes-de-visite", "flyers-tracts", "affiche-poster", "etiquettes-autocollants", "vinyle-adhesif", "roll-up-kakemono", "signaletique-enseignes", "reprographie"];
+  const TOP = ["cartes-de-visite", "flyers-tracts", "depliants-plaquettes", "affiche-poster", "etiquettes-autocollants", "vinyle-adhesif", "roll-up-kakemono", "signaletique-enseignes", "reprographie"];
   const cat = (id) => CATS.find((c) => c.id === id);
   const icon = {
     search: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',

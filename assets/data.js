@@ -180,7 +180,7 @@ const itemName = (it) => (typeof it === "string" ? it : it.n);
 /* Un article est « configurable » s'il a un calculateur (p) ; sinon il part en devis.
    `from` = prix « dès » affiché sur le site officiel pour un article sans calculateur. */
 const isConf = (it) => typeof it === "object" && !!it.p;
-const itemHref = (it) => (isConf(it) ? "produit.html?p=" + it.p : typeof it === "object" && it.f ? "format.html?p=" + it.f + (it.t != null ? "&t=" + it.t : "") : "contact.html?produit=" + encodeURIComponent(itemName(it)));
+const itemHref = (it) => (isConf(it) ? "produit.html?p=" + it.p : typeof it === "object" && it.f ? "format.html?p=" + it.f + (it.t != null ? "&t=" + it.t : "") + (it.v ? "&n=" + encodeURIComponent(it.n) : "") : "contact.html?produit=" + encodeURIComponent(itemName(it)));
 const delivOf = (key, id) => { const p = PRODUCTS[key]; return p.deliv.find((x) => x.id === id) || p.deliv.find((x) => x.id === p.defDeliv) || p.deliv[0]; };
 
 /* Prix HT d'une configuration, selon les règles du site officiel :
@@ -399,9 +399,9 @@ function reviewsHTML(catId) {
 
 /* ---------- Alignement à l'échelle (roll-up, flyers) ----------
    Chaque élément a sa taille réelle en cm (--w, --h) ; l'échelle --k s'adapte à la largeur disponible. */
-function lineupHTML(items, sel = -1) {
+function lineupHTML(items, sel = -1, extra = "") {
   const sum = items.reduce((a, b) => a + b.w, 0);
-  return `<div class="lineup${sel >= 0 ? " has-sel" : ""}" style="--sum:${sum};--gaps:${items.length - 1}">${items.map((it, i) => {
+  return `<div class="lineup${sel >= 0 ? " has-sel" : ""}" style="--sum:${sum};--gaps:${items.length - 1}${extra}">${items.map((it, i) => {
     const tag = it.static ? "span" : "button";
     return `<${tag}${it.static ? ' aria-hidden="true"' : ` type="button" data-i="${i}" aria-label="${esc(it.label + " " + (it.sub || ""))}"`} class="lineup__it${i === sel ? " is-on" : ""}${it.cls ? " " + it.cls : ""}">
       <span class="lineup__lbl"><b>${it.label}</b>${it.sub ? `<small>${it.sub}</small>` : ""}</span>
@@ -414,3 +414,86 @@ const rollupLineup = (sel = -1) => lineupHTML([
 ], sel);
 const sheetArt = '<span class="sheet"><i></i><i></i><i></i><i></i></span>';
 const flyerLineup = (sel = -1) => lineupHTML(FORMATS.flyers.sizes.map((s) => ({ w: s.w, h: s.h, label: s.label, sub: s.hint.split(" · ")[0], inner: sheetArt, cls: "is-sheet" })), sel);
+
+/* ---------- Modèles dessinés pour toutes les autres familles (sur devis) ---------- */
+(() => {
+  const D3 = (sub = "Sous 24 – 72 h") => [
+    { id: "pickup", label: "Retrait à l'atelier", sub: sub + " · gratuit" },
+    { id: "day", label: "Livraison jour même", sub: "Paris & IDF · tarif selon l'adresse", paid: true },
+    { id: "france", label: "Livraison France", sub: "3 – 5 jours" },
+  ];
+  const opt = (...l) => l.map((x) => (typeof x === "string" ? { label: x } : x));
+  const mk = (key, o) => { FORMATS[key] = Object.assign({ kind: "sheet", defSize: 0, deliv: D3(), unit: "ex." }, o); };
+  mk("affiches", { name: "Affiches & posters", catId: "affiche-poster", cat: "Affiches & posters", art: "poster", person: true,
+    desc: "Affiches à l'unité ou en série, du A3 au format Abribus. Couleurs éclatantes, papier photo, dos bleu ou backlight.",
+    sizes: [{ label: "A3", w: 29.7, h: 42, hint: "29,7 × 42 cm" }, { label: "A2", w: 42, h: 59.4, hint: "42 × 59,4 cm" }, { label: "A1", w: 59.4, h: 84.1, hint: "59,4 × 84,1 cm · le plus commandé", star: true }, { label: "A0", w: 84.1, h: 118.9, hint: "84,1 × 118,9 cm" }, { label: "Abribus", w: 120, h: 176, hint: "120 × 176 cm" }],
+    defSize: 2, qty: [1, 5, 10, 25, 50, 100],
+    groups: [{ id: "papier", label: "Papier", options: opt({ label: "Couché satiné 200 g", hint: "Le standard" }, { label: "Papier photo brillant 260 g" }, { label: "Dos bleu 115 g", hint: "Affichage extérieur" }, { label: "Backlight", hint: "Caisson lumineux" }) }] });
+  mk("etiquettes", { name: "Étiquettes & autocollants", catId: "etiquettes-autocollants", cat: "Étiquettes & autocollants", art: "sticker",
+    desc: "Stickers et étiquettes ronds, carrés ou rectangulaires : papier, vinyle, holographique ou imperméable, en planche ou en rouleau.",
+    sizes: [{ label: "Rond 3 cm", w: 3, h: 3, round: true, hint: "Ø 3 cm" }, { label: "Rond 5 cm", w: 5, h: 5, round: true, hint: "Ø 5 cm · le plus commandé", star: true }, { label: "Carré 5 cm", w: 5, h: 5, hint: "5 × 5 cm" }, { label: "7 × 4 cm", w: 7, h: 4, hint: "Rectangle" }, { label: "10 × 5 cm", w: 10, h: 5, hint: "Rectangle" }, { label: "10 × 15 cm", w: 10, h: 15, hint: "Grand format" }],
+    defSize: 1, qty: [50, 100, 250, 500, 1000, 5000],
+    groups: [{ id: "matiere", label: "Matière", options: opt({ label: "Papier adhésif mat" }, { label: "Vinyle blanc brillant", hint: "Résiste à l'eau" }, { label: "Holographique" }, { label: "Transparent" }) }, { id: "livraison", label: "Conditionnement", options: opt("Planches", "Rouleau", "À l'unité (découpe)") }] });
+  mk("vinyle", { name: "Vinyle adhésif", catId: "vinyle-adhesif", cat: "Vinyle adhésif", art: "window", person: true,
+    desc: "Lettrage, vitrophanie, adhésif dépoli ou microperforé : habillez vitrines, murs, sols et véhicules. Pose possible à Paris.",
+    sizes: [{ label: "Lettrage", w: 80, h: 25, hint: "80 × 25 cm" }, { label: "Porte vitrée", w: 90, h: 200, hint: "90 × 200 cm" }, { label: "Vitrine", w: 150, h: 120, hint: "150 × 120 cm · le plus commandé", star: true }, { label: "Grande vitrine", w: 250, h: 200, hint: "250 × 200 cm" }],
+    defSize: 2, qty: [1, 2, 3, 5, 10], unit: "pièce(s)",
+    groups: [{ id: "type", label: "Type d'adhésif", options: opt({ label: "Vinyle couleur", hint: "Lettrage, logo" }, { label: "Vitrophanie", hint: "Lisible des deux côtés" }, { label: "Dépoli", hint: "Effet verre sablé" }, { label: "Microperforé", hint: "On voit à travers" }) }, { id: "pose", label: "Pose", options: opt({ label: "Sans pose" }, { label: "Pose par l'atelier", hint: "Paris & IDF" }) }] });
+  mk("signaletique", { name: "Bâches & enseignes", catId: "signaletique-enseignes", cat: "Signalétique & enseignes", art: "banner", person: true,
+    desc: "Bâches PVC avec œillets, banderoles et enseignes pour façades, chantiers et événements. Résistantes à l'extérieur.",
+    sizes: [{ label: "100 × 50", w: 100, h: 50, hint: "Petite bâche" }, { label: "200 × 100", w: 200, h: 100, hint: "le plus commandé", star: true }, { label: "300 × 100", w: 300, h: 100, hint: "Façade" }, { label: "400 × 80", w: 400, h: 80, hint: "Banderole" }],
+    defSize: 1, qty: [1, 2, 3, 5, 10], unit: "pièce(s)",
+    groups: [{ id: "matiere", label: "Matière", options: opt({ label: "Bâche PVC 510 g", hint: "Extérieur, œillets" }, { label: "Bâche microperforée", hint: "Laisse passer le vent" }, { label: "Enseigne Dibond", hint: "Panneau aluminium" }) }, { id: "finition", label: "Finition", options: opt("Œillets tous les 50 cm", "Ourlets + œillets", "Fourreaux") }] });
+  mk("rigide", { name: "Panneaux rigides", catId: "support-rigide", cat: "Supports rigides", art: "rigid",
+    desc: "Panneaux Forex, Dibond ou carton plume, découpés sur mesure : signalétique, panneaux d'exposition, photos d'art.",
+    sizes: [{ label: "A3", w: 29.7, h: 42, hint: "29,7 × 42 cm" }, { label: "50 × 70", w: 50, h: 70, hint: "cm · le plus commandé", star: true }, { label: "60 × 80", w: 60, h: 80, hint: "cm" }, { label: "80 × 120", w: 80, h: 120, hint: "cm" }, { label: "100 × 150", w: 100, h: 150, hint: "cm" }],
+    defSize: 1, qty: [1, 2, 5, 10, 25], unit: "panneau(x)",
+    groups: [{ id: "matiere", label: "Matière", options: opt({ label: "Forex PVC 3 mm", hint: "Léger, intérieur" }, { label: "Dibond aluminium 3 mm", hint: "Extérieur, premium" }, { label: "Carton plume 5 mm", hint: "Exposition" }) }] });
+  mk("plv", { name: "PLV & expo", catId: "plv-expo", cat: "PLV & expo", art: "plv", person: true,
+    desc: "Présentoirs, totems, stop-trottoirs et comptoirs pour vos points de vente, salons et événements.",
+    sizes: [{ label: "Chevalet", w: 30, h: 40, hint: "Comptoir · 30 × 40 cm" }, { label: "Stop-trottoir", w: 60, h: 100, hint: "60 × 100 cm · le plus commandé", star: true }, { label: "Totem", w: 60, h: 180, hint: "60 × 180 cm" }, { label: "Comptoir", w: 100, h: 90, hint: "Stand · 100 × 90 cm" }],
+    defSize: 1, qty: [1, 2, 3, 5, 10], unit: "pièce(s)",
+    groups: [{ id: "usage", label: "Utilisation", options: opt("Intérieur", { label: "Extérieur", hint: "Matière résistante à la pluie" }) }] });
+  mk("packaging", { name: "Sacs & packaging", catId: "objets-packaging", cat: "Sacs, objets pub & packaging", art: "box",
+    desc: "Sacs kraft, tote bags, boîtes et emballages personnalisés à vos couleurs, en petite ou grande série.",
+    sizes: [{ label: "Boîte 15 cm", w: 15, h: 15, hint: "15 × 15 cm" }, { label: "Sac kraft", w: 25, h: 32, hint: "25 × 32 cm · le plus commandé", star: true }, { label: "Boîte 30 × 20", w: 30, h: 20, hint: "cm" }, { label: "Tote bag", w: 38, h: 42, hint: "38 × 42 cm" }],
+    defSize: 1, qty: [25, 50, 100, 250, 500, 1000],
+    groups: [{ id: "marquage", label: "Marquage", options: opt("Logo 1 couleur", "Logo quadri", "Impression tout autour") }] });
+  mk("brochures", { name: "Catalogues & brochures", catId: "catalogue-brochures", cat: "Catalogues & brochures", art: "booklet",
+    desc: "Brochures agrafées, spirales ou dos carré collé : catalogues, rapports, menus, livres. Mise en page possible par nos graphistes.",
+    sizes: [{ label: "A6", w: 10.5, h: 14.8, hint: "10,5 × 14,8 cm" }, { label: "A5", w: 14.8, h: 21, hint: "14,8 × 21 cm · le plus commandé", star: true }, { label: "Carré 21", w: 21, h: 21, hint: "21 × 21 cm" }, { label: "A4", w: 21, h: 29.7, hint: "21 × 29,7 cm" }],
+    defSize: 1, qty: [10, 25, 50, 100, 250, 500],
+    groups: [{ id: "reliure", label: "Reliure", options: opt({ label: "Agrafée", hint: "8 à 64 pages" }, { label: "Spirale métallique" }, { label: "Dos carré collé", hint: "Effet livre" }, { label: "Couverture rigide" }) }, { id: "pages", label: "Nombre de pages", options: opt("8 pages", "16 pages", "32 pages", "48 pages et plus") }] });
+  mk("papeterie", { name: "Papeterie & bureautique", catId: "papeterie-bureautique", cat: "Papeterie & bureautique", art: "doc",
+    desc: "En-têtes de lettre, enveloppes, cartes de correspondance, documents administratifs et plaques gravées.",
+    sizes: [{ label: "Carte DL", w: 10, h: 21, hint: "Correspondance 10 × 21 cm" }, { label: "Enveloppe", w: 22, h: 11, hint: "DL 22 × 11 cm" }, { label: "En-tête A4", w: 21, h: 29.7, hint: "21 × 29,7 cm · le plus commandé", star: true }, { label: "Plaque 30 × 20", w: 30, h: 20, hint: "Gravée laiton / alu" }],
+    defSize: 2, qty: [50, 100, 250, 500, 1000],
+    groups: [{ id: "papier", label: "Papier", options: opt("Offset 90 g", "Offset 120 g", "Vergé premium") }] });
+  mk("repro", { name: "Reprographie", catId: "reprographie", cat: "Reprographie", art: "doc",
+    desc: "Photocopies, impressions, reliures, scans et plastification, en noir & blanc ou couleur. Sur place, à la minute.",
+    sizes: [{ label: "A5", w: 14.8, h: 21, hint: "14,8 × 21 cm" }, { label: "A4", w: 21, h: 29.7, hint: "21 × 29,7 cm · le plus commandé", star: true }, { label: "A3", w: 29.7, h: 42, hint: "29,7 × 42 cm" }, { label: "Plan A1", w: 59.4, h: 84.1, hint: "59,4 × 84,1 cm" }],
+    defSize: 1, qty: [1, 10, 50, 100, 500, 1000], deliv: D3("Sur place, à la minute"),
+    groups: [{ id: "couleur", label: "Impression", options: opt("Noir & blanc", "Couleur") }, { id: "finition", label: "Finition", options: opt("Sans", "Reliure", "Plastification", "Agrafage") }] });
+  FORMATS.flyers.art = "poster";
+  /* Tous les articles de ces familles ouvrent leur modèle dessiné */
+  const BY_CAT = Object.fromEntries(Object.entries(FORMATS).map(([k, f]) => [f.catId, k]));
+  CATS.forEach((c) => {
+    const k = BY_CAT[c.id]; if (!k || k === "rollup") return;
+    c.items = c.items.map((it) => (typeof it === "string" ? { n: it, f: k, v: 1 } : it.f || it.p ? it : Object.assign({ f: k, v: 1 }, it)));
+  });
+  window.CAT_FORMAT = BY_CAT;
+})();
+
+/* Dessin d'un exemplaire selon la famille (affiche, sticker, vitrine, bâche…) */
+const artHTML = (F, s) => `<span class="sheet sheet--${F.art || "poster"}${s.round ? " is-round" : ""}"><i></i><i></i><i></i><i></i></span>`;
+const formatLineup = (key, sel = -1, only, auto) => {
+  const F = FORMATS[key], list = F.sizes.map((s, i) => ({ s, i })).filter(({ i }) => !only || only.includes(i));
+  const items = list.map(({ s }) => ({ w: s.w, h: s.h, label: s.label, sub: s.hint.split(" · ")[0], inner: artHTML(F, s), cls: "is-sheet" }));
+  const maxH = Math.max(...F.sizes.map((s) => s.h));
+  if (F.person && maxH > 60) items.push({ w: 42, h: 170, label: "1,70 m", sub: "repère", inner: PERSON_SVG, cls: "is-person", static: true });
+  /* Échelle adaptée : le plus grand modèle fait environ 300 px de haut */
+  const extra = auto ? `;--kmax:${(300 / Math.max(maxH, F.person && maxH > 60 ? 170 : 0)).toFixed(2)}px;--g:22px` : "";
+  const html = lineupHTML(items, list.findIndex(({ i }) => i === sel), extra);
+  /* data-i = index réel de la taille */
+  return only ? html.replace(/data-i="(\d+)"/g, (m, n) => `data-i="${list[+n] ? list[+n].i : n}"`) : html;
+};
