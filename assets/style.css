@@ -1856,3 +1856,23 @@ button.lineup__it:hover { transform: translateY(-4px); }
   .lineup__lbl b { font-size: 8.5px; padding: 1px 4px; letter-spacing: -.02em; }
   .fz__stage .lineup__lbl small { display: none; }
 }
+/* Roll-up en plus grand : échelle mini garantie, défilement horizontal si besoin */
+.lineup { --kmin: 0px; --k: clamp(var(--kmin), calc((100cqw - var(--g) * var(--gaps)) / var(--sum)), var(--kmax)); justify-content: safe center; }
+.fz { margin-bottom: 30px; }
+.fz__stage { overflow-x: auto; scrollbar-width: thin; padding: 44px 32px 34px; }
+.fz__stage .lineup { --kmax: 1.75px; }
+.fz__stage[data-kind="sheet"] .lineup { --kmax: 11px; }
+.fz__stage .folds { --k: min(calc((100cqw - 90px) / var(--sum)), 11px); }
+.fz__stage .lineup__lbl b { font-size: 14px; padding: 4px 10px; }
+.fz__stage .lineup__lbl small { font-size: 12.5px; }
+.rusec--slide .rusec__line .lineup { --kmax: 1.42px; }
+.rusec__line .lineup { --kmax: 1.55px; }
+.rusec__line { overflow-x: auto; scrollbar-width: none; padding-bottom: 0; }
+.rusec__line::-webkit-scrollbar { display: none; }
+@media (max-width: 720px) {
+  .fz__stage { padding: 26px 14px 20px; }
+  .fz__stage .lineup, .rusec__line .lineup, .rusec--slide .rusec__line .lineup { --kmin: 0.6px; --g: 10px; }
+  .fz__stage .lineup__lbl b { font-size: 10.5px; padding: 2px 6px; }
+  .rusec__line .lineup__lbl b { font-size: 10px; padding: 2px 6px; }
+}
+.rusec__line { padding-bottom: 16px; }

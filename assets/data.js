@@ -166,7 +166,7 @@ const CATS = [
   { id: "papeterie-bureautique", name: "Papeterie & bureautique", blurb: "En-têtes, administratif, plaques gravées.", items: ["Bureautique", "Administratif", "Plaque gravure"] },
   { id: "etiquettes-autocollants", name: "Étiquettes & autocollants", blurb: "Rouleaux, holographiques, imperméables.", items: ["Étiquettes en rouleau standards", "Étiquettes en plastique", "Étiquettes en papier", "Étiquettes avec finitions spéciales", "Étiquettes holographiques", "Étiquettes Premium", "Étiquettes imperméables", "Étiquettes repositionnables"] },
   { id: "vinyle-adhesif", name: "Vinyle adhésif", blurb: "Vitrines, murs, sols et véhicules.", items: ["Adhésifs pour vitrines", "Adhésifs muraux", "Adhésifs pour voitures et motos", "Covering voiture", "Adhésif pour sols", "Lettrage adhésif", "Adhésif vinyle transparent", "Adhésifs dépoli", "Adhésifs microperforé", "Vitrophanie"] },
-  { id: "roll-up-kakemono", name: "Roll-up & kakémono", blurb: "Imprimé en 24h, livré dans la journée.", items: [{ n: "Roll-up 60 × 160 cm · Mini", f: "rollup", t: 0, x: 1 }, { n: "Roll-up 80 × 200 cm · Classique", from: 79.99, f: "rollup", t: 1, x: 1 }, { n: "Roll-up 100 × 200 cm · Large", f: "rollup", t: 2, x: 1 }, { n: "Roll-up 120 × 200 cm · XL", f: "rollup", t: 3, x: 1 }, { n: "Roll-up 150 × 200 cm · XXL", f: "rollup", t: 4, x: 1 }] },
+  { id: "roll-up-kakemono", name: "Roll-up & kakémono", blurb: "Imprimé en 24h, livré dans la journée.", items: [{ n: "Roll-up 80 × 200 cm · Classique", from: 79.99, f: "rollup", t: 0, x: 1 }, { n: "Roll-up 100 × 200 cm · Large", f: "rollup", t: 1, x: 1 }, { n: "Roll-up 120 × 200 cm · XL", f: "rollup", t: 2, x: 1 }, { n: "Roll-up 150 × 200 cm · XXL", f: "rollup", t: 3, x: 1 }, { n: "Roll-up 200 × 200 cm · Géant", f: "rollup", t: 4, x: 1 }] },
   { id: "signaletique-enseignes", name: "Signalétique & enseignes", blurb: "Enseignes, bâches et plaques pro.", items: ["Enseignes extérieures", "Bâches & banderoles PVC", "Plaques professionnelles laiton / alu"] },
   { id: "support-rigide", name: "Supports rigides", blurb: "Panneaux rigides sur mesure.", items: ["Panneaux & supports rigides"] },
   { id: "plv-expo", name: "PLV & expo", blurb: "Stands, présentoirs et PLV.", items: ["PLV, stands & expo"] },
@@ -301,18 +301,18 @@ const Account = {
    Le client choisit une taille (dessinée à l'échelle) et ses options.
    Un prix n'est affiché que s'il est connu ; sinon la demande part en devis. */
 const RU_SIZES = [
-  { w: 60, h: 160, name: "Mini", use: "Comptoir, vitrine" },
   { w: 80, h: 200, name: "Classique", use: "Le plus commandé", price: 79.99, star: true },
   { w: 100, h: 200, name: "Large", use: "Salon, accueil" },
   { w: 120, h: 200, name: "XL", use: "Fond de stand" },
-  { w: 150, h: 200, name: "XXL", use: "Mur d'image, scène" },
+  { w: 150, h: 200, name: "XXL", use: "Mur d'image" },
+  { w: 200, h: 200, name: "Géant", use: "Scène, grand stand" },
 ];
 const FORMATS = {
   rollup: {
     name: "Roll-up", catId: "roll-up-kakemono", cat: "Roll-up & kakémono", kind: "rollup",
     desc: "Structure aluminium rétractable, bâche haute définition anti-froissement, housse de transport incluse. Imprimé en 24h dans notre atelier.",
     sizes: RU_SIZES.map((s) => ({ label: `${s.w} × ${s.h} cm`, w: s.w, h: s.h, name: s.name, hint: s.use, price: s.price, star: s.star })),
-    defSize: 1,
+    defSize: 0,
     groups: [
       { id: "structure", label: "Structure", options: [{ label: "Standard aluminium", hint: "Housse incluse" }, { label: "Premium pied large", hint: "Plus stable, bâche interchangeable", quote: true }] },
       { id: "bache", label: "Bâche", options: [{ label: "Polyester anti-froissement 210 g", hint: "Aspect mat, ne gondole pas" }, { label: "PVC opaque 440 g", hint: "Anti-reflets, très couvrant", quote: true }] },

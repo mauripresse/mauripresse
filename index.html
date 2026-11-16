@@ -388,6 +388,8 @@
   const link = (el, p) => el.addEventListener("click", (e) => { const b = e.target.closest("[data-i]"); if (b) location.href = `format.html?p=${p}&t=${b.dataset.i}`; });
   document.querySelectorAll("[data-reviews]").forEach((el) => { el.innerHTML = reviewsHTML(); });
   document.querySelectorAll("[data-rollups-gallery]").forEach((el) => { el.innerHTML = rollupLineup(); link(el, "rollup"); });
+  /* Faire glisser la rangée de roll-up ne change pas de diapositive */
+  document.querySelectorAll("[data-rollups-gallery]").forEach((el) => ["touchstart", "touchmove", "touchend"].forEach((ev) => el.addEventListener(ev, (e) => { if (el.scrollWidth > el.clientWidth + 2) e.stopPropagation(); }, { passive: true })));
   document.querySelectorAll("[data-flyers-line]").forEach((el) => { el.innerHTML = flyerLineup(); link(el, "flyers"); });
 })();
 
