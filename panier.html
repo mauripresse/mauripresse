@@ -31,7 +31,7 @@
       <h3>Récapitulatif</h3>
       <div class="recap__sum" style="margin-top:16px">
         <div><span id="p-n"></span><span id="p-ht"></span></div>
-        <div><span>Livraison</span><span>Offerte</span></div>
+        <div><span>Livraison</span><span id="p-liv">Offerte</span></div>
         <div><span>TVA (20 %)</span><span id="p-tva"></span></div>
       </div>
       <div class="recap__ttc"><span>Total TTC</span><b id="p-ttc"></b></div>
@@ -54,6 +54,7 @@
       : `<div class="cempty"><h2>Votre panier est vide.</h2><p>Configurez un produit pour obtenir un prix immédiat, ou demandez un devis sur mesure.</p>
           <div class="hero__cta"><a class="btn" href="catalogue.html">Voir le catalogue <span class="arrow">→</span></a><a class="btn btn--ghost" href="contact.html">Demander un devis</a></div></div>`;
     document.getElementById("p-n").textContent = c.length + " article" + (c.length > 1 ? "s" : "") + " · HT";
+    document.getElementById("p-liv").textContent = c.some((l) => /jour même/i.test(l.detail) && !/retrait/i.test(l.detail)) ? "Selon l'adresse (Paris & IDF)" : "Offerte";
     document.getElementById("p-ht").textContent = eur(ht);
     document.getElementById("p-tva").textContent = eur(ht * 0.2);
     document.getElementById("p-ttc").textContent = eur(ht * 1.2);

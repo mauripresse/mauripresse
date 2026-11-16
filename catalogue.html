@@ -29,7 +29,7 @@
         <input id="filter" type="search" placeholder="Ex. : étiquettes, flyer A5, vitrine…" autocomplete="off">
         <button type="button" id="clear" class="cbar__clear" aria-label="Effacer la recherche" hidden>✕</button>
       </div>
-      <label class="cbar__x"><input type="checkbox" id="express"><span>⚡ Express 24h</span></label>
+      <label class="cbar__x"><input type="checkbox" id="express"><span>⚡ Express 24h · roll-up</span></label>
     </div>
   </div></section>
 
@@ -65,11 +65,11 @@
   const filter = document.getElementById("filter"), express = document.getElementById("express"), clear = document.getElementById("clear");
   const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 const row = (it, c) => {
-  const k = isConf(it), from = itemFrom(it);
-  return `<a class="rrow" href="${itemHref(it)}" data-name="${esc(norm(itemName(it) + " " + c.name))}" data-x="${k ? 1 : 0}">
+  const k = isConf(it), xp = isExpress(it), from = itemFrom(it);
+  return `<a class="rrow" href="${itemHref(it)}" data-name="${esc(norm(itemName(it) + " " + c.name))}" data-x="${xp ? 1 : 0}">
     <span class="rrow__ico">${catIcon(c.id)}</span>
     <div><h3>${esc(itemName(it))}</h3><p>${k ? "Configuration en ligne, prix immédiat" : "Format, quantité et finitions sur mesure"}</p></div>
-    <span class="rrow__p">${from ? `dès <b>${eur(from)}</b> HT` : ""}${k ? '<span class="pill">24h</span>' : '<span class="pill pill--soft">Sur devis →</span>'}</span>
+    <span class="rrow__p">${from ? `dès <b>${eur(from)}</b> HT` : ""}${xp ? '<span class="pill">24h</span>' : ""}${k ? "" : '<span class="pill pill--soft">Sur devis →</span>'}</span>
   </a>`;
 };
 

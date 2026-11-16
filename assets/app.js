@@ -37,7 +37,7 @@ const CUR = PAGE === "categorie.html" ? (cat(QS.get("c")) || CATS[0]).id
 : PAGE === "produit.html" ? (PRODUCTS[QS.get("p")] || PRODUCTS.cartes).catId
 : null;
 const ALL_ON = PAGE === "catalogue.html" && QS.get("express") !== "1";
-const EXPRESS_ON = PAGE === "catalogue.html" && QS.get("express") === "1";
+const EXPRESS_ON = PAGE === "categorie.html" && QS.get("c") === "roll-up-kakemono";
 const cur = (cond) => (cond ? ' aria-current="page"' : "");
 let ORDER = [...TOP, ...CATS.map((c) => c.id).filter((id) => !TOP.includes(id))];
 if (CUR && ORDER.indexOf(CUR) > 4) ORDER = [CUR, ...ORDER.filter((id) => id !== CUR)];
@@ -59,7 +59,7 @@ const header = `
     <div class="suggest" data-suggest role="listbox" aria-label="Suggestions"></div>
   </form>
   <nav class="header__actions" aria-label="Raccourcis">
-    <a class="hpill hpill--express" href="catalogue.html?express=1"${cur(EXPRESS_ON)}>${icon.bolt}<span>Express 24h</span></a>
+    <a class="hpill hpill--express" href="categorie.html?c=roll-up-kakemono"${cur(EXPRESS_ON)}>${icon.bolt}<span>Roll-up 24h</span></a>
     <a class="hpill hpill--quote" href="contact.html"${cur(PAGE === "contact.html")}>Devis sur mesure</a>
     <button class="hicon hicon--search" type="button" data-search-toggle aria-label="Rechercher">${icon.searchBig}</button>
     <a class="hicon" href="compte.html" aria-label="Mon compte"${cur(PAGE === "compte.html")}>${icon.user}<span class="hicon__lbl">Compte</span></a>
@@ -84,7 +84,7 @@ const header = `
   </div>
   <div class="mmenu__body">
     <div class="mmenu__quick">
-      <a class="mq mq--express" href="catalogue.html?express=1"${cur(EXPRESS_ON)}>${icon.bolt}<span>Express 24h</span></a>
+      <a class="mq mq--express" href="categorie.html?c=roll-up-kakemono"${cur(EXPRESS_ON)}>${icon.bolt}<span>Roll-up 24h</span></a>
       <a class="mq" href="contact.html"${cur(PAGE === "contact.html")}>${icon.doc}<span>Devis</span></a>
       <a class="mq" href="compte.html"${cur(PAGE === "compte.html")}>${icon.user}<span>Se connecter</span></a>
       <a class="mq" href="compte.html?onglet=creer">${icon.userPlus}<span>Créer un compte</span></a>
@@ -220,7 +220,7 @@ const header = `
       sub.innerHTML = `<div class="wrap sub__grid">
         <div><span class="mono" style="color:var(--cyan)">${String(CATS.indexOf(c) + 1).padStart(2, "0")}</span><h4>${esc(c.name)}</h4><p>${esc(c.blurb)}</p>
           <a class="btn btn--sm" href="categorie.html?c=${c.id}">Voir toute la famille <span class="arrow">→</span></a></div>
-        <ul>${c.items.map((it) => `<li><a href="${itemHref(it)}">${esc(itemName(it))}${isConf(it) ? ' <span class="pill">24h</span>' : ""}</a></li>`).join("")}</ul>
+        <ul>${c.items.map((it) => `<li><a href="${itemHref(it)}">${esc(itemName(it))}${isExpress(it) ? ' <span class="pill">24h</span>' : ""}</a></li>`).join("")}</ul>
       </div>`;
       sub.classList.add("is-open");
     }));

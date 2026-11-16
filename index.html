@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mauri Presse — Imprimerie à Paris 10e · Impression express 24h</title>
-<meta name="description" content="Imprimerie offset et numérique à Paris 10e. Cartes de visite, flyers, affiches, roll-up, signalétique et reprographie. Retrait atelier le jour même, livraison express 24h.">
+<title>Mauri Presse — Imprimerie à Paris 10e · Roll-up imprimé en 24h</title>
+<meta name="description" content="Imprimerie offset et numérique à Paris 10e. Cartes de visite, flyers, affiches, roll-up, signalétique et reprographie. Roll-up imprimé en 24h et livré dans la journée à Paris et en Île-de-France, retrait atelier le jour même.">
 <link rel="icon" href="https://mauripresse.com/images/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,14 +22,14 @@
     <div class="wrap hero__grid">
       <div>
         <span class="eyebrow">Imprimerie · Paris 10<sup>e</sup> · Gare du Nord</span>
-        <h1>Imprimé à Paris.<br>Prêt <em>en 24h.</em></h1>
+        <h1>Imprimé à Paris.<br>Prêt <em>dans la journée.</em></h1>
         <p class="hero__lead">Des cartes de visite aux bannières grand format : offset, numérique et signalétique, fabriqués dans notre atelier de la rue de Chabrol avec une fidélité colorimétrique garantie.</p>
         <div class="hero__cta">
           <a class="btn" href="catalogue.html">Voir le catalogue <span class="arrow">→</span></a>
           <a class="btn btn--ghost" href="contact.html">Demander un devis</a>
         </div>
         <div class="hero__facts">
-          <div><b>24h</b><span>Impression express</span></div>
+          <div><b>24h</b><span>Roll-up imprimé</span></div>
           <div><b>Jour même</b><span>Retrait à l'atelier</span></div>
           <div><b>2400 DPI</b><span>Profil FOGRA39</span></div>
         </div>
@@ -37,7 +37,7 @@
 
       <div class="hero__visual">
         <div class="hero__img crop"><img src="https://images.unsplash.com/photo-1777652918682-dec5c79d1301?auto=format&fit=crop&w=1400&q=75" alt="Remise en main propre d'une carte de visite fraîchement imprimée" fetchpriority="high"></div>
-        <div class="hero__stamp" aria-hidden="true"><div>24h<small>EXPRESS</small></div></div>
+        <div class="hero__stamp" aria-hidden="true"><div>24h<small>ROLL-UP</small></div></div>
 
         <form class="quote" id="quote" aria-label="Estimation de prix rapide">
           <div class="quote__title"><h3>Votre prix en direct</h3><span class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
@@ -47,28 +47,105 @@
             <div><label for="qq">Quantité</label><select id="qq"></select></div>
             <div><label for="qd">Délai</label><select id="qd"></select></div>
           </div>
-          <div class="quote__price"><span>Prix HT<br>livraison offerte</span><b id="qprice">—</b></div>
+          <div class="quote__price"><span>Prix HT<br>retrait atelier gratuit</span><b id="qprice">—</b></div>
           <a class="btn btn--cyan btn--block" id="qgo" href="produit.html">Configurer ce produit <span class="arrow">→</span></a>
         </form>
       </div>
     </div>
   </section>
 
-<!-- BANNIÈRE -->
-<section class="section section--tight">
-  <div class="wrap">
-    <a class="banner reveal" href="catalogue.html?express=1">
-      <img src="https://images.unsplash.com/photo-1693031630369-bd429a57f115?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
-      <div class="banner__txt">
-        <span class="banner__tag">Mauri Presse Express</span>
-        <h2>Commandé aujourd'hui,<br><em>livré en moins de 24h.</em></h2>
-        <p>Impression prioritaire dans notre atelier de Paris 10<sup>e</sup>. Retrait sur place le jour même.</p>
-        <span class="btn btn--yellow">Voir les produits express <span class="arrow">→</span></span>
-      </div>
-      <div class="banner__stamp" aria-hidden="true"><div>24h<small>CHRONO</small></div></div>
-    </a>
+<!-- GRAND CARROUSEL -->
+  <section class="section section--tight hcar-sec" aria-label="À la une">
+    <div class="wrap">
+      <div class="hcar" id="hcar" aria-roledescription="carrousel">
+        <div class="hcar__track">
+<article class="hcar__slide hcar__slide--rollup" role="group" aria-roledescription="diapositive" aria-label="1 sur 5">
+  <img class="hcar__bg" src="https://images.unsplash.com/photo-1752155222944-675c2c3bfafd?auto=format&fit=crop&w=1800&q=75" alt="" fetchpriority="high">
+  <div class="hcar__rollups" data-rollups></div>
+  <div class="hcar__txt">
+    <span class="hcar__tag">Best-seller · Roll-up</span>
+    <h2>Votre roll-up imprimé en 24h,<br><em>livré dans la journée.</em></h2>
+    <p>Structure aluminium, bâche haute définition anti-froissement. Livraison le jour même à Paris et en Île-de-France, ou retrait gratuit à l'atelier.</p>
+    <span class="hcar__price">dès <b>49,00 €</b> HT</span>
+    <div class="hcar__cta"><a class="btn btn--yellow" href="contact.html?produit=Roll-Up%20Stand%20%26%20Kakemono">Commander mon roll-up <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=roll-up-kakemono">Voir les roll-up</a></div>
   </div>
-</section>
+</article>
+<article class="hcar__slide hcar__slide--cartes" role="group" aria-roledescription="diapositive" aria-label="2 sur 5">
+  <img class="hcar__bg" src="https://images.unsplash.com/photo-1718670013988-c6e3edb92345?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
+  
+  <div class="hcar__txt">
+    <span class="hcar__tag">Cartes de visite</span>
+    <h2>Des cartes de visite<br><em>qui font bonne impression.</em></h2>
+    <p>Couché 350 g, soft-touch, dorure, coins arrondis… Configurez vos cartes en ligne, le prix s'affiche en direct.</p>
+    <span class="hcar__price">dès <b>19,00 €</b> HT</span>
+    <div class="hcar__cta"><a class="btn btn--yellow" href="produit.html?p=classic">Configurer mes cartes <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=cartes-de-visite">Toutes les cartes</a></div>
+  </div>
+</article>
+<article class="hcar__slide hcar__slide--flyers" role="group" aria-roledescription="diapositive" aria-label="3 sur 5">
+  <img class="hcar__bg" src="https://images.unsplash.com/photo-1769893715447-8f12c382e49c?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
+  
+  <div class="hcar__txt">
+    <span class="hcar__tag">Flyers & tracts</span>
+    <h2>Flyers, tracts et dépliants<br><em>du A6 au A3.</em></h2>
+    <p>Pour vos ouvertures, événements et opérations commerciales. Papier brillant ou mat, recto ou recto/verso.</p>
+    <span class="hcar__price">dès <b>14,90 €</b> HT</span>
+    <div class="hcar__cta"><a class="btn btn--yellow" href="contact.html?produit=Flyers%20%26%20Brochures">Demander mes flyers <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=flyers-tracts">Voir les flyers</a></div>
+  </div>
+</article>
+<article class="hcar__slide hcar__slide--garantie" role="group" aria-roledescription="diapositive" aria-label="4 sur 5">
+  <img class="hcar__bg" src="https://images.unsplash.com/photo-1715154470884-1c2be0b0129f?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
+  
+  <div class="hcar__txt">
+    <span class="hcar__tag">Prix le plus bas garanti</span>
+    <h2>Trouvé moins cher ailleurs&nbsp;?<br><em>On vous rembourse la différence.</em></h2>
+    <p>Pour un produit identique, en ligne ou chez un imprimeur près de chez vous. Envoyez-nous la preuve, l'atelier vérifie.</p>
+    
+    <div class="hcar__cta"><a class="btn btn--yellow" href="garantie.html">Faire une demande <span class="arrow">→</span></a><a class="btn btn--light" href="garantie.html">Comment ça marche</a></div>
+  </div>
+</article>
+<article class="hcar__slide hcar__slide--livraison" role="group" aria-roledescription="diapositive" aria-label="5 sur 5">
+  <img class="hcar__bg" src="https://images.unsplash.com/photo-1503694978374-8a2fa686963a?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
+  
+  <div class="hcar__txt">
+    <span class="hcar__tag">Livraison jour même</span>
+    <h2>Livré le jour même<br><em>à Paris et en Île-de-France.</em></h2>
+    <p>Livraison express payante, au tarif selon votre adresse : demandez-nous le prix. Ou retrait gratuit à l'atelier, 24 rue de Chabrol.</p>
+    
+    <div class="hcar__cta"><a class="btn btn--yellow" href="contact.html?produit=Livraison%20jour%20m%C3%AAme">Demander le tarif de livraison <span class="arrow">→</span></a><a class="btn btn--light" href="index.html#acces">Nous trouver</a></div>
+  </div>
+</article>
+        </div>
+        <button class="hcar__arrow hcar__arrow--prev" type="button" aria-label="Diapositive précédente">←</button>
+        <button class="hcar__arrow hcar__arrow--next" type="button" aria-label="Diapositive suivante">→</button>
+        <div class="hcar__dots" role="tablist" aria-label="Choisir une diapositive"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROLL-UP À LA UNE -->
+  <section class="section" id="rollup">
+    <div class="wrap">
+      <div class="rusec reveal">
+        <div class="rusec__head">
+          <div>
+            <span class="eyebrow eyebrow--yellow">Notre best-seller</span>
+            <h2>Le roll-up imprimé en 24h, <em>livré dans la journée.</em></h2>
+            <p class="rusec__lead">Le support star des salons, vitrines et événements. Structure aluminium rétractable, bâche haute définition anti-froissement, housse de transport incluse.</p>
+          </div>
+          <div class="rusec__price"><small>À partir de</small><b>49,00 €</b><span>HT · 85 × 200 cm</span></div>
+        </div>
+        <div class="rusec__gallery" data-rollups-gallery></div>
+        <ul class="rusec__facts">
+          <li><b>Imprimé en 24h</b><span>dans notre atelier de Paris 10<sup>e</sup></span></li>
+          <li><b>Livré le jour même</b><span>à Paris et en Île-de-France · livraison payante, tarif selon l'adresse</span></li>
+          <li><b>Retrait gratuit</b><span>à l'atelier, 24 rue de Chabrol</span></li>
+          <li><b>Contrôle PAO</b><span>vos fichiers vérifiés avant impression</span></li>
+        </ul>
+        <div class="hero__cta"><a class="btn btn--yellow" href="contact.html?produit=Roll-Up%20Stand%20%26%20Kakemono">Commander mon roll-up <span class="arrow">→</span></a><a class="btn btn--light" href="contact.html?produit=Livraison%20jour%20m%C3%AAme%20roll-up">Tarif de livraison</a></div>
+        <p class="rusec__note">Visuels d'exemple : votre roll-up est imprimé avec votre propre maquette.</p>
+      </div>
+    </div>
+  </section>
 
   <!-- BANDEAU -->
   <div class="ticker" aria-hidden="true"><div class="ticker__track" id="ticker"></div></div>
@@ -76,7 +153,7 @@
   <!-- CHIFFRES (ordinateur) -->
   <section class="section section--tight desk">
     <div class="wrap stats reveal">
-      <div class="stat"><b><span data-count="24">24</span> h</b><h3>Impression express</h3><p>Fabrication prioritaire à l'atelier et expédition sous 24 heures.</p></div>
+      <div class="stat"><b><span data-count="24">24</span> h</b><h3>Roll-up express</h3><p>Votre roll-up imprimé en 24h et livré dans la journée à Paris et en Île-de-France.</p></div>
       <div class="stat"><b><span data-count="2400">2 400</span> DPI</b><h3>Haute précision</h3><p>Presses HP Indigo et Heidelberg, profil colorimétrique FOGRA39.</p></div>
       <div class="stat"><b><span data-count="0" id="stat-products">0</span></b><h3>Produits au catalogue</h3><p>De la photocopie minute au covering de véhicule, en 14 familles.</p></div>
       <div class="stat"><b><span data-count="6">6</span> j / 7</b><h3>Atelier ouvert</h3><p>Du lundi au samedi, de 9h à 19h30, à deux pas de la Gare du Nord.</p></div>
@@ -95,7 +172,18 @@
   </div>
 </section>
 
-  <!-- PRIX DÉGRESSIFS (ordinateur) -->
+<!-- PRIX LE PLUS BAS GARANTI -->
+<section class="section section--tight">
+  <div class="wrap">
+    <a class="gband reveal" href="garantie.html">
+      <span class="gband__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
+      <span class="gband__txt"><small>Notre engagement</small><b>Prix le plus bas garanti</b><span>Trouvé moins cher ailleurs pour un produit identique ? Nous vous remboursons la différence.</span></span>
+      <span class="btn btn--yellow">Faire une demande <span class="arrow">→</span></span>
+    </a>
+  </div>
+</section>
+
+<!-- PRIX DÉGRESSIFS (ordinateur) -->
   <section class="section desk">
     <div class="wrap degr">
       <div class="reveal">
@@ -115,24 +203,6 @@
         <div class="hero__cta"><a class="btn btn--cyan" id="dg-go" href="produit.html?p=cartes">Configurer mes cartes <span class="arrow">→</span></a><span class="degr__save" id="dg-save"></span></div>
       </div>
       <div class="degr__chart reveal" id="dg-chart" aria-hidden="true"></div>
-    </div>
-  </section>
-
-  <!-- EXPRESS -->
-  <section class="section" id="express">
-    <div class="wrap">
-      <div class="dark reveal">
-        <span class="eyebrow eyebrow--yellow">Impression express</span>
-        <h2>Un salon demain&nbsp;? On imprime aujourd'hui.</h2>
-        <p class="dark__lead">Fabrication prioritaire à l'atelier et expédition sous 24 heures, contrôle PAO inclus. À Paris, retirez votre commande le jour même au 24 rue de Chabrol.</p>
-        <div class="steps">
-          <div class="step"><h3>Configurez</h3><p>Format, papier, finition : le prix s'ajuste en direct, sans attendre un devis.</p></div>
-          <div class="step"><h3>Envoyez vos fichiers</h3><p>PDF, AI, PSD… Nos opérateurs PAO vérifient dimensions et fonds perdus.</p></div>
-          <div class="step"><h3>On imprime</h3><p>Presses HP Indigo et Heidelberg, calibrées pour des couleurs fidèles.</p></div>
-          <div class="step"><h3>Retrait ou livraison</h3><p>Retrait à l'atelier le jour même, ou livraison express partout en France.</p></div>
-        </div>
-        <div class="hero__cta"><a class="btn btn--yellow" href="catalogue.html?express=1">Produits disponibles en 24h <span class="arrow">→</span></a></div>
-      </div>
     </div>
   </section>
 
@@ -170,7 +240,7 @@
           <li><span>Presses</span><span>HP Indigo & Heidelberg</span></li>
           <li><span>Précision</span><span>2400 DPI · profil colorimétrique FOGRA39</span></li>
           <li><span>Assistance PAO</span><span>Une équipe sur place — <a href="tel:0783460217" style="border-bottom:1.5px solid var(--cyan)">07 83 46 02 17</a></span></li>
-          <li><span>Livraison</span><span>Partout en France, le jour même à Paris</span></li>
+          <li><span>Livraison</span><span>Partout en France · le jour même à Paris et en Île-de-France (payante, tarif selon l'adresse)</span></li>
         </ul>
       </div>
     </div>
@@ -224,7 +294,7 @@
       <div class="reveal">
         <details class="faq" open><summary>Quels fichiers dois-je envoyer ?</summary><div><p>Un PDF de préférence ; les fichiers AI, PSD, JPG et PNG sont aussi acceptés. Prévoyez une résolution de 300 DPI, des couleurs en CMJN et des fonds perdus. Chaque fichier est contrôlé avant impression.</p></div></details>
         <details class="faq"><summary>Je n'ai pas de maquette, vous pouvez la créer ?</summary><div><p>Oui. Nos graphistes créent votre maquette sur mesure : décrivez votre besoin dans une <a href="contact.html" style="text-decoration:underline;color:var(--ink)">demande de devis</a>.</p></div></details>
-        <details class="faq"><summary>Quels sont les délais ?</summary><div><p>Trois rythmes au choix : standard en 3 à 4 jours, express en 24 à 48 heures, ou retrait à l'atelier le jour même à Paris 10<sup>e</sup>, selon le produit.</p></div></details>
+        <details class="faq"><summary>Quels sont les délais ?</summary><div><p>Trois rythmes au choix : standard en 3 à 4 jours, express en 24 à 48 heures, ou retrait à l'atelier le jour même à Paris 10<sup>e</sup>, selon le produit. Les roll-up sont imprimés en 24h. La livraison le jour même est possible à Paris et en Île-de-France : elle est payante, avec un tarif selon votre adresse, à demander à l'atelier.</p></div></details>
         <details class="faq"><summary>Où et quand retirer ma commande ?</summary><div><p>À l'atelier, 24 rue de Chabrol, 75010 Paris, du lundi au samedi de 9h à 19h30. En cas d'urgence, impression sur devis de 20h à 23h et le dimanche au 07 83 46 02 17.</p></div></details>
         <details class="faq"><summary>Quels moyens de paiement acceptez-vous ?</summary><div><p>Espèces, carte bancaire, Visa, Mastercard, virement et PayPal.</p></div></details>
       </div>
@@ -284,12 +354,12 @@
 
 /* Catalogue de l'accueil : huit familles, une photo et un prix chacune */
 (() => {
-  const SHOW = ["cartes-de-visite", "flyers-tracts", "affiche-poster", "etiquettes-autocollants", "roll-up-kakemono", "vinyle-adhesif", "signaletique-enseignes", "objets-packaging"];
+  const SHOW = ["roll-up-kakemono", "cartes-de-visite", "flyers-tracts", "affiche-poster", "etiquettes-autocollants", "vinyle-adhesif", "signaletique-enseignes", "objets-packaging"];
   const FROM = { "cartes-de-visite": fromPrice("classic"), "flyers-tracts": 14.9, "roll-up-kakemono": 49 }; /* prix « dès » du site officiel */
   document.getElementById("cats").innerHTML = SHOW.map((id, i) => {
     const c = CATS.find((x) => x.id === id), k = FROM[id];
-    return `<a class="shopcard${i >= 6 ? " shopcard--extra" : ""}" href="categorie.html?c=${id}">
-      <div class="shopcard__img"><img src="${catPhoto(id, 700)}" alt="" loading="lazy">${id === "cartes-de-visite" ? '<span class="tag tag--magenta">24h</span>' : ""}</div>
+    return `<a class="shopcard${i === 0 ? " shopcard--big" : ""}${i >= 7 ? " shopcard--extra" : ""}" href="categorie.html?c=${id}">
+      <div class="shopcard__img"><img src="${catPhoto(id, 700)}" alt="" loading="lazy">${i === 0 ? '<span class="tag tag--magenta">Imprimé en 24h · livré dans la journée</span>' : ""}</div>
       <div class="shopcard__body">
         <h3>${esc(c.name)}</h3>
         <p>${esc(c.blurb)}</p>
@@ -297,6 +367,38 @@
       </div>
     </a>`;
   }).join("");
+})();
+
+/* Grand carrousel : flèches, points, glisser au doigt, défilement automatique */
+(() => {
+  const root = document.getElementById("hcar"), track = root.querySelector(".hcar__track"), slides = [...root.querySelectorAll(".hcar__slide")];
+  const dots = root.querySelector(".hcar__dots");
+  root.querySelectorAll("[data-rollups]").forEach((el) => { el.innerHTML = [0, 4, 1].map(rollupHTML).join(""); });
+  dots.innerHTML = slides.map((s, i) => `<button type="button" role="tab" aria-label="Diapositive ${i + 1}"></button>`).join("");
+  let cur = 0, timer = null;
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const go = (n) => {
+    cur = (n + slides.length) % slides.length;
+    track.style.transform = `translateX(${-cur * 100}%)`;
+    slides.forEach((s, i) => { s.classList.toggle("is-on", i === cur); s.setAttribute("aria-hidden", i !== cur); s.querySelectorAll("a").forEach((a) => (a.tabIndex = i === cur ? 0 : -1)); });
+    [...dots.children].forEach((b, i) => b.setAttribute("aria-selected", i === cur));
+  };
+  const play = () => { if (still) return; clearInterval(timer); timer = setInterval(() => go(cur + 1), 6500); };
+  const stop = () => clearInterval(timer);
+  root.querySelector(".hcar__arrow--prev").addEventListener("click", () => { go(cur - 1); play(); });
+  root.querySelector(".hcar__arrow--next").addEventListener("click", () => { go(cur + 1); play(); });
+  dots.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { go([...dots.children].indexOf(b)); play(); } });
+  root.addEventListener("mouseenter", stop); root.addEventListener("mouseleave", play);
+  root.addEventListener("focusin", stop); root.addEventListener("focusout", play);
+  root.addEventListener("keydown", (e) => { if (e.key === "ArrowLeft") { go(cur - 1); play(); } if (e.key === "ArrowRight") { go(cur + 1); play(); } });
+  let x0 = null, dx = 0;
+  root.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; dx = 0; stop(); }, { passive: true });
+  root.addEventListener("touchmove", (e) => { if (x0 != null) dx = e.touches[0].clientX - x0; }, { passive: true });
+  root.addEventListener("touchend", () => { if (Math.abs(dx) > 45) go(cur + (dx < 0 ? 1 : -1)); x0 = null; play(); });
+  go(0); play();
+
+  /* Galerie de la section roll-up */
+  document.querySelectorAll("[data-rollups-gallery]").forEach((el) => { el.innerHTML = ROLLUPS.map((r, i) => `<figure class="rusec__item">${rollupHTML(i)}<figcaption>${r.title}</figcaption></figure>`).join(""); });
 })();
 
 /* Calculateur express du hero (mêmes prix que le configurateur) */

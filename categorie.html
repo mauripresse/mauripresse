@@ -33,8 +33,19 @@
     <div class="items items--lg" id="c-items"></div>
   </div></section>
 
-  <section class="section section--tight"><div class="wrap">
-    <div class="urgent">
+<section class="section section--tight" id="ru-block" hidden><div class="wrap">
+  <div class="rusec rusec--page">
+    <div class="rusec__head"><div><span class="eyebrow eyebrow--yellow">Exemples de roll-up</span><h2>Imprimé en 24h, <em>livré dans la journée.</em></h2>
+      <p class="rusec__lead">Livraison le jour même à Paris et en Île-de-France (payante, tarif selon votre adresse) ou retrait gratuit à l'atelier.</p></div>
+      <div class="rusec__price"><small>À partir de</small><b>49,00 €</b><span>HT · 85 × 200 cm</span></div></div>
+    <div class="rusec__gallery" id="ru-gallery"></div>
+    <div class="hero__cta"><a class="btn btn--yellow" href="contact.html?produit=Roll-Up%20Stand%20%26%20Kakemono">Commander mon roll-up <span class="arrow">→</span></a><a class="btn btn--light" href="contact.html?produit=Livraison%20jour%20m%C3%AAme%20roll-up">Tarif de livraison</a></div>
+    <p class="rusec__note">Visuels d'exemple : votre roll-up est imprimé avec votre propre maquette.</p>
+  </div>
+</div></section>
+
+<section class="section section--tight"><div class="wrap">
+  <div class="urgent">
       <div>
         <h2>Un format ou une finition qui n'est pas dans la liste&nbsp;?</h2>
         <p>Nous imprimons aussi sur mesure. Décrivez votre projet, l'équipe PAO vous répond avec un prix et un délai.</p>
@@ -63,19 +74,24 @@
   document.getElementById("c-name").textContent = c.name;
   document.getElementById("c-blurb").textContent = c.blurb + " Imprimé dans notre atelier de Paris 10e, à retirer sur place ou livré partout en France.";
   const img = document.getElementById("c-img"); img.src = catPhoto(c.id); img.alt = c.name;
-  document.getElementById("c-badges").innerHTML = (conf ? '<span class="badge">⚡ Prix en ligne & express 24h</span>' : '<span class="badge">✎ Chiffré sur devis</span>') + '<span class="badge">📍 Retrait Paris 10<sup>e</sup></span><span class="badge">✓ Contrôle des fichiers inclus</span>';
+  document.getElementById("c-badges").innerHTML = (c.id === "roll-up-kakemono" ? '<span class="badge">⚡ Imprimé en 24h</span><span class="badge">🚚 Livré dans la journée · Paris & IDF</span>' : conf ? '<span class="badge">⚡ Prix en ligne</span>' : '<span class="badge">✎ Chiffré sur devis</span>') + '<span class="badge">📍 Retrait Paris 10<sup>e</sup></span><span class="badge">✓ Contrôle des fichiers inclus</span>';
   document.getElementById("c-count").textContent = String(i + 1).padStart(2, "0");
   document.getElementById("c-devis").href = "contact.html?produit=" + encodeURIComponent(c.name);
 
 document.getElementById("c-items").innerHTML = c.items.map((it) => {
-  const k = isConf(it), from = itemFrom(it);
+  const k = isConf(it), xp = isExpress(it), from = itemFrom(it);
   return `<a class="item" href="${itemHref(it)}">
     <div><h3>${esc(itemName(it))}</h3><p>${k ? "Configuration en ligne, prix immédiat." : "Format, quantité et finitions sur mesure."}</p></div>
-    <div class="item__meta"><span>${from ? `dès <b>${eur(from)}</b> HT` : "Sur devis"}</span>${k ? '<span class="pill">24h</span>' : '<span class="pill pill--soft">Devis →</span>'}</div>
+    <div class="item__meta"><span>${from ? `dès <b>${eur(from)}</b> HT` : "Sur devis"}</span>${xp ? '<span class="pill">24h</span>' : ""}${k ? "" : '<span class="pill pill--soft">Devis →</span>'}</div>
   </a>`;
 }).join("");
 
-  document.getElementById("c-others").innerHTML = CATS.filter((x) => x.id !== c.id).map((x) => `<a href="categorie.html?c=${x.id}">${esc(x.name)}</a>`).join("");
+if (c.id === "roll-up-kakemono") {
+  document.getElementById("ru-block").hidden = false;
+  document.getElementById("ru-gallery").innerHTML = ROLLUPS.map((r, n) => `<figure class="rusec__item">${rollupHTML(n)}<figcaption>${r.title}</figcaption></figure>`).join("");
+}
+
+document.getElementById("c-others").innerHTML = CATS.filter((x) => x.id !== c.id).map((x) => `<a href="categorie.html?c=${x.id}">${esc(x.name)}</a>`).join("");
 })();
 </script>
 </body>

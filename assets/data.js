@@ -65,7 +65,7 @@ const PRODUCTS = {
     qty: [100, 250, 500],
     defQty: 100, defDeliv: "j5",
     deliv: [
-      { id: "day", label: "Livraison jour même", sub: "Same day", short: "Jour même", days: 0, prices: [30, 50, 80] },
+      { id: "day", label: "Livraison jour même", sub: "Paris & IDF · + frais", short: "Jour même", days: 0, paid: true, prices: [30, 50, 80] },
       { id: "j5", label: "Livraison 5 jours", sub: "Standard", short: "5 jours", days: 5, prices: [25, 40, 60] },
     ],
     groups: [
@@ -161,7 +161,7 @@ const CATS = [
   { id: "papeterie-bureautique", name: "Papeterie & bureautique", blurb: "En-têtes, administratif, plaques gravées.", items: ["Bureautique", "Administratif", "Plaque gravure"] },
   { id: "etiquettes-autocollants", name: "Étiquettes & autocollants", blurb: "Rouleaux, holographiques, imperméables.", items: ["Étiquettes en rouleau standards", "Étiquettes en plastique", "Étiquettes en papier", "Étiquettes avec finitions spéciales", "Étiquettes holographiques", "Étiquettes Premium", "Étiquettes imperméables", "Étiquettes repositionnables"] },
   { id: "vinyle-adhesif", name: "Vinyle adhésif", blurb: "Vitrines, murs, sols et véhicules.", items: ["Adhésifs pour vitrines", "Adhésifs muraux", "Adhésifs pour voitures et motos", "Covering voiture", "Adhésif pour sols", "Lettrage adhésif", "Adhésif vinyle transparent", "Adhésifs dépoli", "Adhésifs microperforé", "Vitrophanie"] },
-  { id: "roll-up-kakemono", name: "Roll-up & kakémono", blurb: "Structures rétractables prêtes à poser.", items: [{ n: "Roll-Up Stand & Kakemono", from: 49 }] },
+  { id: "roll-up-kakemono", name: "Roll-up & kakémono", blurb: "Imprimé en 24h, livré dans la journée.", items: [{ n: "Roll-Up Stand & Kakemono", from: 49, x: 1 }] },
   { id: "signaletique-enseignes", name: "Signalétique & enseignes", blurb: "Enseignes, bâches et plaques pro.", items: ["Enseignes extérieures", "Bâches & banderoles PVC", "Plaques professionnelles laiton / alu"] },
   { id: "support-rigide", name: "Supports rigides", blurb: "Panneaux rigides sur mesure.", items: ["Panneaux & supports rigides"] },
   { id: "plv-expo", name: "PLV & expo", blurb: "Stands, présentoirs et PLV.", items: ["PLV, stands & expo"] },
@@ -218,3 +218,22 @@ const BAG_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 const TRASH_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>';
 /* Icône d'une ligne de panier : le pictogramme de sa famille, retrouvé via le nom du produit */
 const lineIcon = (name) => { const p = Object.values(PRODUCTS).find((p) => p.name === name); return p ? catIcon(p.catId) : BAG_ICON; };
+
+/* ---------- Produits express (24h) : les cartes configurables et le roll-up ---------- */
+const isExpress = (it) => isConf(it) || (typeof it === "object" && !!it.x);
+
+/* ---------- Visuels de roll-up (exemples dessinés, pas des photos) ---------- */
+const ROLLUPS = [
+  { cls: "ru--tech", tag: "Salon 2026", title: "Tech Days", sub: "Innovation · Stand B12", url: "tech-days.fr" },
+  { cls: "ru--resto", tag: "Nouvelle carte", title: "La Table de Clara", sub: "Cuisine maison · Paris 10e", url: "latabledeclara.fr" },
+  { cls: "ru--immo", tag: "Agence immobilière", title: "Maison Lumière", sub: "Achat · Vente · Location", url: "maison-lumiere.fr" },
+  { cls: "ru--beaute", tag: "Institut", title: "Atelier Rose", sub: "Soins visage & bien-être", url: "atelier-rose.fr" },
+  { cls: "ru--mp", tag: "Votre logo ici", title: "Votre roll-up", sub: "Imprimé en 24h", url: "mauripresse.com" },
+];
+const rollupHTML = (i) => {
+  const r = ROLLUPS[i % ROLLUPS.length];
+  return `<div class="ru ${r.cls}" aria-hidden="true"><div class="ru__rail"></div><div class="ru__banner">
+      <span class="ru__tag">${r.tag}</span><b class="ru__title">${r.title}</b><span class="ru__sub">${r.sub}</span>
+      <span class="ru__art"><i></i><i></i><i></i></span><span class="ru__url">${r.url}</span>
+    </div><div class="ru__base"></div></div>`;
+};

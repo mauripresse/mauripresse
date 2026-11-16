@@ -21,7 +21,7 @@
     <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><a href="catalogue.html">Catalogue</a><span>/</span><a id="crumb-cat" href="catalogue.html"></a></nav>
     <h1 id="p-name"></h1>
     <p id="p-desc"></p>
-    <div class="badges"><span class="badge">🚚 Livraison offerte</span><span class="badge">📍 Retrait Paris 10<sup>e</sup></span><span class="badge">✓ Contrôle des fichiers inclus</span></div>
+    <div class="badges"><span class="badge">🚚 Livraison jour même Paris & IDF</span><span class="badge">📍 Retrait Paris 10<sup>e</sup></span><span class="badge">✓ Contrôle des fichiers inclus</span></div>
   </div></section>
 
   <div class="wrap config">
@@ -56,7 +56,7 @@
           <p style="margin-top:10px">Pas de fichier ? Nos graphistes créent votre maquette sur mesure — <a href="contact.html" style="text-decoration:underline;color:var(--ink)">demandez un devis</a>.</p>
         </div></details>
         <details class="faq"><summary>Livraison & retrait à l'atelier</summary><div>
-          <p>Retrait à l'atelier au 24 rue de Chabrol, Paris 10<sup>e</sup>, du lundi au samedi de 9h à 19h30. Livraison partout en France, en standard ou en express.</p>
+          <p>Retrait gratuit à l'atelier au 24 rue de Chabrol, Paris 10<sup>e</sup>, du lundi au samedi de 9h à 19h30. Livraison partout en France. La livraison le jour même est possible à Paris et en Île-de-France : elle est payante, avec un tarif selon votre adresse, confirmé par l'atelier.</p>
         </div></details>
         <details class="faq"><summary>Un besoin hors grille&nbsp;?</summary><div>
           <p>Format spécial, très grande quantité, papier de création ou finition particulière : appelez l'atelier au <a href="tel:0147707924" style="text-decoration:underline;color:var(--ink)">01 47 70 79 24</a> ou envoyez votre demande, nous imprimons aussi sur mesure.</p>
@@ -71,18 +71,19 @@
       <div class="recap__date" id="recap-date"></div>
       <div class="recap__sum">
         <div><span>Prix HT</span><span id="r-ht"></span></div>
-        <div><span>Livraison</span><span>Offerte</span></div>
+        <div><span>Livraison</span><span id="r-liv">Offerte</span></div>
         <div><span>TVA (20 %)</span><span id="r-tva"></span></div>
       </div>
       <div class="recap__ttc"><span>Total TTC</span><b id="r-ttc"></b></div>
       <div class="recap__unit" id="r-unit"></div>
       <button class="btn btn--cyan btn--block" id="add" type="button">Ajouter au panier <span class="arrow">→</span></button>
-      <ul class="assure"><li>Paiement sécurisé (CB, Visa, PayPal)</li><li>Imprimé dans notre atelier parisien</li><li>Assistance PAO au 07 83 46 02 17</li></ul>
-      <a class="guarantee" id="guarantee-link" href="garantie.html">
+      <a class="guarantee guarantee--big" id="guarantee-link" href="garantie.html">
         <span class="guarantee__ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
         <span><b>Prix le plus bas garanti</b><small>Trouvé moins cher ailleurs ? On vous rembourse la différence.</small></span>
         <span class="arrow">→</span>
       </a>
+      <ul class="assure"><li>Paiement sécurisé (CB, Visa, PayPal)</li><li>Imprimé dans notre atelier parisien</li><li>Assistance PAO au 07 83 46 02 17</li></ul>
+
     </aside>
   </div>
 </main>
@@ -196,7 +197,8 @@ stages.forEach((st) => {
     const d = delivOf(key, state.d), ht = computePrice(key, state.q, state.c, state.d), qty = p.qty[state.q];
     const rows = [["Produit", p.name], ...p.groups.map((g, i) => [g.label, g.options[state.c[i]].label]), ["Quantité", qty.toLocaleString("fr-FR") + " ex."], ["Délai", d.label + " · " + d.sub]];
     document.getElementById("recap-list").innerHTML = rows.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
-    document.getElementById("recap-date").innerHTML = d.days === 0 ? "📍 <b>Retrait à l'atelier</b>, sous réserve de validation des fichiers." : `🚚 Livraison estimée <b>${deliveryDate(d.days)}</b>`;
+    document.getElementById("r-liv").textContent = d.paid ? "Selon l'adresse" : d.id === "pickup" ? "Retrait gratuit" : "Offerte";
+    document.getElementById("recap-date").innerHTML = d.paid ? "🚚 <b>Livraison aujourd'hui</b> à Paris et en Île-de-France. Frais de livraison selon l'adresse, confirmés par l'atelier." : d.days === 0 ? "📍 <b>Retrait à l'atelier</b>, sous réserve de validation des fichiers." : `🚚 Livraison estimée <b>${deliveryDate(d.days)}</b>`;
     p.groups.forEach((g, i) => { const e = document.querySelector(`[data-val="${i}"]`); if (e) e.textContent = g.options[state.c[i]].label; });
     document.getElementById("r-ht").textContent = eur(ht);
     document.getElementById("guarantee-link").href = "garantie.html?" + new URLSearchParams({ produit: p.name, prix: ht.toFixed(2), config: rows.slice(1).map(([k, v]) => k + " : " + v).join(" | ") });
