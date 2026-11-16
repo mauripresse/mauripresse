@@ -17,57 +17,31 @@
 <script src="assets/app.js"></script>
 
 <main>
-  <!-- HERO -->
-  <section class="hero">
-    <div class="wrap hero__grid">
-      <div>
-        <span class="eyebrow">Imprimerie · Paris 10<sup>e</sup> · Gare du Nord</span>
-        <h1>Imprimé à Paris.<br>Prêt <em>dans la journée.</em></h1>
-        <p class="hero__lead">Des cartes de visite aux bannières grand format : offset, numérique et signalétique, fabriqués dans notre atelier de la rue de Chabrol avec une fidélité colorimétrique garantie.</p>
-        <div class="hero__cta">
-          <a class="btn" href="catalogue.html">Voir le catalogue <span class="arrow">→</span></a>
-          <a class="btn btn--ghost" href="contact.html">Demander un devis</a>
-        </div>
-        <div class="hero__facts">
-          <div><b>24h</b><span>Roll-up imprimé</span></div>
-          <div><b>Jour même</b><span>Retrait à l'atelier</span></div>
-          <div><b>2400 DPI</b><span>Profil FOGRA39</span></div>
-        </div>
-      </div>
-
-      <div class="hero__visual">
-        <div class="hero__img crop"><img src="https://images.unsplash.com/photo-1777652918682-dec5c79d1301?auto=format&fit=crop&w=1400&q=75" alt="Remise en main propre d'une carte de visite fraîchement imprimée" fetchpriority="high"></div>
-        <div class="hero__stamp" aria-hidden="true"><div>24h<small>ROLL-UP</small></div></div>
-
-        <form class="quote" id="quote" aria-label="Estimation de prix rapide">
-          <div class="quote__title"><h3>Votre prix en direct</h3><span class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
-          <label for="qp">Produit</label>
-          <select id="qp"></select>
-          <div class="quote__row">
-            <div><label for="qq">Quantité</label><select id="qq"></select></div>
-            <div><label for="qd">Délai</label><select id="qd"></select></div>
-          </div>
-          <div class="quote__price"><span>Prix HT<br>retrait atelier gratuit</span><b id="qprice">—</b></div>
-          <a class="btn btn--cyan btn--block" id="qgo" href="produit.html">Configurer ce produit <span class="arrow">→</span></a>
-        </form>
-      </div>
-    </div>
-  </section>
-
 <!-- GRAND CARROUSEL -->
   <section class="section section--tight hcar-sec" aria-label="À la une">
     <div class="wrap">
       <div class="hcar" id="hcar" aria-roledescription="carrousel">
         <div class="hcar__track">
-<article class="hcar__slide hcar__slide--rollup" role="group" aria-roledescription="diapositive" aria-label="1 sur 5">
-  <img class="hcar__bg" src="https://images.unsplash.com/photo-1752155222944-675c2c3bfafd?auto=format&fit=crop&w=1800&q=75" alt="" fetchpriority="high">
-  <div class="hcar__rollups" data-rollups></div>
-  <div class="hcar__txt">
-    <span class="hcar__tag">Best-seller · Roll-up</span>
-    <h2>Votre roll-up imprimé en 24h,<br><em>livré dans la journée.</em></h2>
-    <p>Structure aluminium, bâche haute définition anti-froissement. Livraison le jour même à Paris et en Île-de-France, ou retrait gratuit à l'atelier.</p>
-    <span class="hcar__price">dès <b>49,00 €</b> HT</span>
-    <div class="hcar__cta"><a class="btn btn--yellow" href="contact.html?produit=Roll-Up%20Stand%20%26%20Kakemono">Commander mon roll-up <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=roll-up-kakemono">Voir les roll-up</a></div>
+<article class="hcar__slide hcar__slide--rusec" role="group" aria-roledescription="diapositive" aria-label="1 sur 5">
+  <div class="rusec rusec--slide">
+        <div class="rusec__head">
+          <div>
+            <span class="eyebrow eyebrow--yellow">Notre best-seller</span>
+            <h2>Le roll-up imprimé en 24h, <em>livré dans la journée.</em></h2>
+            <p class="rusec__lead">Le support star des salons, vitrines et événements. Structure aluminium rétractable, bâche haute définition anti-froissement, housse de transport incluse.</p>
+          </div>
+          <div class="rusec__price"><small>À partir de</small><b>49,00 €</b><span>HT · 85 × 200 cm</span></div>
+        </div>
+        <div class="rusec__gallery" data-rollups-gallery></div>
+        <ul class="rusec__facts">
+          <li><b>Imprimé en 24h</b><span>dans notre atelier de Paris 10<sup>e</sup></span></li>
+          <li><b>Livré le jour même</b><span>à Paris et en Île-de-France · livraison payante, tarif selon l'adresse</span></li>
+          <li><b>Retrait gratuit</b><span>à l'atelier, 24 rue de Chabrol</span></li>
+          <li><b>Contrôle PAO</b><span>vos fichiers vérifiés avant impression</span></li>
+        </ul>
+        <div class="hero__cta"><a class="btn btn--yellow" href="contact.html?produit=Roll-Up%20Stand%20%26%20Kakemono">Commander mon roll-up <span class="arrow">→</span></a><a class="btn btn--light" href="contact.html?produit=Livraison%20jour%20m%C3%AAme%20roll-up">Tarif de livraison</a></div>
+        <p class="rusec__note">Visuels d'exemple : votre roll-up est imprimé avec votre propre maquette.</p>
+      
   </div>
 </article>
 <article class="hcar__slide hcar__slide--cartes" role="group" aria-roledescription="diapositive" aria-label="2 sur 5">
@@ -96,9 +70,9 @@
   <img class="hcar__bg" src="https://images.unsplash.com/photo-1715154470884-1c2be0b0129f?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
   
   <div class="hcar__txt">
-    <span class="hcar__tag">Prix le plus bas garanti</span>
-    <h2>Trouvé moins cher ailleurs&nbsp;?<br><em>On vous rembourse la différence.</em></h2>
-    <p>Pour un produit identique, en ligne ou chez un imprimeur près de chez vous. Envoyez-nous la preuve, l'atelier vérifie.</p>
+    <span class="hcar__tag">Prix les plus bas de France</span>
+    <h2>Trouvé moins cher ailleurs&nbsp;?<br><em>On vous fait -5&nbsp;%.</em></h2>
+    <p>Pour un produit identique, en ligne ou chez un imprimeur près de chez vous : envoyez-nous la preuve, l'atelier vérifie et vous accorde 5 % de réduction sur votre commande.</p>
     
     <div class="hcar__cta"><a class="btn btn--yellow" href="garantie.html">Faire une demande <span class="arrow">→</span></a><a class="btn btn--light" href="garantie.html">Comment ça marche</a></div>
   </div>
@@ -122,27 +96,48 @@
     </div>
   </section>
 
-  <!-- ROLL-UP À LA UNE -->
-  <section class="section" id="rollup">
-    <div class="wrap">
-      <div class="rusec reveal">
-        <div class="rusec__head">
-          <div>
-            <span class="eyebrow eyebrow--yellow">Notre best-seller</span>
-            <h2>Le roll-up imprimé en 24h, <em>livré dans la journée.</em></h2>
-            <p class="rusec__lead">Le support star des salons, vitrines et événements. Structure aluminium rétractable, bâche haute définition anti-froissement, housse de transport incluse.</p>
-          </div>
-          <div class="rusec__price"><small>À partir de</small><b>49,00 €</b><span>HT · 85 × 200 cm</span></div>
+<!-- PRIX LES PLUS BAS -->
+<div class="wrap">
+  <a class="gstrip" href="garantie.html">
+    <span class="gstrip__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
+    <span class="gstrip__txt"><b>Les prix les plus bas de France</b><span>Trouvé moins cher ailleurs ? On vous fait <strong>-5 %</strong> sur votre commande.</span></span>
+    <span class="gstrip__go">En savoir plus <span class="arrow">→</span></span>
+  </a>
+</div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero__grid">
+      <div>
+        <span class="eyebrow">Imprimerie · Paris 10<sup>e</sup> · Gare du Nord</span>
+        <h1>Imprimé à Paris.<br>Prêt <em>en moins de 2&nbsp;heures.</em></h1>
+        <p class="hero__lead">Des cartes de visite aux bannières grand format : offset, numérique et signalétique, fabriqués dans notre atelier de la rue de Chabrol avec une fidélité colorimétrique garantie.</p>
+        <div class="hero__cta">
+          <a class="btn" href="catalogue.html">Voir le catalogue <span class="arrow">→</span></a>
+          <a class="btn btn--ghost" href="contact.html">Demander un devis</a>
         </div>
-        <div class="rusec__gallery" data-rollups-gallery></div>
-        <ul class="rusec__facts">
-          <li><b>Imprimé en 24h</b><span>dans notre atelier de Paris 10<sup>e</sup></span></li>
-          <li><b>Livré le jour même</b><span>à Paris et en Île-de-France · livraison payante, tarif selon l'adresse</span></li>
-          <li><b>Retrait gratuit</b><span>à l'atelier, 24 rue de Chabrol</span></li>
-          <li><b>Contrôle PAO</b><span>vos fichiers vérifiés avant impression</span></li>
-        </ul>
-        <div class="hero__cta"><a class="btn btn--yellow" href="contact.html?produit=Roll-Up%20Stand%20%26%20Kakemono">Commander mon roll-up <span class="arrow">→</span></a><a class="btn btn--light" href="contact.html?produit=Livraison%20jour%20m%C3%AAme%20roll-up">Tarif de livraison</a></div>
-        <p class="rusec__note">Visuels d'exemple : votre roll-up est imprimé avec votre propre maquette.</p>
+        <div class="hero__facts">
+          <div><b>24h</b><span>Roll-up imprimé</span></div>
+          <div><b>&lt; 2 h</b><span>Retrait à l'atelier</span></div>
+          <div><b>2400 DPI</b><span>Profil FOGRA39</span></div>
+        </div>
+      </div>
+
+      <div class="hero__visual">
+        <div class="hero__img crop"><img src="https://images.unsplash.com/photo-1777652918682-dec5c79d1301?auto=format&fit=crop&w=1400&q=75" alt="Remise en main propre d'une carte de visite fraîchement imprimée" fetchpriority="high"></div>
+        <div class="hero__stamp" aria-hidden="true"><div>24h<small>ROLL-UP</small></div></div>
+
+        <form class="quote" id="quote" aria-label="Estimation de prix rapide">
+          <div class="quote__title"><h3>Votre prix en direct</h3><span class="cmyk" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
+          <label for="qp">Produit</label>
+          <select id="qp"></select>
+          <div class="quote__row">
+            <div><label for="qq">Quantité</label><select id="qq"></select></div>
+            <div><label for="qd">Délai</label><select id="qd"></select></div>
+          </div>
+          <div class="quote__price"><span>Prix HT<br>retrait atelier gratuit</span><b id="qprice">—</b></div>
+          <a class="btn btn--cyan btn--block" id="qgo" href="produit.html">Configurer ce produit <span class="arrow">→</span></a>
+        </form>
       </div>
     </div>
   </section>
@@ -169,17 +164,6 @@
     </div>
     <div class="shop" id="cats"></div>
     <div class="shop__more reveal"><a class="btn" href="catalogue.html">Voir les 14 familles de produits <span class="arrow">→</span></a></div>
-  </div>
-</section>
-
-<!-- PRIX LE PLUS BAS GARANTI -->
-<section class="section section--tight">
-  <div class="wrap">
-    <a class="gband reveal" href="garantie.html">
-      <span class="gband__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
-      <span class="gband__txt"><small>Notre engagement</small><b>Prix le plus bas garanti</b><span>Trouvé moins cher ailleurs pour un produit identique ? Nous vous remboursons la différence.</span></span>
-      <span class="btn btn--yellow">Faire une demande <span class="arrow">→</span></span>
-    </a>
   </div>
 </section>
 
@@ -373,7 +357,6 @@
 (() => {
   const root = document.getElementById("hcar"), track = root.querySelector(".hcar__track"), slides = [...root.querySelectorAll(".hcar__slide")];
   const dots = root.querySelector(".hcar__dots");
-  root.querySelectorAll("[data-rollups]").forEach((el) => { el.innerHTML = [0, 4, 1].map(rollupHTML).join(""); });
   dots.innerHTML = slides.map((s, i) => `<button type="button" role="tab" aria-label="Diapositive ${i + 1}"></button>`).join("");
   let cur = 0, timer = null;
   const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

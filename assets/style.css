@@ -1620,3 +1620,64 @@ body { overflow-x: clip; }
   .hcar__cta .btn { flex: none; width: 100%; padding: 13px 16px; font-size: 14.5px; }
   .hcar__slide--rollup h2 { font-size: 28px; }
 }
+
+/* ==========================================================================
+   Carrousel en haut de page — 1re diapositive : la section roll-up
+   ========================================================================== */
+.hcar-sec { padding-top: 22px; }
+.hero h1 em { white-space: normal; }
+.hcar__slide--rusec { align-items: stretch; }
+.hcar__slide--rusec::after { content: none; }
+.rusec--slide { width: 100%; border-radius: 0; padding: clamp(28px, 4vw, 56px) clamp(28px, 5vw, 64px) 92px; }
+.rusec--slide .rusec__gallery { margin: 28px 0 24px; }
+.rusec--slide .rusec__item { padding: 20px 10px 14px; }
+.rusec--slide .rusec__item .ru { height: 250px; }
+.rusec--slide .rusec__note { display: none; }
+.rusec--slide h2 { font-size: clamp(32px, 4.2vw, 56px); }
+.rusec--slide > * { opacity: 0; transform: translateY(18px); transition: opacity .6s, transform .6s cubic-bezier(.2,.8,.2,1); }
+.hcar__slide.is-on .rusec--slide > * { opacity: 1; transform: none; }
+.hcar__slide.is-on .rusec--slide > :nth-child(2) { transition-delay: .1s; }
+.hcar__slide.is-on .rusec--slide > :nth-child(3) { transition-delay: .18s; }
+.hcar__slide.is-on .rusec--slide > :nth-child(4) { transition-delay: .26s; }
+
+/* Petit bandeau « prix les plus bas de France » */
+.gstrip { display: flex; align-items: center; gap: 16px; margin-top: 14px; padding: 14px 20px; border-radius: 18px; background: var(--cyan-soft); border: 1.5px solid var(--cyan); transition: transform .15s, box-shadow .15s; }
+.gstrip:hover { transform: translateY(-2px); box-shadow: 4px 4px 0 var(--cyan); }
+.gstrip__ico { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--cyan); color: #fff; display: grid; place-items: center; }
+.gstrip__ico svg { width: 22px; height: 22px; }
+.gstrip__txt { flex: 1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.gstrip__txt b { font-family: var(--display); font-size: 19px; letter-spacing: -0.02em; }
+.gstrip__txt span { font-size: 15px; color: var(--ink-soft); }
+.gstrip__txt strong { color: var(--magenta); }
+.gstrip__go { flex: none; font-weight: 700; font-size: 14.5px; color: var(--cyan); }
+
+@media (max-width: 720px) {
+  .hcar-sec { padding-top: 12px; }
+  .rusec--slide { padding: 24px 18px 88px; }
+  .rusec--slide h2 { font-size: 27px; margin: 10px 0 10px; }
+  .rusec--slide .rusec__lead { font-size: 14px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .rusec--slide .rusec__price b { font-size: 38px; }
+  .rusec--slide .rusec__gallery { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin: 18px 0 14px; padding: 0; overflow: visible; }
+  .rusec--slide .rusec__item { padding: 12px 2px 8px; border-radius: 12px; }
+  .rusec--slide .rusec__item .ru { height: 128px; }
+  .rusec--slide .rusec__item figcaption { display: none; }
+  .rusec--slide .rusec__facts { grid-template-columns: 1fr 1fr; gap: 0 12px; margin-bottom: 18px; }
+  .rusec--slide .rusec__facts li, .rusec--slide .rusec__facts li + li { padding: 12px 0 0; border-left: 0; }
+  .rusec--slide .rusec__facts b { font-size: 15.5px; }
+  .rusec--slide .rusec__facts span { font-size: 12px; }
+  .rusec--slide .hero__cta { flex-direction: column; gap: 8px; }
+  .rusec--slide .hero__cta .btn { width: 100%; padding: 13px; font-size: 14.5px; }
+  .gstrip { padding: 12px 14px; gap: 12px; align-items: flex-start; }
+  .gstrip__txt b { font-size: 16px; }
+  .gstrip__txt span { font-size: 13.5px; }
+  .gstrip__go { display: none; }
+}
+@media (max-width: 1020px) and (min-width: 721px) { .rusec--slide .rusec__gallery { grid-template-columns: repeat(5, minmax(0, 1fr)); overflow: visible; } .rusec--slide .rusec__item .ru { height: 190px; } }
+@media (min-width: 1021px) {
+  .rusec--slide { padding-top: 40px; padding-bottom: 86px; }
+  .rusec--slide h2 { font-size: clamp(30px, 3.6vw, 48px); margin: 10px 0 10px; }
+  .rusec--slide .rusec__gallery { margin: 22px 0 18px; }
+  .rusec--slide .rusec__item .ru { height: 205px; }
+  .rusec--slide .rusec__facts li { padding-top: 14px; }
+  .rusec--slide .hero__cta { margin-top: 18px; }
+}
