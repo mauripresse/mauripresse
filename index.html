@@ -44,15 +44,23 @@
       
   </div>
 </article>
-<article class="hcar__slide hcar__slide--cartes" role="group" aria-roledescription="diapositive" aria-label="2 sur 6">
-  <img class="hcar__bg" src="https://images.unsplash.com/photo-1718670013921-2f144aba173a?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
-  
-  <div class="hcar__txt">
-    <span class="hcar__tag">Cartes de visite</span>
-    <h2>Des cartes de visite<br><em>qui font bonne impression.</em></h2>
-    <p>Couché 350 g, soft-touch, dorure, coins arrondis… Configurez vos cartes en ligne, le prix s'affiche en direct.</p>
-    <span class="hcar__price">dès <b>19,00 €</b> HT</span>
-    <div class="hcar__cta"><a class="btn btn--yellow" href="produit.html?p=classic">Configurer mes cartes <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=cartes-de-visite">Toutes les cartes</a></div>
+<article class="hcar__slide hcar__slide--rusec hcar__slide--cards" role="group" aria-roledescription="diapositive" aria-label="2 sur 6">
+  <div class="rusec rusec--slide rusec--cards">
+    <div class="rusec__head">
+      <div>
+        <span class="eyebrow eyebrow--cyan">Cartes de visite</span>
+        <h2>Vos cartes de visite, <em>à votre image.</em></h2>
+        <p class="rusec__lead">Choisissez le sens, la finition et les coins : l'aperçu change en direct. Couché 350 g, prix affiché tout de suite.</p>
+      </div>
+      <div class="rusec__price"><small>À partir de</small><b>19,00 €</b><span>HT · 100 cartes</span></div>
+    </div>
+    <div class="bcctl" data-cards-ctl>
+      <div class="bcctl__g"><span>Sens</span><button type="button" data-k="o" data-v="0" class="is-on">Horizontal</button><button type="button" data-k="o" data-v="1">Vertical</button></div>
+      <div class="bcctl__g"><span>Finition</span><button type="button" data-k="f" data-v="0" class="is-on">Mat</button><button type="button" data-k="f" data-v="1">Soft-touch</button><button type="button" data-k="f" data-v="2">Brillant</button></div>
+      <div class="bcctl__g"><span>Coins</span><button type="button" data-k="r" data-v="0" class="is-on">Carrés</button><button type="button" data-k="r" data-v="1">Arrondis</button></div>
+    </div>
+    <div class="rusec__line is-cards" data-cards-line></div>
+    <div class="hero__cta"><a class="btn btn--yellow" data-cards-go href="produit.html?p=classic">Personnaliser mes cartes <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=cartes-de-visite">Toutes les cartes</a></div>
   </div>
 </article>
 <article class="hcar__slide hcar__slide--rusec hcar__slide--fly" role="group" aria-roledescription="diapositive" aria-label="3 sur 6">
@@ -383,9 +391,14 @@
   const go = (n) => {
     cur = (n + slides.length) % slides.length;
     track.style.transform = `translateX(${-cur * 100}%)`;
+    fit();
     slides.forEach((s, i) => { s.classList.toggle("is-on", i === cur); s.setAttribute("aria-hidden", i !== cur); s.querySelectorAll("a").forEach((a) => (a.tabIndex = i === cur ? 0 : -1)); });
     [...dots.children].forEach((b, i) => b.setAttribute("aria-selected", i === cur));
   };
+  /* Plus d'espace vide : le carrousel prend la hauteur de la diapositive affichée */
+  function fit() { track.style.height = slides[cur].offsetHeight + "px"; }
+  if (window.ResizeObserver) { const ro = new ResizeObserver(() => fit()); slides.forEach((s) => ro.observe(s)); }
+  window.addEventListener("resize", fit);
   const play = () => { if (still) return; clearInterval(timer); timer = setInterval(() => go(cur + 1), 6500); };
   const stop = () => clearInterval(timer);
   root.querySelector(".hcar__arrow--prev").addEventListener("click", () => { go(cur - 1); play(); });
@@ -407,6 +420,24 @@
   /* Faire glisser la rangée de roll-up ne change pas de diapositive */
   document.querySelectorAll("[data-rollups-gallery]").forEach((el) => ["touchstart", "touchmove", "touchend"].forEach((ev) => el.addEventListener(ev, (e) => { if (el.scrollWidth > el.clientWidth + 2) e.stopPropagation(); }, { passive: true })));
   document.querySelectorAll("[data-flyers-line]").forEach((el) => { el.innerHTML = formatLineup("flyers", -1, [0, 2, 3, 4, 5]); link(el, "flyers"); });
+  /* Cartes de visite : les 4 formats du configurateur, sens / finition / coins au choix */
+  document.querySelectorAll("[data-cards-line]").forEach((el) => {
+    const P = PRODUCTS.classic, st = { o: 0, f: 0, r: 0 }, ctl = el.parentElement.querySelector("[data-cards-ctl]"), go = el.parentElement.querySelector("[data-cards-go]");
+    const FIN = ["mat", "soft", "brillant"], FIN_I = [0, 1, 2], NAMES = ["Standard", "Allongé", "Italien", "Carré"];
+    const href = (fi) => `produit.html?p=classic&c=${[fi, st.o, 0, 0, FIN_I[st.f], st.r].join(",")}`;
+    const draw = () => {
+      el.dataset.fin = FIN[st.f]; el.dataset.corner = st.r ? "round" : "square";
+      el.innerHTML = lineupHTML(P.groups[0].options.map((o, i) => {
+        const [a, b] = o.label.match(/[\d,]+/g).map((n) => parseFloat(n.replace(",", ".")));
+        const [w, h] = st.o ? [Math.min(a, b), Math.max(a, b)] : [Math.max(a, b), Math.min(a, b)];
+        return { w, h, label: o.label.replace(/,0\b/g, "").replace(" cm", ""), sub: NAMES[i], inner: `<span class="bzc"><i class="bzc__logo">VN</i><b>Votre Nom</b><i>Votre métier</i><i>01 23 45 67 89</i></span>`, cls: "is-card" };
+      }));
+      go.href = href(0);
+    };
+    ctl.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; st[b.dataset.k] = +b.dataset.v; ctl.querySelectorAll(`[data-k="${b.dataset.k}"]`).forEach((x) => x.classList.toggle("is-on", x === b)); draw(); });
+    el.addEventListener("click", (e) => { const b = e.target.closest("[data-i]"); if (b) location.href = href(+b.dataset.i); });
+    draw();
+  });
   /* Dépliants : ouvert → fermé, pour 3 pliages */
   document.querySelectorAll("[data-dep-row]").forEach((el) => {
     el.innerHTML = [0, 2, 3].map((i) => { const s = FORMATS.depliants.sizes[i], n = s.folds + 1;

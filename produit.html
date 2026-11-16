@@ -102,6 +102,7 @@
     c: p.groups.map(() => 0),
   };
   if (params.has("q") && p.qty[+params.get("q")] != null) state.q = +params.get("q");
+  if (params.get("c")) params.get("c").split(",").forEach((v, i) => { if (p.groups[i] && p.groups[i].options[+v]) state.c[i] = +v; });
 
   document.title = p.name + " · Mauri Presse";
   document.getElementById("reviews").innerHTML = reviewsHTML(p.catId);
