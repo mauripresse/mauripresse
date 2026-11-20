@@ -2137,3 +2137,104 @@ button.lineup__it:hover { transform: translateY(-4px); }
 .sacslide__colors button i { width: 20px; height: 20px; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 1px rgba(255,255,255,.4); }
 .sacslide__colors button.is-on { background: #fff; color: var(--ink); }
 @media (max-width: 720px) { .sacslide__tag { font-size: 10px; padding: 4px 8px; } .sacslide__colors button { font-size: 12.5px; padding: 5px 10px 5px 6px; } }
+
+/* ================= Sac kraft sur photo ================= */
+.bph { position: relative; aspect-ratio: 2 / 3; max-height: 680px; margin: 0 auto; overflow: hidden; background: #ddd; container-type: inline-size; }
+.bph__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: filter .4s; }
+.bph[data-color="blanc"] .bph__img { filter: grayscale(1) brightness(1.32) contrast(1.06); }
+/* Zone imprimée calée sur la face avant du sac de la photo */
+.bph__print { position: absolute; left: 21%; width: 53%; top: 35%; height: 27%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3cqw; text-align: center; mix-blend-mode: multiply; transition: opacity .35s, transform .35s; }
+.bph__print img { max-width: 92%; max-height: 52%; object-fit: contain; filter: brightness(0) contrast(1.2); opacity: .86; }
+.bph__print span { font-family: var(--display); font-weight: 700; font-size: 3.4cqw; text-transform: uppercase; letter-spacing: .04em; color: #1b1b1b; opacity: .82; }
+.bph__print b { font-family: var(--display); font-weight: 800; font-size: 6cqw; line-height: 1; color: #1b1b1b; opacity: .85; }
+.bph__print--back img { max-height: 24%; max-width: 50%; }
+.bph[data-ink="quadri"] .bph__print img { filter: none; opacity: .95; }
+.bph[data-ink="quadri"] .bph__print span, .bph[data-ink="quadri"] .bph__print b { color: #a3005a; }
+.bph[data-side="front"] .bph__print--back, .bph[data-side="back"] .bph__print--front { opacity: 0; transform: scale(.96); }
+.bph__side { position: absolute; left: 4%; top: 4%; font-family: var(--mono); font-size: 12px; padding: 4px 10px; border-radius: 99px; background: rgba(21,19,58,.85); color: #fff; }
+.bph.is-pulse .bph__print { animation: bagPop .5s ease-out; }
+.bagview__stage .bph { max-height: 640px; }
+.sacslide__pics { cursor: pointer; }
+.sacslide__duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.sacslide__duo .bph { border-radius: 18px; max-height: none; box-shadow: 0 24px 50px -24px rgba(0,0,0,.7); }
+.sacslide__duo .bph:nth-child(2) { transform: translateY(26px); }
+.sacslide__legend { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 36px; text-align: center; font-family: var(--mono); font-size: 12px; opacity: .75; }
+@media (max-width: 720px) { .sacslide__duo { gap: 8px; } .sacslide__duo .bph:nth-child(2) { transform: translateY(14px); } .sacslide__legend { margin-top: 20px; font-size: 10.5px; } }
+.bph { aspect-ratio: 4 / 5; }
+.bph__img { object-position: 50% 70%; }
+.bph__print { top: 28%; height: 32%; }
+.bph[data-side="front"] .bph__print--back, .bph[data-side="back"] .bph__print--front { visibility: hidden; }
+.bph.is-pulse .bph__print { animation: bphPop .45s ease-out; }
+@keyframes bphPop { from { transform: scale(.94); } to { transform: none; } }
+.bph__print span { font-size: 3.8cqw; } .bph__print b { font-size: 6.6cqw; }
+
+/* ================= Papier alimentaire & serviettes : aperçu ================= */
+.pzview { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 18px; align-items: center; padding: 26px; background: linear-gradient(135deg, #8a6a4f, #6b4f39); }
+.pzview__mock { display: grid; place-items: center; min-height: 460px; }
+.pzview__photo { margin: 0; align-self: end; }
+.pzview__photo img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; box-shadow: 0 16px 30px -14px rgba(0,0,0,.7); }
+.pzview__photo figcaption { margin-top: 6px; font-family: var(--mono); font-size: 11.5px; color: #fff; opacity: .8; text-align: center; }
+.fp, .fn { position: relative; }
+.fp__dim { position: absolute; left: 50%; bottom: -30px; transform: translateX(-50%); font-family: var(--mono); font-size: 12px; padding: 3px 10px; border-radius: 99px; background: var(--ink); color: #fff; white-space: nowrap; }
+/* Feuille de papier alimentaire */
+.fp__sheet { --bg: #f7f5ef; position: relative; height: min(420px, 62vw); aspect-ratio: var(--ar); overflow: hidden; transform: rotate(-4deg); background: var(--bg); box-shadow: 0 22px 40px -16px rgba(0,0,0,.6); container-type: size; }
+.fp[data-paper="kraft"] .fp__sheet { --bg: #cfa676; }
+.fp__light { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(118deg, rgba(255,255,255,.22) 0%, transparent 28%, rgba(0,0,0,.08) 46%, transparent 60%, rgba(255,255,255,.18) 78%, rgba(0,0,0,.06) 100%), linear-gradient(28deg, transparent 40%, rgba(0,0,0,.07) 50%, transparent 60%); }
+.fp__grid { position: absolute; inset: -30%; display: grid; grid-template-columns: repeat(6, 1fr); align-items: center; justify-items: center; gap: 4cqh 2cqw; transform: rotate(-22deg); mix-blend-mode: multiply; }
+.fp__cell { display: grid; place-items: center; width: 100%; }
+.fp__cell:nth-child(12n+7), .fp__cell:nth-child(12n+8), .fp__cell:nth-child(12n+9), .fp__cell:nth-child(12n+10), .fp__cell:nth-child(12n+11), .fp__cell:nth-child(12n+12) { transform: translateX(8cqw); }
+.fp__cell img { width: 22cqw; filter: brightness(0); opacity: .75; }
+.fp__cell b, .fp__center b { font-family: var(--display); font-size: 3.6cqw; text-transform: uppercase; letter-spacing: .06em; color: #1b1b1b; opacity: .7; white-space: nowrap; }
+.fp__center { display: none; position: absolute; inset: 0; flex-direction: column; align-items: center; justify-content: center; gap: 3cqh; mix-blend-mode: multiply; }
+.fp__center img { width: 62cqw; filter: brightness(0); opacity: .8; }
+.fp__center b { font-size: 5.5cqw; }
+.fp[data-motif="center"] .fp__grid { display: none; } .fp[data-motif="center"] .fp__center { display: flex; }
+.fp[data-ink="rouge"] .fp__cell img, .fp[data-ink="rouge"] .fp__center img { filter: brightness(0) invert(17%) sepia(90%) saturate(5000%) hue-rotate(350deg); }
+.fp[data-ink="rouge"] b { color: #c8102e; }
+.fp[data-ink="quadri"] img { filter: none !important; opacity: .9; }
+.fp[data-ink="quadri"] b { color: var(--magenta); }
+/* Serviette pliée en 4 */
+.fn { --c: #fff; width: min(380px, 70vw); aspect-ratio: 1; }
+.fn[data-color="kraft"] { --c: #c8a47a; } .fn[data-color="noir"] { --c: #26262b; } .fn[data-color="bordeaux"] { --c: #6b1d2b; }
+.fn__napkin { position: absolute; inset: 0; transform: rotate(8deg); background-color: var(--c);
+  background-image: radial-gradient(rgba(0,0,0,.09) 1px, transparent 1.4px), radial-gradient(rgba(255,255,255,.25) 1px, transparent 1.4px); background-size: 7px 7px; background-position: 0 0, 3.5px 3.5px;
+  box-shadow: 0 22px 40px -16px rgba(0,0,0,.6), inset 0 0 0 7px rgba(0,0,0,.04); border-radius: 3px; container-type: size; }
+.fn__napkin--2 { z-index: -1; transform: rotate(-6deg) translate(-6%, 4%); filter: brightness(.94); }
+.fn__fold { position: absolute; background: linear-gradient(90deg, rgba(0,0,0,.1), rgba(255,255,255,.12)); }
+.fn__fold--a { left: 0; right: 0; top: 50%; height: 2px; } .fn__fold--b { top: 0; bottom: 0; left: 50%; width: 2px; background: linear-gradient(rgba(0,0,0,.1), rgba(255,255,255,.12)); }
+.fn__napkin::after { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.18), transparent 45%, rgba(0,0,0,.08)); pointer-events: none; }
+.fn__print { position: absolute; right: 8%; bottom: 8%; width: 36%; height: 36%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4cqh; mix-blend-mode: multiply; }
+.fn__print img { max-width: 100%; max-height: 60%; filter: brightness(0); opacity: .82; }
+.fn__print b { font-family: var(--display); font-size: 4cqw; text-transform: uppercase; letter-spacing: .06em; color: #1b1b1b; opacity: .75; white-space: nowrap; }
+.fn[data-pos="center"] .fn__print { inset: 18%; width: auto; height: auto; }
+.fn[data-pos="center"] .fn__print b { font-size: 6cqw; }
+.fn[data-color="noir"] .fn__print, .fn[data-color="bordeaux"] .fn__print { mix-blend-mode: normal; }
+.fn[data-color="noir"] .fn__print img, .fn[data-color="bordeaux"] .fn__print img { filter: brightness(0) invert(1); }
+.fn[data-color="noir"] .fn__print b, .fn[data-color="bordeaux"] .fn__print b { color: #fff; }
+.fp.is-pulse .fp__sheet, .fn.is-pulse .fn__napkin:first-child { animation: bphPop .45s ease-out; }
+.fp.is-pulse .fp__sheet { animation-name: fpPop; } @keyframes fpPop { from { transform: rotate(-4deg) scale(.95); } to { transform: rotate(-4deg); } }
+.fn.is-pulse .fn__napkin:first-child { animation-name: fnPop; } @keyframes fnPop { from { transform: rotate(8deg) scale(.95); } to { transform: rotate(8deg); } }
+@media (max-width: 720px) {
+  .pzview { grid-template-columns: 1fr; padding: 18px 14px 34px; }
+  .pzview__mock { min-height: 340px; }
+  .pzview__photo { display: none; }
+  .fp__sheet { height: min(300px, 70vw); }
+}
+.fp__grid { grid-template-columns: repeat(6, 28cqw); inset: auto; left: -40%; top: -25%; width: 180%; }
+.fp__cell { width: 28cqw; height: 10cqh; }
+.fp__cell img { width: 20cqw; max-height: 100%; object-fit: contain; }
+.fp__grid { grid-template-columns: repeat(6, 42cqw); left: -70%; top: -30%; width: 260%; gap: 6cqh 4cqw; }
+.fp__cell { width: 42cqw; height: 13cqh; }
+.fp__cell:nth-child(12n+7), .fp__cell:nth-child(12n+8), .fp__cell:nth-child(12n+9), .fp__cell:nth-child(12n+10), .fp__cell:nth-child(12n+11), .fp__cell:nth-child(12n+12) { transform: translateX(22cqw); }
+.fp__cell img { width: 36cqw; }
+.fp__cell b { font-size: 5.4cqw; }
+.fp__sheet { height: min(500px, 64vw); }
+.pzview__mock { min-height: 540px; }
+@media (max-width: 720px) { .fp__sheet { height: min(320px, 72vw); } .pzview__mock { min-height: 360px; } }
+.fp__cell b { font-size: 4.4cqw; }
+/* Bannière : jamais plus haute que l'écran */
+@media (min-width: 721px) {
+  .hcar__slide { min-height: min(clamp(520px, 74vh, 660px), calc(100vh - 210px)); }
+  .hcar-sec { padding-top: 14px; }
+}
+.sacslide__duo .bph { width: 100%; margin: 0; }

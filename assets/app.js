@@ -36,6 +36,7 @@ const QS = new URLSearchParams(location.search);
 const CUR = PAGE === "categorie.html" ? (cat(QS.get("c")) || CATS[0]).id
 : PAGE === "produit.html" ? (PRODUCTS[QS.get("p")] || PRODUCTS.cartes).catId
 : PAGE === "format.html" ? (FORMATS[QS.get("p")] || FORMATS.rollup).catId
+: PAGE === "sac.html" || PAGE === "perso.html" ? "objets-packaging"
 : null;
 const ALL_ON = PAGE === "catalogue.html" && QS.get("express") !== "1";
 const EXPRESS_ON = (PAGE === "categorie.html" && QS.get("c") === "roll-up-kakemono") || (PAGE === "format.html" && QS.get("p") === "rollup");

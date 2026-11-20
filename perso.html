@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Personnalisé à votre logo · Mauri Presse</title>
+<meta name="description" content="Papier alimentaire et serviettes personnalisés à votre logo pour restaurants, snacks et cafés : aperçu en direct, maquette avant tirage, imprimé en France.">
+<link rel="icon" href="https://mauripresse.com/images/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+
+<main>
+  <section class="pagehead"><div class="wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><a href="catalogue.html">Catalogue</a><span>/</span><a href="categorie.html?c=objets-packaging">Sacs, objets pub & packaging</a></nav>
+    <h1 id="p-name"></h1>
+    <p id="p-lead"></p>
+    <ul class="sacbadges" id="p-badges"></ul>
+  </div></section>
+
+  <div class="wrap config sac">
+    <div>
+      <div class="bagview">
+        <div class="bagview__live"><span class="livebadge"><i></i>Aperçu en direct</span><p>Chaque choix s'affiche <b>tout de suite</b> : couleur, format, logo et texte.</p></div>
+        <div class="pzview">
+          <div class="pzview__mock" id="mock"></div>
+          <figure class="pzview__photo"><img id="p-photo" alt=""><figcaption>En situation</figcaption></figure>
+        </div>
+        <div class="pv__bar">
+          <span class="pv__note"><b>Votre maquette (BAT)</b> vous est envoyée avant tirage.</span>
+          <span class="pv__actions">
+            <label class="btn btn--cyan btn--sm"><input type="file" id="logo-file" accept="image/*" hidden>Importer mon logo</label>
+            <button type="button" class="btn btn--ghost btn--sm" id="logo-reset" hidden>Logo Mauri Presse</button>
+          </span>
+        </div>
+      </div>
+
+      <div id="groups"></div>
+      <section class="og">
+        <div class="og__head"><span class="og__n" id="n-text"></span><h3>Votre texte</h3></div>
+        <div class="fgrid"><label class="field field--full"><span>Texte imprimé avec le logo</span><input id="f-text" maxlength="36"></label></div>
+        <p class="sac__hint">Pas de logo ? Nos graphistes le mettent en page gratuitement.</p>
+      </section>
+      <section class="og">
+        <div class="og__head"><span class="og__n" id="n-qty"></span><h3>Quantité</h3></div>
+        <div class="chips-q" id="qty"></div>
+      </section>
+      <section class="og">
+        <div class="og__head"><span class="og__n" id="n-deliv"></span><h3>Retrait ou livraison</h3></div>
+        <div class="opts" id="deliv"></div>
+      </section>
+    </div>
+
+    <aside class="recap" aria-live="polite">
+      <h3>Votre commande <span class="live">Aperçu en direct</span></h3>
+      <dl id="recap-list"></dl>
+      <div class="recap__quote"><b>Prix sur devis</b><span>Devis gratuit, réponse de l'atelier dans la journée.</span></div>
+      <a class="btn btn--cyan btn--block" id="go">Recevoir mon devis gratuit <span class="arrow">→</span></a>
+      <ul class="assure"><li>Maquette (BAT) envoyée avant tirage</li><li>Fabriqué sous 24 – 72 h</li><li>Imprimé en France, à Paris 10<sup>e</sup></li><li>Paiement sécurisé</li></ul>
+    </aside>
+  </div>
+
+  <div class="wrap" id="reviews"></div>
+</main>
+<div class="buybar"><div><small>Devis gratuit</small><b>Sur devis</b></div><a class="btn btn--cyan" id="bb-go">Recevoir mon devis</a></div>
+
+<script>
+(() => {
+  const key = PERSO[new URLSearchParams(location.search).get("p")] ? new URLSearchParams(location.search).get("p") : "papier", P = PERSO[key];
+  const st = Object.fromEntries(P.groups.map((g) => [g.id, 0])); st.q = 1; st.d = 0;
+  const DELIV = [{ label: "Retrait à l'atelier", hint: "Fabriqué sous 24 – 72 h · gratuit" }, { label: "Livraison jour même", hint: "Paris & IDF · tarif selon l'adresse" }, { label: "Livraison France", hint: "48 – 72 h après fabrication" }];
+  document.title = P.name + " · Mauri Presse";
+  document.getElementById("p-name").innerHTML = esc(P.name.replace(/ personnalisée?s?$/, "")) + ' <span class="h-accent">personnalisé' + (key === "serviette" ? "es" : "") + ' à votre logo.</span>';
+  document.getElementById("p-lead").textContent = P.lead;
+  document.getElementById("p-badges").innerHTML = P.badges.map(([b, s]) => `<li><b>${b}</b><span>${s}</span></li>`).join("");
+  const ph = document.getElementById("p-photo"); ph.src = `https://images.unsplash.com/photo-${P.photo}?auto=format&fit=crop&w=700&h=700&q=75`; ph.alt = P.photoAlt;
+  document.getElementById("reviews").innerHTML = reviewsHTML("objets-packaging");
+  const txt = document.getElementById("f-text"); txt.value = P.text;
+
+  /* Options */
+  document.getElementById("groups").innerHTML = P.groups.map((g, gi) => `<section class="og"><div class="og__head"><span class="og__n">${gi + 1}</span><h3>${esc(g.label)}</h3></div>
+    ${g.swatch ? `<div class="swatches">${g.options.map((o, i) => `<button type="button" class="sw${i ? "" : " is-on"}" data-g="${g.id}" data-i="${i}" style="--sw:${o.hex}"><i></i><b>${esc(o.label)}</b><small>${esc(o.hint)}</small></button>`).join("")}</div>`
+      : `<div class="opts">${g.options.map((o, i) => `<label class="opt"><input type="radio" name="${g.id}" value="${i}" ${i ? "" : "checked"}><span><b>${esc(o.label)}</b>${o.hint ? `<small>${esc(o.hint)}</small>` : ""}</span></label>`).join("")}</div>`}</section>`).join("");
+  const n = P.groups.length;
+  document.getElementById("n-text").textContent = n + 1; document.getElementById("n-qty").textContent = n + 2; document.getElementById("n-deliv").textContent = n + 3;
+  document.getElementById("groups").addEventListener("click", (e) => { const b = e.target.closest(".sw"); if (!b) return; st[b.dataset.g] = +b.dataset.i; document.querySelectorAll(`.sw[data-g="${b.dataset.g}"]`).forEach((x) => x.classList.toggle("is-on", x === b)); render(); });
+  document.getElementById("groups").addEventListener("change", (e) => { if (e.target.name) { st[e.target.name] = +e.target.value; render(); } });
+  document.getElementById("qty").innerHTML = P.qty.map((q, i) => `<button type="button" data-q="${i}">${q.toLocaleString("fr-FR")} ${P.unit}</button>`).join("");
+  document.getElementById("qty").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { st.q = +b.dataset.q; render(); } });
+  document.getElementById("deliv").innerHTML = DELIV.map((d, i) => `<label class="opt"><input type="radio" name="dv" value="${i}" ${i ? "" : "checked"}><span><b>${d.label}</b><small>${d.hint}</small></span></label>`).join("");
+  document.getElementById("deliv").addEventListener("change", (e) => { st.d = +e.target.value; render(); });
+
+  /* Logo du client (reste dans le navigateur) */
+  let logo = LOGO_URL, logoName = "";
+  document.getElementById("logo-file").addEventListener("change", (e) => { const f = e.target.files[0]; if (!f) return; if (logo !== LOGO_URL) URL.revokeObjectURL(logo); logo = URL.createObjectURL(f); logoName = f.name; document.getElementById("logo-reset").hidden = false; render(); });
+  document.getElementById("logo-reset").addEventListener("click", () => { if (logo !== LOGO_URL) URL.revokeObjectURL(logo); logo = LOGO_URL; logoName = ""; document.getElementById("logo-file").value = ""; document.getElementById("logo-reset").hidden = true; render(); });
+  txt.addEventListener("input", render);
+
+  const rows = () => [["Produit", P.name], ...P.groups.map((g) => [g.label, g.options[st[g.id]].label]), ["Logo", logoName || "Logo à fournir (ou création par nos graphistes)"], ["Texte", txt.value || "—"], ["Quantité", P.qty[st.q].toLocaleString("fr-FR") + " " + P.unit], ["Délai", DELIV[st.d].label + " · " + DELIV[st.d].hint]];
+  function render() {
+    const m = document.getElementById("mock");
+    m.innerHTML = persoHTML(key, st, logo, txt.value);
+    m.firstElementChild.classList.add("is-pulse");
+    document.querySelectorAll("#qty button").forEach((b) => b.classList.toggle("is-on", +b.dataset.q === st.q));
+    document.getElementById("recap-list").innerHTML = rows().map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
+    const href = "contact.html?" + new URLSearchParams({ produit: P.name, config: rows().slice(1).map(([k, v]) => k + " : " + v).join(" | ") });
+    document.getElementById("go").href = href; document.getElementById("bb-go").href = href;
+  }
+  document.body.classList.add("has-buybar");
+  render();
+})();
+</script>
+</body>
+</html>

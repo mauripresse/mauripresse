@@ -50,7 +50,7 @@
       <div>
         <span class="eyebrow eyebrow--yellow">Nouveau · Restaurants & vente à emporter</span>
         <h2>Le sac kraft <em>à votre logo.</em></h2>
-        <p class="rusec__lead">Sac kraft 26 × 17 × 29 cm, fond plat et poignées torsadées : brun, blanc ou noir, imprimé à vos couleurs. Importez votre logo, l'aperçu change en direct.</p>
+        <p class="rusec__lead">Sac kraft 26 × 17 × 29 cm, fond plat et poignées torsadées : brun ou blanc, imprimé à vos couleurs. Importez votre logo, l'aperçu change en direct.</p>
         <ul class="sacslide__ok"><li>Maquette avant tirage</li><li>Fabriqué sous 24 – 48 h</li><li>Imprimé en France</li><li>Paiement sécurisé</li></ul>
         <div class="sacslide__price"><small>Les 100 sacs</small><b>99,99 €</b><span>HT</span></div>
         <div class="hero__cta"><a class="btn btn--yellow" href="sac.html">Personnaliser mon sac <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=objets-packaging">Tout le packaging</a></div>
@@ -411,7 +411,17 @@
     [...dots.children].forEach((b, i) => b.setAttribute("aria-selected", i === cur));
   };
   /* Plus d'espace vide : le carrousel prend la hauteur de la diapositive affichée */
-  function fit() { track.style.height = slides[cur].offsetHeight + "px"; }
+  /* La bannière tient toujours dans l'écran (flèches visibles sans descendre) :
+     si une diapositive est plus haute que la place disponible, son contenu est réduit proportionnellement. */
+  const top0 = () => root.getBoundingClientRect().top + window.scrollY;
+  function fitSlide(s) {
+    const el = s.querySelector(".rusec--slide, .hcar__txt"); if (!el) return;
+    const z = parseFloat(el.style.zoom) || 1, nat = s.offsetHeight / z;
+    const avail = window.innerHeight - top0() - 14, min = window.innerWidth <= 720 ? 0.78 : 0.6;
+    const nz = Math.max(min, Math.min(1, avail / nat));
+    if (Math.abs(nz - z) > 0.01) { el.style.zoom = nz; if (el.classList.contains("rusec--slide")) el.style.width = (100 / nz) + "%"; }
+  }
+  function fit() { slides.forEach(fitSlide); track.style.height = slides[cur].offsetHeight + "px"; }
   if (window.ResizeObserver) { const ro = new ResizeObserver(() => fit()); slides.forEach((s) => ro.observe(s)); }
   window.addEventListener("resize", fit);
   const play = () => { if (still) return; clearInterval(timer); timer = setInterval(() => go(cur + 1), 6500); };
@@ -436,10 +446,10 @@
   document.querySelectorAll("[data-rollups-gallery]").forEach((el) => ["touchstart", "touchmove", "touchend"].forEach((ev) => el.addEventListener(ev, (e) => { if (el.scrollWidth > el.clientWidth + 2) e.stopPropagation(); }, { passive: true })));
   document.querySelectorAll("[data-flyers-line]").forEach((el) => { el.innerHTML = formatLineup("flyers", -1, [0, 2, 3, 4, 5]); link(el, "flyers"); });
   /* Sac kraft : deux exemples (brun et noir) */
-  document.querySelectorAll("[data-sac-pics]").forEach((el) => { el.innerHTML = `<div class="sacslide__3d">${bag3dHTML({ spin: true, sides: "rv", back: "Bon appétit !", u: window.innerWidth <= 720 ? 6.5 : 11 })}<span class="sacslide__tag sacslide__tag--a">Recto · votre logo</span><span class="sacslide__tag sacslide__tag--b">Verso · votre message</span><span class="sacslide__tag sacslide__tag--c">26 × 17 × 29 cm</span></div><div class="sacslide__colors">${SAC.colors.map((c, i) => `<button type="button" data-c="${c.id}" class="${i ? "" : "is-on"}" style="--sw:${c.hex}" aria-label="${c.label}"><i></i>${c.label}</button>`).join("")}</div>`;
-    const b = el.querySelector(".b3d"); bag3dDrag(b);
-    el.querySelector(".sacslide__colors").addEventListener("click", (e) => { const t = e.target.closest("[data-c]"); if (!t) return; b.dataset.color = t.dataset.c; b.dataset.ink = t.dataset.c === "noir" ? "blanc" : "noir"; el.querySelectorAll("[data-c]").forEach((x) => x.classList.toggle("is-on", x === t)); });
-    ["touchstart", "touchmove", "touchend"].forEach((ev) => b.addEventListener(ev, (e) => e.stopPropagation(), { passive: true })); });
+  document.querySelectorAll("[data-sac-pics]").forEach((el) => { el.innerHTML = `<div class="sacslide__duo">${bagPhotoHTML({ color: "kraft" })}${bagPhotoHTML({ color: "blanc", side: "back", back: "Bon appétit !" })}</div>
+      <div class="sacslide__legend"><span>Kraft brun · recto</span><span>Kraft blanc · verso</span></div>`;
+    el.querySelectorAll(".bph")[1].querySelector(".bph__side").textContent = "Verso";
+    el.addEventListener("click", () => { location.href = "sac.html"; }); });
   /* Cartes de visite : les 4 formats du configurateur, sens / finition / coins au choix */
   document.querySelectorAll("[data-cards-line]").forEach((el) => {
     const P = PRODUCTS.classic, st = { o: 0, f: 0, r: 0 }, ctl = el.parentElement.querySelector("[data-cards-ctl]"), go = el.parentElement.querySelector("[data-cards-go]");

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sac kraft personnalisé pour restaurant · Mauri Presse</title>
-<meta name="description" content="Sac kraft personnalisé avec votre logo pour la vente à emporter : 26 × 17 × 29 cm, kraft brun, blanc ou noir, maquette avant tirage, fabriqué sous 24-48 h, imprimé en France. Dès 99,99 € HT les 100.">
+<meta name="description" content="Sac kraft personnalisé avec votre logo pour la vente à emporter : 26 × 17 × 29 cm, kraft brun ou blanc, maquette avant tirage, fabriqué sous 24-48 h, imprimé en France. Dès 99,99 € HT les 100.">
 <link rel="icon" href="https://mauripresse.com/images/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,11 +33,11 @@
     <div>
       <!-- Aperçu en direct du sac, en 3D -->
       <div class="bagview">
-        <div class="bagview__live"><span class="livebadge"><i></i>Aperçu en direct</span><p>Chaque choix s'affiche <b>tout de suite</b> sur votre sac. <b>Faites-le tourner</b> pour voir le verso.</p></div>
+        <div class="bagview__live"><span class="livebadge"><i></i>Aperçu en direct</span><p>Chaque choix s'affiche <b>tout de suite</b> sur votre sac. Passez au <b>verso</b> pour voir le dos.</p></div>
         <div class="bagview__stage" id="bag-wrap"></div>
         <div class="bagview__ctl">
-          <div class="bagview__faces"><button type="button" data-face="front" class="is-on">Recto</button><button type="button" data-face="back">Verso</button><button type="button" data-face="spin">↻ 360°</button></div>
-          <span class="bagview__hint">↔ Glissez pour tourner · 26 × 17 × 29 cm</span>
+          <div class="bagview__faces"><button type="button" data-face="front" class="is-on">Recto</button><button type="button" data-face="back">Verso</button></div>
+          <span class="bagview__hint">Photo réelle du sac · 26 × 17 × 29 cm</span>
         </div>
         <div class="pv__bar">
           <span class="pv__note"><b>Votre maquette (BAT)</b> vous est envoyée avant tirage.</span>
@@ -99,10 +99,9 @@
 <script>
 (() => {
   const S = SAC, st = { c: 0, s: 0, i: 0, q: 0, d: 0 }, wrap = document.getElementById("bag-wrap");
-  wrap.innerHTML = bag3dHTML({ sides: "r", u: window.innerWidth <= 720 ? 7.5 : 11.5 });
-  const bag = wrap.querySelector(".b3d"), faces = document.querySelectorAll("[data-face]");
-  const turn = bag3dDrag(bag, () => faces.forEach((b) => b.classList.remove("is-on")));
-  const face = (f) => { bag.classList.toggle("b3d--spin", f === "spin"); if (f !== "spin") turn.set(f === "back" ? 152 : -28); faces.forEach((b) => b.classList.toggle("is-on", b.dataset.face === f)); };
+  wrap.innerHTML = bagPhotoHTML();
+  const bag = wrap.querySelector(".bph"), faces = document.querySelectorAll("[data-face]");
+  const face = (f) => { bag.dataset.side = f; bag.querySelector(".bph__side").textContent = f === "back" ? "Verso" : "Recto"; faces.forEach((b) => b.classList.toggle("is-on", b.dataset.face === f)); };
   faces.forEach((b) => b.addEventListener("click", () => face(b.dataset.face)));
   /* petit effet à chaque changement, pour montrer que l'aperçu est en direct */
   const pulse = () => { bag.classList.remove("is-pulse"); void bag.offsetWidth; bag.classList.add("is-pulse"); };
@@ -113,7 +112,7 @@
     document.getElementById(id).addEventListener("change", (e) => { st[key] = +e.target.value; render(); });
   };
   document.getElementById("colors").innerHTML = S.colors.map((c, i) => `<button type="button" class="sw" data-i="${i}" style="--sw:${c.hex}"><i></i><b>${esc(c.label)}</b><small>${esc(c.hint)}</small></button>`).join("");
-  document.getElementById("colors").addEventListener("click", (e) => { const b = e.target.closest("[data-i]"); if (b) { st.c = +b.dataset.i; if (S.colors[st.c].id === "noir" && st.i === 0) st.i = 1; if (S.colors[st.c].id !== "noir" && st.i === 1) st.i = 0; document.querySelectorAll('[name="i"]').forEach((r) => (r.checked = +r.value === st.i)); render(); } });
+  document.getElementById("colors").addEventListener("click", (e) => { const b = e.target.closest("[data-i]"); if (b) { st.c = +b.dataset.i; render(); } });
   radios("sides", S.sides, "s");
   radios("inks", S.inks, "i");
   radios("deliv", S.deliv, "d");
@@ -134,7 +133,7 @@
     document.getElementById("logo-file").value = ""; document.getElementById("logo-reset").hidden = true; render();
   });
   const txt = document.getElementById("f-text");
-  txt.addEventListener("input", () => { bag.querySelector("[data-bag-text]").textContent = txt.value; if (turn.get() > 90) face("front"); render(); });
+  txt.addEventListener("input", () => { bag.querySelector("[data-bag-text]").textContent = txt.value; face("front"); render(); });
   const back = document.getElementById("f-back");
   back.addEventListener("input", () => { bag.querySelector("[data-bag-back]").textContent = back.value; if (st.s === 1) face("back"); render(); });
 
@@ -145,9 +144,11 @@
 
   function render() {
     const c = S.colors[st.c];
-    const was = bag.dataset.sides;
-    bag.dataset.color = c.id; bag.dataset.ink = S.inks[st.i].id; bag.dataset.sides = st.s === 1 ? "rv" : "r";
-    if (was === "r" && st.s === 1) face("back");
+    const was = bag.dataset.rv;
+    bag.dataset.color = c.id; bag.dataset.ink = S.inks[st.i].id; bag.dataset.rv = st.s === 1 ? "1" : "0";
+    if (was === "0" && st.s === 1) face("back");
+    if (st.s !== 1 && bag.dataset.side === "back") face("front");
+    faces[1].disabled = st.s !== 1;
     document.getElementById("back-note").hidden = st.s === 1; back.disabled = st.s !== 1;
     pulse();
     document.getElementById("v-color").textContent = c.label;

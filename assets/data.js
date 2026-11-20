@@ -170,7 +170,7 @@ const CATS = [
   { id: "signaletique-enseignes", name: "Signalétique & enseignes", blurb: "Enseignes, bâches et plaques pro.", items: ["Enseignes extérieures", "Bâches & banderoles PVC", "Plaques professionnelles laiton / alu"] },
   { id: "support-rigide", name: "Supports rigides", blurb: "Panneaux rigides sur mesure.", items: ["Panneaux & supports rigides"] },
   { id: "plv-expo", name: "PLV & expo", blurb: "Stands, présentoirs et PLV.", items: ["PLV, stands & expo"] },
-  { id: "objets-packaging", name: "Sacs, objets pub & packaging", blurb: "Textile, goodies et boîtes personnalisées.", items: [{ n: "Sac kraft personnalisé restaurant · 26 × 17 × 29 cm", from: 99.99, h: "sac.html" }, "Sacs personnalisés", "Objets publicitaires", "Packaging & boîtes", "Textile personnalisé"] },
+  { id: "objets-packaging", name: "Sacs, objets pub & packaging", blurb: "Textile, goodies et boîtes personnalisées.", items: [{ n: "Sac kraft personnalisé restaurant · 26 × 17 × 29 cm", from: 99.99, h: "sac.html" }, { n: "Papier alimentaire personnalisé", h: "perso.html?p=papier" }, { n: "Serviettes personnalisées", h: "perso.html?p=serviette" }, "Sacs personnalisés", "Objets publicitaires", "Packaging & boîtes", "Textile personnalisé"] },
 ];
 
 /* ---------- Utilitaires partagés ---------- */
@@ -588,4 +588,64 @@ function bag3dDrag(root, onTurn) {
   const end = () => { x0 = null; root.classList.remove("is-drag"); };
   root.addEventListener("pointerup", end); root.addEventListener("pointercancel", end);
   return { set, get: () => ry };
+}
+
+/* ---------- Sac kraft sur une vraie photo (le logo est incrusté sur la face) ---------- */
+SAC.colors = SAC.colors.filter((c) => c.id !== "noir");
+SAC.inks = SAC.inks.filter((c) => c.id !== "blanc");
+const BAG_PHOTO = "https://images.unsplash.com/photo-1616429368325-d5d7542b0ec3?auto=format&fit=crop&w=1000&q=80";
+function bagPhotoHTML(o = {}) {
+  const { color = "kraft", ink = "noir", side = "front", text = "Imprimerie · Paris 10e", back = "Merci & à bientôt !" } = o;
+  return `<div class="bph" data-color="${color}" data-ink="${ink}" data-side="${side}">
+    <img class="bph__img" src="${BAG_PHOTO}" alt="Sac kraft à poignées torsadées, 26 × 17 × 29 cm">
+    <div class="bph__print bph__print--front"><img data-bag-logo src="${IMG}mauri_logo.png" alt=""><span data-bag-text>${esc(text)}</span></div>
+    <div class="bph__print bph__print--back"><b data-bag-back>${esc(back)}</b><img data-bag-logo src="${IMG}mauri_logo.png" alt=""></div>
+    <span class="bph__side">Recto</span>
+  </div>`;
+}
+
+/* ---------- Papier alimentaire et serviettes personnalisés (sur devis) ---------- */
+const PERSO = {
+  papier: {
+    name: "Papier alimentaire personnalisé", short: "papier alimentaire",
+    lead: "Papier ingraissable pour burgers, sandwichs, frites et viennoiseries, imprimé à votre logo. Encres alimentaires, contact direct avec les aliments.",
+    photo: "1585238341267-1cfec2046a55", photoAlt: "Burger posé sur du papier alimentaire",
+    badges: [["✓ Maquette avant tirage", "BAT envoyé avant impression"], ["🍔 Contact alimentaire", "Encres et papier certifiés"], ["🇫🇷 Imprimé en France", "dans notre atelier, Paris 10e"], ["🔒 Paiement sécurisé", "CB, espèces ou lien de paiement"]],
+    groups: [
+      { id: "papier", label: "Papier", swatch: true, options: [{ label: "Blanc ingraissable", hint: "40 g · le plus choisi", hex: "#f7f5ef", v: "blanc" }, { label: "Kraft ingraissable", hint: "40 g · aspect naturel", hex: "#c9a173", v: "kraft" }] },
+      { id: "format", label: "Format", options: [{ label: "25 × 35 cm", hint: "Sandwichs, viennoiseries", w: 25, h: 35 }, { label: "31 × 38 cm", hint: "Burgers · le plus commandé", w: 31, h: 38 }, { label: "35 × 50 cm", hint: "Plateaux, fonds de panier", w: 35, h: 50 }] },
+      { id: "motif", label: "Mise en page", options: [{ label: "Motif répété", hint: "Logo en quinconce sur toute la feuille", v: "repeat" }, { label: "Logo centré", hint: "Un grand logo au centre", v: "center" }] },
+      { id: "encre", label: "Couleur d'impression", options: [{ label: "Noir", v: "noir" }, { label: "Rouge", v: "rouge" }, { label: "Couleurs (quadri)", v: "quadri" }] },
+    ],
+    text: "Fait maison · Paris 10e",
+    qty: [1000, 2500, 5000, 10000, 25000], unit: "feuilles",
+  },
+  serviette: {
+    name: "Serviettes personnalisées", short: "serviettes",
+    lead: "Serviettes en ouate de cellulose imprimées à votre logo, pour restaurants, cafés, traiteurs et événements. Pliées en 4, prêtes à poser sur la table.",
+    photo: "1767528402041-55425fc177ee", photoAlt: "Serviette blanche imprimée au logo d'un café",
+    badges: [["✓ Maquette avant tirage", "BAT envoyé avant impression"], ["🧻 Douces et résistantes", "2 ou 3 plis, ouate de cellulose"], ["🇫🇷 Imprimé en France", "dans notre atelier, Paris 10e"], ["🔒 Paiement sécurisé", "CB, espèces ou lien de paiement"]],
+    groups: [
+      { id: "couleur", label: "Couleur de la serviette", swatch: true, options: [{ label: "Blanc", hint: "Le classique", hex: "#ffffff", v: "blanc" }, { label: "Kraft", hint: "Recyclé, naturel", hex: "#c8a47a", v: "kraft" }, { label: "Noir", hint: "Chic, logo blanc", hex: "#24242a", v: "noir" }, { label: "Bordeaux", hint: "Gastronomique", hex: "#6b1d2b", v: "bordeaux" }] },
+      { id: "format", label: "Format", options: [{ label: "33 × 33 cm", hint: "Plié 16,5 × 16,5 cm · café, snack" }, { label: "40 × 40 cm", hint: "Plié 20 × 20 cm · restaurant" }] },
+      { id: "plis", label: "Épaisseur", options: [{ label: "2 plis", hint: "Le standard" }, { label: "3 plis", hint: "Plus épaisse, effet tissu" }] },
+      { id: "position", label: "Position du logo", options: [{ label: "Dans le coin", hint: "Visible une fois pliée", v: "corner" }, { label: "Au centre", hint: "Grand logo", v: "center" }] },
+    ],
+    text: "Bon appétit",
+    qty: [500, 1000, 2500, 5000, 10000], unit: "serviettes",
+  },
+};
+const LOGO_URL = IMG + "mauri_logo.png";
+/* Aperçu réaliste : feuille de papier alimentaire ou serviette pliée, avec le logo */
+function persoHTML(key, st, logo = LOGO_URL, text = "") {
+  const P = PERSO[key], v = (id) => { const g = P.groups.find((x) => x.id === id); return g.options[st[id] || 0]; };
+  if (key === "papier") {
+    const f = v("format"), cells = Array.from({ length: 48 }, (_, i) => `<span class="fp__cell">${i % 2 ? `<b>${esc(text)}</b>` : `<img src="${logo}" alt="">`}</span>`).join("");
+    return `<div class="fp" data-paper="${v("papier").v}" data-ink="${v("encre").v}" data-motif="${v("motif").v}" style="--ar:${f.w / f.h}">
+      <div class="fp__sheet"><div class="fp__grid">${cells}</div><div class="fp__center"><img src="${logo}" alt=""><b>${esc(text)}</b></div><i class="fp__light"></i></div>
+      <span class="fp__dim">${esc(f.label)}</span></div>`;
+  }
+  return `<div class="fn" data-color="${v("couleur").v}" data-pos="${v("position").v}">
+    <div class="fn__napkin"><i class="fn__fold fn__fold--a"></i><i class="fn__fold fn__fold--b"></i><div class="fn__print"><img src="${logo}" alt=""><b>${esc(text)}</b></div></div>
+    <div class="fn__napkin fn__napkin--2"></div><span class="fp__dim">${esc(v("format").hint.split(" · ")[0])}</span></div>`;
 }
