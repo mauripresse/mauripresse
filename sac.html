@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sac kraft personnalisé pour restaurant · Mauri Presse</title>
+<meta name="description" content="Sac kraft personnalisé avec votre logo pour la vente à emporter : 26 × 17 × 29 cm, kraft brun, blanc ou noir, maquette avant tirage, fabriqué sous 24-48 h, imprimé en France. Dès 99,99 € HT les 100.">
+<link rel="icon" href="https://mauripresse.com/images/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="site-header"></div>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+
+<main>
+  <section class="pagehead"><div class="wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a><span>/</span><a href="catalogue.html">Catalogue</a><span>/</span><a href="categorie.html?c=objets-packaging">Sacs, objets pub & packaging</a></nav>
+    <h1>Sac kraft personnalisé <span class="h-accent">pour restaurant.</span></h1>
+    <p>Le sac de vente à emporter à votre image : votre logo imprimé sur un sac kraft solide, fond plat et poignées torsadées. Idéal pour restaurants, boulangeries, traiteurs et boutiques.</p>
+    <ul class="sacbadges">
+      <li><b>✓ Maquette avant tirage</b><span>BAT envoyé avant impression</span></li>
+      <li><b>⚡ Fabriqué sous 24 – 48 h</b><span>retrait ou livraison</span></li>
+      <li><b>🇫🇷 Imprimé en France</b><span>dans notre atelier, Paris 10<sup>e</sup></span></li>
+      <li><b>🔒 Paiement sécurisé</b><span>CB, espèces ou lien de paiement</span></li>
+    </ul>
+  </div></section>
+
+  <div class="wrap config sac">
+    <div>
+      <!-- Aperçu en direct du sac -->
+      <div class="bag" id="bag" data-color="kraft" data-ink="noir">
+        <div class="bag__stage">
+          <svg class="bag__svg" viewBox="0 0 440 540" aria-hidden="true">
+            <defs>
+              <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .16"/></feComponentTransfer><feBlend in2="SourceGraphic" mode="multiply"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+              <linearGradient id="gFront" x1="0" x2="1"><stop offset="0" style="stop-color:var(--bag-2)"/><stop offset=".35" style="stop-color:var(--bag)"/><stop offset="1" style="stop-color:var(--bag-2)"/></linearGradient>
+              <linearGradient id="gSide" x1="0" x2="1"><stop offset="0" style="stop-color:var(--bag-3)"/><stop offset="1" style="stop-color:var(--bag-2)"/></linearGradient>
+            </defs>
+            <ellipse cx="225" cy="508" rx="190" ry="16" fill="rgba(0,0,0,.25)"/>
+            <!-- poignée arrière -->
+            <path d="M205 150 C205 40, 335 40, 335 150" fill="none" stroke="var(--handle-2)" stroke-width="9" stroke-linecap="round"/>
+            <!-- intérieur / dos -->
+            <polygon points="60,180 130,150 400,150 330,180" fill="var(--bag-3)"/>
+            <!-- soufflet (côté) -->
+            <polygon points="330,180 400,150 400,470 330,500" fill="url(#gSide)"/>
+            <polyline points="330,180 362,210 400,150" fill="none" stroke="var(--bag-3)" stroke-width="2" opacity=".8"/>
+            <line x1="362" y1="210" x2="362" y2="485" stroke="rgba(0,0,0,.12)" stroke-width="2"/>
+            <!-- face avant -->
+            <rect x="60" y="180" width="270" height="320" fill="url(#gFront)"/>
+            <rect x="60" y="180" width="270" height="320" fill="var(--bag)" filter="url(#grain)" opacity=".9"/>
+            <rect x="60" y="180" width="270" height="30" fill="rgba(0,0,0,.08)"/>
+            <line x1="60" y1="210" x2="330" y2="210" stroke="rgba(0,0,0,.14)" stroke-width="1.5"/>
+            <polygon points="60,470 330,470 330,500 60,500" fill="rgba(0,0,0,.06)"/>
+            <!-- poignée avant -->
+            <path d="M135 190 C135 70, 255 70, 255 190" fill="none" stroke="var(--handle)" stroke-width="10" stroke-linecap="round"/>
+            <path d="M135 190 C135 70, 255 70, 255 190" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="3 6"/>
+            <rect x="125" y="186" width="20" height="16" rx="2" fill="var(--bag-2)"/><rect x="245" y="186" width="20" height="16" rx="2" fill="var(--bag-2)"/>
+          </svg>
+          <!-- zone imprimée (face avant) -->
+          <div class="bag__print" id="bag-print">
+            <img id="bag-logo" src="https://mauripresse.com/images/mauri_logo.png" alt="">
+            <span id="bag-text">Imprimerie · Paris 10<sup>e</sup></span>
+          </div>
+          <span class="bag__dim bag__dim--w">26 cm</span><span class="bag__dim bag__dim--h">29 cm</span><span class="bag__dim bag__dim--d">17 cm</span>
+        </div>
+        <div class="pv__bar">
+          <span class="pv__note"><b>Aperçu en direct</b> — votre maquette (BAT) vous est envoyée avant tirage.</span>
+          <span class="pv__actions">
+            <label class="btn btn--ghost btn--sm"><input type="file" id="logo-file" accept="image/*" hidden>Importer mon logo</label>
+            <button type="button" class="btn btn--ghost btn--sm" id="logo-reset" hidden>Logo Mauri Presse</button>
+          </span>
+        </div>
+      </div>
+
+      <section class="og">
+        <div class="og__head"><span class="og__n">1</span><h3>Couleur du sac</h3><span class="og__val" id="v-color"></span></div>
+        <div class="swatches" id="colors"></div>
+      </section>
+      <section class="og">
+        <div class="og__head"><span class="og__n">2</span><h3>Impression</h3></div>
+        <div class="opts" id="sides"></div>
+      </section>
+      <section class="og">
+        <div class="og__head"><span class="og__n">3</span><h3>Couleur d'impression</h3></div>
+        <div class="opts" id="inks"></div>
+      </section>
+      <section class="og">
+        <div class="og__head"><span class="og__n">4</span><h3>Format</h3></div>
+        <div class="opts"><label class="opt"><input type="radio" checked><span><b>26 × 17 × 29 cm</b><small>Largeur × soufflet × hauteur · fond plat, poignées torsadées</small></span></label></div>
+      </section>
+      <section class="og">
+        <div class="og__head"><span class="og__n">5</span><h3>Votre personnalisation</h3></div>
+        <div class="fgrid">
+          <label class="field field--full"><span>Texte sous le logo</span><input id="f-text" maxlength="40" value="Imprimerie · Paris 10e" placeholder="Ex. : Restaurant Le Chabrol · 01 23 45 67 89"></label>
+        </div>
+        <p class="sac__hint">Importez votre logo avec le bouton sous l'aperçu (PNG, JPG). Pas de logo ? Nos graphistes le mettent en page gratuitement.</p>
+      </section>
+      <section class="og">
+        <div class="og__head"><span class="og__n">6</span><h3>Quantité</h3></div>
+        <div class="chips-q" id="qty"></div>
+      </section>
+      <section class="og">
+        <div class="og__head"><span class="og__n">7</span><h3>Retrait ou livraison</h3></div>
+        <div class="opts" id="deliv"></div>
+      </section>
+    </div>
+
+    <aside class="recap" aria-live="polite">
+      <h3>Votre sac <span class="live">Prix en direct</span></h3>
+      <dl id="recap-list"></dl>
+      <div id="recap-price"></div>
+      <button class="btn btn--cyan btn--block" id="go" type="button"></button>
+      <a class="btn btn--ghost btn--block" id="go-devis" style="margin-top:10px">Demander un devis</a>
+      <ul class="assure"><li>Maquette (BAT) envoyée avant tirage</li><li>Fabriqué sous 24 – 48 h</li><li>Imprimé en France, à Paris 10<sup>e</sup></li><li>Paiement sécurisé</li></ul>
+    </aside>
+  </div>
+
+  <div class="wrap" id="reviews"></div>
+</main>
+<div class="buybar"><div><small id="bb-k">Total TTC</small><b id="bb-ttc"></b></div><button class="btn btn--cyan" id="bb-go" type="button"></button></div>
+
+<script>
+(() => {
+  const S = SAC, st = { c: 0, s: 0, i: 0, q: 0, d: 0 }, bag = document.getElementById("bag");
+  document.getElementById("reviews").innerHTML = reviewsHTML("objets-packaging");
+
+  const radios = (id, list, key) => {
+    document.getElementById(id).innerHTML = list.map((o, i) => `<label class="opt"><input type="radio" name="${key}" value="${i}" ${i === st[key] ? "checked" : ""}><span><b>${esc(o.label)}</b>${o.hint ? `<small>${esc(o.hint)}</small>` : ""}${o.quote ? "<em>Sur devis</em>" : ""}</span></label>`).join("");
+    document.getElementById(id).addEventListener("change", (e) => { st[key] = +e.target.value; render(); });
+  };
+  document.getElementById("colors").innerHTML = S.colors.map((c, i) => `<button type="button" class="sw" data-i="${i}" style="--sw:${c.hex}"><i></i><b>${esc(c.label)}</b><small>${esc(c.hint)}</small></button>`).join("");
+  document.getElementById("colors").addEventListener("click", (e) => { const b = e.target.closest("[data-i]"); if (b) { st.c = +b.dataset.i; if (S.colors[st.c].id === "noir" && st.i === 0) st.i = 1; if (S.colors[st.c].id !== "noir" && st.i === 1) st.i = 0; document.querySelectorAll('[name="i"]').forEach((r) => (r.checked = +r.value === st.i)); render(); } });
+  radios("sides", S.sides, "s");
+  radios("inks", S.inks, "i");
+  radios("deliv", S.deliv, "d");
+  document.getElementById("qty").innerHTML = S.qty.map((q, i) => `<button type="button" data-q="${i}">${q.toLocaleString("fr-FR")} sacs</button>`).join("");
+  document.getElementById("qty").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { st.q = +b.dataset.q; render(); } });
+
+  /* Logo : celui de Mauri Presse par défaut, ou celui du client (reste dans le navigateur) */
+  const logo = document.getElementById("bag-logo"), DEF = logo.src;
+  let userLogo = null, userName = "";
+  document.getElementById("logo-file").addEventListener("change", (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    if (userLogo) URL.revokeObjectURL(userLogo);
+    userLogo = URL.createObjectURL(f); userName = f.name; logo.src = userLogo;
+    document.getElementById("logo-reset").hidden = false; render();
+  });
+  document.getElementById("logo-reset").addEventListener("click", () => {
+    if (userLogo) URL.revokeObjectURL(userLogo); userLogo = null; userName = ""; logo.src = DEF;
+    document.getElementById("logo-file").value = ""; document.getElementById("logo-reset").hidden = true; render();
+  });
+  const txt = document.getElementById("f-text");
+  txt.addEventListener("input", () => { document.getElementById("bag-text").textContent = txt.value; render(); });
+
+  const price = () => { const p = S.prices[S.qty[st.q]]; return p && !S.inks[st.i].quote && !S.sides[st.s].quote ? p : null; };
+  const rows = () => [["Produit", "Sac kraft personnalisé"], ["Format", "26 × 17 × 29 cm"], ["Couleur", S.colors[st.c].label], ["Impression", S.sides[st.s].label], ["Encre", S.inks[st.i].label],
+    ["Logo", userName || "Logo à fournir (ou création par nos graphistes)"], ["Texte", txt.value || "—"], ["Quantité", S.qty[st.q].toLocaleString("fr-FR") + " sacs"], ["Délai", S.deliv[st.d].label + " · " + S.deliv[st.d].hint]];
+  const devisHref = () => "contact.html?" + new URLSearchParams({ produit: "Sac kraft personnalisé 26 × 17 × 29 cm", config: rows().slice(1).map(([k, v]) => k + " : " + v).join(" | ") });
+
+  function render() {
+    const c = S.colors[st.c];
+    bag.dataset.color = c.id; bag.dataset.ink = S.inks[st.i].id;
+    document.getElementById("v-color").textContent = c.label;
+    document.querySelectorAll(".sw").forEach((b) => b.classList.toggle("is-on", +b.dataset.i === st.c));
+    document.querySelectorAll("#qty button").forEach((b) => b.classList.toggle("is-on", +b.dataset.q === st.q));
+    document.getElementById("recap-list").innerHTML = rows().map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
+    const ht = price(), d = S.deliv[st.d], go = document.getElementById("go"), bb = document.getElementById("bb-go");
+    if (ht) {
+      document.getElementById("recap-price").innerHTML = `<div class="recap__sum"><div><span>Prix HT</span><span>${eur(ht)}</span></div><div><span>Livraison</span><span>${d.paid ? "Selon l'adresse" : d.id === "pickup" ? "Retrait gratuit" : "Offerte"}</span></div><div><span>TVA (20 %)</span><span>${eur(ht * 0.2)}</span></div></div><div class="recap__ttc"><span>Total TTC</span><b>${eur(ht * 1.2)}</b></div><div class="recap__unit">soit ${(ht / S.qty[st.q]).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} € HT / sac</div>`;
+      go.innerHTML = 'Ajouter au panier <span class="arrow">→</span>'; bb.textContent = "Ajouter au panier";
+      document.getElementById("bb-k").textContent = "Total TTC"; document.getElementById("bb-ttc").textContent = eur(ht * 1.2);
+    } else {
+      document.getElementById("recap-price").innerHTML = `<div class="recap__quote"><b>Prix sur devis</b><span>À partir de ${eur(S.prices[100])} HT les 100 sacs · réponse de l'atelier dans la journée.</span></div>`;
+      go.innerHTML = 'Recevoir mon devis gratuit <span class="arrow">→</span>'; bb.textContent = "Recevoir mon devis";
+      document.getElementById("bb-k").textContent = "Devis gratuit"; document.getElementById("bb-ttc").textContent = "dès " + eur(S.prices[100]) + " HT";
+    }
+    document.getElementById("go-devis").href = devisHref();
+  }
+  document.getElementById("go").addEventListener("click", () => {
+    const ht = price();
+    if (!ht) { location.href = devisHref(); return; }
+    Cart.add({ name: "Sac kraft personnalisé 26 × 17 × 29 cm", detail: rows().slice(2).map(([k, v]) => (k === "Logo" ? "Logo : " + v : v)).join(" · "), price: ht });
+  });
+  document.body.classList.add("has-buybar");
+  document.getElementById("bb-go").addEventListener("click", () => document.getElementById("go").click());
+  render();
+})();
+</script>
+</body>
+</html>

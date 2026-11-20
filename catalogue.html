@@ -65,7 +65,7 @@
   const filter = document.getElementById("filter"), express = document.getElementById("express"), clear = document.getElementById("clear");
   const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 const row = (it, c) => {
-  const k = isConf(it) || !!(typeof it === "object" && it.f), xp = isExpress(it), from = itemFrom(it);
+  const k = isConf(it) || !!(typeof it === "object" && (it.f || it.h)), xp = isExpress(it), from = itemFrom(it);
   return `<a class="rrow" href="${itemHref(it)}" data-name="${esc(norm(itemName(it) + " " + c.name))}" data-x="${xp ? 1 : 0}">
     <span class="rrow__ico">${catIcon(c.id)}</span>
     <div><h3>${esc(itemName(it))}</h3><p>${isConf(it) ? "Configuration en ligne, prix immédiat" : k ? "Choisissez votre taille, aperçu à l'échelle" : "Format, quantité et finitions sur mesure"}</p></div>

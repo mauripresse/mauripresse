@@ -22,7 +22,7 @@
     <div class="wrap">
       <div class="hcar" id="hcar" aria-roledescription="carrousel">
         <div class="hcar__track">
-<article class="hcar__slide hcar__slide--rusec" role="group" aria-roledescription="diapositive" aria-label="1 sur 6">
+<article class="hcar__slide hcar__slide--rusec" role="group" aria-roledescription="diapositive" aria-label="1 sur 7">
   <div class="rusec rusec--slide">
         <div class="rusec__head">
           <div>
@@ -44,7 +44,7 @@
       
   </div>
 </article>
-<article class="hcar__slide hcar__slide--rusec hcar__slide--cards" role="group" aria-roledescription="diapositive" aria-label="2 sur 6">
+<article class="hcar__slide hcar__slide--rusec hcar__slide--cards" role="group" aria-roledescription="diapositive" aria-label="2 sur 7">
   <div class="rusec rusec--slide rusec--cards">
     <div class="rusec__head">
       <div>
@@ -63,7 +63,22 @@
     <div class="hero__cta"><a class="btn btn--yellow" data-cards-go href="produit.html?p=classic">Personnaliser mes cartes <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=cartes-de-visite">Toutes les cartes</a></div>
   </div>
 </article>
-<article class="hcar__slide hcar__slide--rusec hcar__slide--fly" role="group" aria-roledescription="diapositive" aria-label="3 sur 6">
+<article class="hcar__slide hcar__slide--rusec hcar__slide--sac" role="group" aria-roledescription="diapositive" aria-label="3 sur 7">
+  <div class="rusec rusec--slide rusec--sac">
+    <div class="sacslide">
+      <div>
+        <span class="eyebrow eyebrow--yellow">Nouveau · Restaurants & vente à emporter</span>
+        <h2>Le sac kraft <em>à votre logo.</em></h2>
+        <p class="rusec__lead">Sac kraft 26 × 17 × 29 cm, fond plat et poignées torsadées : brun, blanc ou noir, imprimé à vos couleurs. Importez votre logo, l'aperçu change en direct.</p>
+        <ul class="sacslide__ok"><li>Maquette avant tirage</li><li>Fabriqué sous 24 – 48 h</li><li>Imprimé en France</li><li>Paiement sécurisé</li></ul>
+        <div class="sacslide__price"><small>Les 100 sacs</small><b>99,99 €</b><span>HT</span></div>
+        <div class="hero__cta"><a class="btn btn--yellow" href="sac.html">Personnaliser mon sac <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=objets-packaging">Tout le packaging</a></div>
+      </div>
+      <div class="sacslide__pics" data-sac-pics></div>
+    </div>
+  </div>
+</article>
+<article class="hcar__slide hcar__slide--rusec hcar__slide--fly" role="group" aria-roledescription="diapositive" aria-label="4 sur 7">
   <div class="rusec rusec--slide rusec--light">
     <div class="rusec__head">
       <div>
@@ -77,7 +92,7 @@
     <div class="hero__cta"><a class="btn btn--yellow" href="format.html?p=flyers">Choisir mon format <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=flyers-tracts">Voir les flyers</a></div>
   </div>
 </article>
-<article class="hcar__slide hcar__slide--rusec hcar__slide--dep" role="group" aria-roledescription="diapositive" aria-label="4 sur 6">
+<article class="hcar__slide hcar__slide--rusec hcar__slide--dep" role="group" aria-roledescription="diapositive" aria-label="5 sur 7">
   <div class="rusec rusec--slide">
     <div class="rusec__head">
       <div>
@@ -91,7 +106,7 @@
     <div class="hero__cta"><a class="btn btn--yellow" href="format.html?p=depliants">Choisir mon pliage <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=depliants-plaquettes">Voir les dépliants</a></div>
   </div>
 </article>
-<article class="hcar__slide hcar__slide--garantie" role="group" aria-roledescription="diapositive" aria-label="5 sur 6">
+<article class="hcar__slide hcar__slide--garantie" role="group" aria-roledescription="diapositive" aria-label="6 sur 7">
   <img class="hcar__bg" src="https://images.unsplash.com/photo-1761586631743-768b1b75ecdc?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
   
   <div class="hcar__txt">
@@ -102,7 +117,7 @@
     <div class="hcar__cta"><a class="btn btn--yellow" href="garantie.html">Faire une demande <span class="arrow">→</span></a><a class="btn btn--light" href="garantie.html">Comment ça marche</a></div>
   </div>
 </article>
-<article class="hcar__slide hcar__slide--livraison" role="group" aria-roledescription="diapositive" aria-label="6 sur 6">
+<article class="hcar__slide hcar__slide--livraison" role="group" aria-roledescription="diapositive" aria-label="7 sur 7">
   <img class="hcar__bg" src="https://images.unsplash.com/photo-1791297972819-dc62f8fe2375?auto=format&fit=crop&w=1800&q=75" alt="" loading="lazy">
   
   <div class="hcar__txt">
@@ -367,7 +382,7 @@
 /* Catalogue de l'accueil : huit familles, une photo et un prix chacune */
 (() => {
   const SHOW = ["roll-up-kakemono", "cartes-de-visite", "flyers-tracts", "depliants-plaquettes", "affiche-poster", "etiquettes-autocollants", "vinyle-adhesif", "signaletique-enseignes", "objets-packaging"];
-  const FROM = { "cartes-de-visite": fromPrice("classic"), "flyers-tracts": 14.9, "roll-up-kakemono": 79.99 }; /* prix « dès » du site officiel */
+  const FROM = { "cartes-de-visite": fromPrice("classic"), "flyers-tracts": 14.9, "roll-up-kakemono": 79.99, "objets-packaging": 99.99 }; /* prix « dès » du site officiel */
   document.getElementById("cats").innerHTML = SHOW.map((id, i) => {
     const c = CATS.find((x) => x.id === id), k = FROM[id];
     return `<a class="shopcard${i === 0 ? " shopcard--big" : ""}${i >= 7 ? " shopcard--extra" : ""}" href="categorie.html?c=${id}">
@@ -420,6 +435,8 @@
   /* Faire glisser la rangée de roll-up ne change pas de diapositive */
   document.querySelectorAll("[data-rollups-gallery]").forEach((el) => ["touchstart", "touchmove", "touchend"].forEach((ev) => el.addEventListener(ev, (e) => { if (el.scrollWidth > el.clientWidth + 2) e.stopPropagation(); }, { passive: true })));
   document.querySelectorAll("[data-flyers-line]").forEach((el) => { el.innerHTML = formatLineup("flyers", -1, [0, 2, 3, 4, 5]); link(el, "flyers"); });
+  /* Sac kraft : deux exemples (brun et noir) */
+  document.querySelectorAll("[data-sac-pics]").forEach((el) => { el.innerHTML = bagHTML("kraft", "noir", 1) + bagHTML("noir", "blanc", 2); el.addEventListener("click", () => { location.href = "sac.html"; }); });
   /* Cartes de visite : les 4 formats du configurateur, sens / finition / coins au choix */
   document.querySelectorAll("[data-cards-line]").forEach((el) => {
     const P = PRODUCTS.classic, st = { o: 0, f: 0, r: 0 }, ctl = el.parentElement.querySelector("[data-cards-ctl]"), go = el.parentElement.querySelector("[data-cards-go]");

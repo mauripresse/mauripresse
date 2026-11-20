@@ -170,7 +170,7 @@ const CATS = [
   { id: "signaletique-enseignes", name: "Signalétique & enseignes", blurb: "Enseignes, bâches et plaques pro.", items: ["Enseignes extérieures", "Bâches & banderoles PVC", "Plaques professionnelles laiton / alu"] },
   { id: "support-rigide", name: "Supports rigides", blurb: "Panneaux rigides sur mesure.", items: ["Panneaux & supports rigides"] },
   { id: "plv-expo", name: "PLV & expo", blurb: "Stands, présentoirs et PLV.", items: ["PLV, stands & expo"] },
-  { id: "objets-packaging", name: "Sacs, objets pub & packaging", blurb: "Textile, goodies et boîtes personnalisées.", items: ["Sacs personnalisés", "Objets publicitaires", "Packaging & boîtes", "Textile personnalisé"] },
+  { id: "objets-packaging", name: "Sacs, objets pub & packaging", blurb: "Textile, goodies et boîtes personnalisées.", items: [{ n: "Sac kraft personnalisé restaurant · 26 × 17 × 29 cm", from: 99.99, h: "sac.html" }, "Sacs personnalisés", "Objets publicitaires", "Packaging & boîtes", "Textile personnalisé"] },
 ];
 
 /* ---------- Utilitaires partagés ---------- */
@@ -180,7 +180,7 @@ const itemName = (it) => (typeof it === "string" ? it : it.n);
 /* Un article est « configurable » s'il a un calculateur (p) ; sinon il part en devis.
    `from` = prix « dès » affiché sur le site officiel pour un article sans calculateur. */
 const isConf = (it) => typeof it === "object" && !!it.p;
-const itemHref = (it) => (isConf(it) ? "produit.html?p=" + it.p : typeof it === "object" && it.f ? "format.html?p=" + it.f + (it.t != null ? "&t=" + it.t : "") + (it.v ? "&n=" + encodeURIComponent(it.n) : "") : "contact.html?produit=" + encodeURIComponent(itemName(it)));
+const itemHref = (it) => (typeof it === "object" && it.h ? it.h : isConf(it) ? "produit.html?p=" + it.p : typeof it === "object" && it.f ? "format.html?p=" + it.f + (it.t != null ? "&t=" + it.t : "") + (it.v ? "&n=" + encodeURIComponent(it.n) : "") : "contact.html?produit=" + encodeURIComponent(itemName(it)));
 const delivOf = (key, id) => { const p = PRODUCTS[key]; return p.deliv.find((x) => x.id === id) || p.deliv.find((x) => x.id === p.defDeliv) || p.deliv[0]; };
 
 /* Prix HT d'une configuration, selon les règles du site officiel :
@@ -524,3 +524,43 @@ function depEx(s, open, n = 0) {
 }
 FORMATS.flyers.art = "photo";
 FORMATS.flyers.sizes.forEach((s, i) => { s.ex = i; });
+
+/* ---------- Sac kraft personnalisé (restaurants, vente à emporter) ---------- */
+const SAC = {
+  colors: [
+    { id: "kraft", label: "Kraft brun", hint: "Naturel, le plus choisi", hex: "#b88a55" },
+    { id: "blanc", label: "Kraft blanc", hint: "Couleurs éclatantes", hex: "#f2efe7" },
+    { id: "noir", label: "Noir", hint: "Chic, impression blanche", hex: "#26262b" },
+  ],
+  sides: [{ label: "Recto", hint: "Logo sur une face" }, { label: "Recto-verso", hint: "Logo sur les deux faces" }],
+  inks: [{ id: "noir", label: "Noir", hint: "1 couleur" }, { id: "blanc", label: "Blanc", hint: "Pour sac noir" }, { id: "quadri", label: "Couleurs (quadri)", hint: "Votre logo en couleurs" }],
+  qty: [100, 250, 500, 1000, 2000, 5000, 10000],
+  prices: { 100: 99.99 }, /* prix HT ; les autres quantités partent en devis */
+  deliv: [
+    { id: "pickup", label: "Retrait à l'atelier", hint: "Fabriqué sous 24 – 48 h · gratuit" },
+    { id: "day", label: "Livraison jour même", hint: "Paris & IDF · tarif selon l'adresse", paid: true },
+    { id: "france", label: "Livraison France", hint: "48 – 72 h après fabrication" },
+  ],
+};
+/* Sac dessiné (bannière) : même rendu que l'aperçu de la page produit */
+function bagHTML(color = "kraft", ink = "noir", n = 0) {
+  const g = "g" + n;
+  return `<div class="bag bag--mini" data-color="${color}" data-ink="${ink}"><div class="bag__stage">
+    <svg class="bag__svg" viewBox="0 0 440 540" aria-hidden="true"><defs>
+      <filter id="${g}n" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .16"/></feComponentTransfer><feBlend in2="SourceGraphic" mode="multiply"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+      <linearGradient id="${g}f" x1="0" x2="1"><stop offset="0" style="stop-color:var(--bag-2)"/><stop offset=".35" style="stop-color:var(--bag)"/><stop offset="1" style="stop-color:var(--bag-2)"/></linearGradient>
+      <linearGradient id="${g}s" x1="0" x2="1"><stop offset="0" style="stop-color:var(--bag-3)"/><stop offset="1" style="stop-color:var(--bag-2)"/></linearGradient></defs>
+      <ellipse cx="225" cy="508" rx="190" ry="16" fill="rgba(0,0,0,.3)"/>
+      <path d="M205 150 C205 40, 335 40, 335 150" fill="none" stroke="var(--handle-2)" stroke-width="9" stroke-linecap="round"/>
+      <polygon points="60,180 130,150 400,150 330,180" fill="var(--bag-3)"/>
+      <polygon points="330,180 400,150 400,470 330,500" fill="url(#${g}s)"/>
+      <polyline points="330,180 362,210 400,150" fill="none" stroke="var(--bag-3)" stroke-width="2" opacity=".8"/>
+      <rect x="60" y="180" width="270" height="320" fill="url(#${g}f)"/>
+      <rect x="60" y="180" width="270" height="320" fill="var(--bag)" filter="url(#${g}n)" opacity=".9"/>
+      <rect x="60" y="180" width="270" height="30" fill="rgba(0,0,0,.08)"/>
+      <path d="M135 190 C135 70, 255 70, 255 190" fill="none" stroke="var(--handle)" stroke-width="10" stroke-linecap="round"/>
+      <rect x="125" y="186" width="20" height="16" rx="2" fill="var(--bag-2)"/><rect x="245" y="186" width="20" height="16" rx="2" fill="var(--bag-2)"/>
+    </svg>
+    <div class="bag__print"><img src="${IMG}mauri_logo.png" alt=""><span>Imprimerie · Paris 10e</span></div>
+  </div></div>`;
+}

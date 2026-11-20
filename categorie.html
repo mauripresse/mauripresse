@@ -87,7 +87,7 @@
   document.getElementById("c-devis").href = "contact.html?produit=" + encodeURIComponent(c.name);
 
 document.getElementById("c-items").innerHTML = c.items.map((it) => {
-  const k = isConf(it) || !!(typeof it === "object" && it.f), xp = isExpress(it), from = itemFrom(it);
+  const k = isConf(it) || !!(typeof it === "object" && (it.f || it.h)), xp = isExpress(it), from = itemFrom(it);
   return `<a class="item" href="${itemHref(it)}">
     <div><h3>${esc(itemName(it))}</h3><p>${isConf(it) ? "Configuration en ligne, prix immédiat." : k ? "Choisissez votre taille en ligne, aperçu à l'échelle." : "Format, quantité et finitions sur mesure."}</p></div>
     <div class="item__meta"><span>${from ? `dès <b>${eur(from)}</b> HT` : "Sur devis"}</span>${xp ? '<span class="pill">24h</span>' : ""}${k ? "" : '<span class="pill pill--soft">Devis →</span>'}</div>
