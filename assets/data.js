@@ -566,3 +566,26 @@ function bagHTML(color = "kraft", ink = "noir", n = 0) {
     <div class="bag__print"><img src="${IMG}mauri_logo.png" alt=""><span>Imprimerie · Paris 10e</span></div>
   </div></div>`;
 }
+
+/* ---------- Sac kraft en 3D (on le fait tourner pour voir recto et verso) ---------- */
+function bag3dHTML(o = {}) {
+  const { color = "kraft", ink = "noir", sides = "rv", text = "Imprimerie · Paris 10e", back = "Merci & à bientôt !", spin = false, u = 12 } = o;
+  const handle = (c) => `<svg class="b3f__handle" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true"><path d="M8 60 C8 -8, 92 -8, 92 60" fill="none" stroke="var(${c})" stroke-width="5.5" stroke-linecap="round"/><path d="M8 60 C8 -8, 92 -8, 92 60" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2" stroke-dasharray="2 4"/></svg>`;
+  return `<div class="bag b3d${spin ? " b3d--spin" : ""}" data-color="${color}" data-ink="${ink}" data-sides="${sides}" style="--u:${u}px">
+    <div class="b3d__scene"><div class="b3d__box" style="--ry:-28deg">
+      <div class="b3f b3f--inner"></div><div class="b3f b3f--inner b3f--inner2"></div>
+      <div class="b3f b3f--left"></div><div class="b3f b3f--right"></div><div class="b3f b3f--bottom"></div>
+      <div class="b3f b3f--back">${handle("--handle-2")}<div class="bag__print bag__print--back"><b data-bag-back>${esc(back)}</b><img data-bag-logo src="${IMG}mauri_logo.png" alt=""></div></div>
+      <div class="b3f b3f--front">${handle("--handle")}<div class="bag__print"><img data-bag-logo src="${IMG}mauri_logo.png" alt=""><span data-bag-text>${esc(text)}</span></div></div>
+    </div><div class="b3d__shadow"></div></div></div>`;
+}
+/* Faire tourner un sac à la souris / au doigt */
+function bag3dDrag(root, onTurn) {
+  const box = root.querySelector(".b3d__box"); let ry = -28, x0 = null, r0 = 0;
+  const set = (v) => { ry = v; box.style.setProperty("--ry", v + "deg"); onTurn && onTurn(v); };
+  root.addEventListener("pointerdown", (e) => { x0 = e.clientX; r0 = ry; root.classList.add("is-drag"); root.classList.remove("b3d--spin"); root.setPointerCapture(e.pointerId); });
+  root.addEventListener("pointermove", (e) => { if (x0 != null) set(r0 + (e.clientX - x0) * 0.6); });
+  const end = () => { x0 = null; root.classList.remove("is-drag"); };
+  root.addEventListener("pointerup", end); root.addEventListener("pointercancel", end);
+  return { set, get: () => ry };
+}

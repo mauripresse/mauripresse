@@ -31,46 +31,18 @@
 
   <div class="wrap config sac">
     <div>
-      <!-- Aperçu en direct du sac -->
-      <div class="bag" id="bag" data-color="kraft" data-ink="noir">
-        <div class="bag__stage">
-          <svg class="bag__svg" viewBox="0 0 440 540" aria-hidden="true">
-            <defs>
-              <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .16"/></feComponentTransfer><feBlend in2="SourceGraphic" mode="multiply"/><feComposite in2="SourceGraphic" operator="in"/></filter>
-              <linearGradient id="gFront" x1="0" x2="1"><stop offset="0" style="stop-color:var(--bag-2)"/><stop offset=".35" style="stop-color:var(--bag)"/><stop offset="1" style="stop-color:var(--bag-2)"/></linearGradient>
-              <linearGradient id="gSide" x1="0" x2="1"><stop offset="0" style="stop-color:var(--bag-3)"/><stop offset="1" style="stop-color:var(--bag-2)"/></linearGradient>
-            </defs>
-            <ellipse cx="225" cy="508" rx="190" ry="16" fill="rgba(0,0,0,.25)"/>
-            <!-- poignée arrière -->
-            <path d="M205 150 C205 40, 335 40, 335 150" fill="none" stroke="var(--handle-2)" stroke-width="9" stroke-linecap="round"/>
-            <!-- intérieur / dos -->
-            <polygon points="60,180 130,150 400,150 330,180" fill="var(--bag-3)"/>
-            <!-- soufflet (côté) -->
-            <polygon points="330,180 400,150 400,470 330,500" fill="url(#gSide)"/>
-            <polyline points="330,180 362,210 400,150" fill="none" stroke="var(--bag-3)" stroke-width="2" opacity=".8"/>
-            <line x1="362" y1="210" x2="362" y2="485" stroke="rgba(0,0,0,.12)" stroke-width="2"/>
-            <!-- face avant -->
-            <rect x="60" y="180" width="270" height="320" fill="url(#gFront)"/>
-            <rect x="60" y="180" width="270" height="320" fill="var(--bag)" filter="url(#grain)" opacity=".9"/>
-            <rect x="60" y="180" width="270" height="30" fill="rgba(0,0,0,.08)"/>
-            <line x1="60" y1="210" x2="330" y2="210" stroke="rgba(0,0,0,.14)" stroke-width="1.5"/>
-            <polygon points="60,470 330,470 330,500 60,500" fill="rgba(0,0,0,.06)"/>
-            <!-- poignée avant -->
-            <path d="M135 190 C135 70, 255 70, 255 190" fill="none" stroke="var(--handle)" stroke-width="10" stroke-linecap="round"/>
-            <path d="M135 190 C135 70, 255 70, 255 190" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="3 6"/>
-            <rect x="125" y="186" width="20" height="16" rx="2" fill="var(--bag-2)"/><rect x="245" y="186" width="20" height="16" rx="2" fill="var(--bag-2)"/>
-          </svg>
-          <!-- zone imprimée (face avant) -->
-          <div class="bag__print" id="bag-print">
-            <img id="bag-logo" src="https://mauripresse.com/images/mauri_logo.png" alt="">
-            <span id="bag-text">Imprimerie · Paris 10<sup>e</sup></span>
-          </div>
-          <span class="bag__dim bag__dim--w">26 cm</span><span class="bag__dim bag__dim--h">29 cm</span><span class="bag__dim bag__dim--d">17 cm</span>
+      <!-- Aperçu en direct du sac, en 3D -->
+      <div class="bagview">
+        <div class="bagview__live"><span class="livebadge"><i></i>Aperçu en direct</span><p>Chaque choix s'affiche <b>tout de suite</b> sur votre sac. <b>Faites-le tourner</b> pour voir le verso.</p></div>
+        <div class="bagview__stage" id="bag-wrap"></div>
+        <div class="bagview__ctl">
+          <div class="bagview__faces"><button type="button" data-face="front" class="is-on">Recto</button><button type="button" data-face="back">Verso</button><button type="button" data-face="spin">↻ 360°</button></div>
+          <span class="bagview__hint">↔ Glissez pour tourner · 26 × 17 × 29 cm</span>
         </div>
         <div class="pv__bar">
-          <span class="pv__note"><b>Aperçu en direct</b> — votre maquette (BAT) vous est envoyée avant tirage.</span>
+          <span class="pv__note"><b>Votre maquette (BAT)</b> vous est envoyée avant tirage.</span>
           <span class="pv__actions">
-            <label class="btn btn--ghost btn--sm"><input type="file" id="logo-file" accept="image/*" hidden>Importer mon logo</label>
+            <label class="btn btn--cyan btn--sm"><input type="file" id="logo-file" accept="image/*" hidden>Importer mon logo</label>
             <button type="button" class="btn btn--ghost btn--sm" id="logo-reset" hidden>Logo Mauri Presse</button>
           </span>
         </div>
@@ -95,7 +67,8 @@
       <section class="og">
         <div class="og__head"><span class="og__n">5</span><h3>Votre personnalisation</h3></div>
         <div class="fgrid">
-          <label class="field field--full"><span>Texte sous le logo</span><input id="f-text" maxlength="40" value="Imprimerie · Paris 10e" placeholder="Ex. : Restaurant Le Chabrol · 01 23 45 67 89"></label>
+          <label class="field field--full"><span>Texte du recto (sous le logo)</span><input id="f-text" maxlength="40" value="Imprimerie · Paris 10e" placeholder="Ex. : Restaurant Le Chabrol · 01 23 45 67 89"></label>
+          <label class="field field--full"><span>Texte du verso <small id="back-note">(choisissez « Recto-verso » pour l'imprimer)</small></span><input id="f-back" maxlength="40" value="Merci & à bientôt !" placeholder="Ex. : Bon appétit ! · Commandez au 01 23 45 67 89"></label>
         </div>
         <p class="sac__hint">Importez votre logo avec le bouton sous l'aperçu (PNG, JPG). Pas de logo ? Nos graphistes le mettent en page gratuitement.</p>
       </section>
@@ -125,7 +98,14 @@
 
 <script>
 (() => {
-  const S = SAC, st = { c: 0, s: 0, i: 0, q: 0, d: 0 }, bag = document.getElementById("bag");
+  const S = SAC, st = { c: 0, s: 0, i: 0, q: 0, d: 0 }, wrap = document.getElementById("bag-wrap");
+  wrap.innerHTML = bag3dHTML({ sides: "r", u: window.innerWidth <= 720 ? 7.5 : 11.5 });
+  const bag = wrap.querySelector(".b3d"), faces = document.querySelectorAll("[data-face]");
+  const turn = bag3dDrag(bag, () => faces.forEach((b) => b.classList.remove("is-on")));
+  const face = (f) => { bag.classList.toggle("b3d--spin", f === "spin"); if (f !== "spin") turn.set(f === "back" ? 152 : -28); faces.forEach((b) => b.classList.toggle("is-on", b.dataset.face === f)); };
+  faces.forEach((b) => b.addEventListener("click", () => face(b.dataset.face)));
+  /* petit effet à chaque changement, pour montrer que l'aperçu est en direct */
+  const pulse = () => { bag.classList.remove("is-pulse"); void bag.offsetWidth; bag.classList.add("is-pulse"); };
   document.getElementById("reviews").innerHTML = reviewsHTML("objets-packaging");
 
   const radios = (id, list, key) => {
@@ -141,29 +121,35 @@
   document.getElementById("qty").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { st.q = +b.dataset.q; render(); } });
 
   /* Logo : celui de Mauri Presse par défaut, ou celui du client (reste dans le navigateur) */
-  const logo = document.getElementById("bag-logo"), DEF = logo.src;
+  const logos = () => bag.querySelectorAll("[data-bag-logo]"), DEF = logos()[0].src;
   let userLogo = null, userName = "";
   document.getElementById("logo-file").addEventListener("change", (e) => {
     const f = e.target.files[0]; if (!f) return;
     if (userLogo) URL.revokeObjectURL(userLogo);
-    userLogo = URL.createObjectURL(f); userName = f.name; logo.src = userLogo;
+    userLogo = URL.createObjectURL(f); userName = f.name; logos().forEach((l) => (l.src = userLogo)); face("front");
     document.getElementById("logo-reset").hidden = false; render();
   });
   document.getElementById("logo-reset").addEventListener("click", () => {
-    if (userLogo) URL.revokeObjectURL(userLogo); userLogo = null; userName = ""; logo.src = DEF;
+    if (userLogo) URL.revokeObjectURL(userLogo); userLogo = null; userName = ""; logos().forEach((l) => (l.src = DEF));
     document.getElementById("logo-file").value = ""; document.getElementById("logo-reset").hidden = true; render();
   });
   const txt = document.getElementById("f-text");
-  txt.addEventListener("input", () => { document.getElementById("bag-text").textContent = txt.value; render(); });
+  txt.addEventListener("input", () => { bag.querySelector("[data-bag-text]").textContent = txt.value; if (turn.get() > 90) face("front"); render(); });
+  const back = document.getElementById("f-back");
+  back.addEventListener("input", () => { bag.querySelector("[data-bag-back]").textContent = back.value; if (st.s === 1) face("back"); render(); });
 
   const price = () => { const p = S.prices[S.qty[st.q]]; return p && !S.inks[st.i].quote && !S.sides[st.s].quote ? p : null; };
   const rows = () => [["Produit", "Sac kraft personnalisé"], ["Format", "26 × 17 × 29 cm"], ["Couleur", S.colors[st.c].label], ["Impression", S.sides[st.s].label], ["Encre", S.inks[st.i].label],
-    ["Logo", userName || "Logo à fournir (ou création par nos graphistes)"], ["Texte", txt.value || "—"], ["Quantité", S.qty[st.q].toLocaleString("fr-FR") + " sacs"], ["Délai", S.deliv[st.d].label + " · " + S.deliv[st.d].hint]];
+    ["Logo", userName || "Logo à fournir (ou création par nos graphistes)"], ["Texte recto", txt.value || "—"], ...(st.s === 1 ? [["Texte verso", back.value || "—"]] : []), ["Quantité", S.qty[st.q].toLocaleString("fr-FR") + " sacs"], ["Délai", S.deliv[st.d].label + " · " + S.deliv[st.d].hint]];
   const devisHref = () => "contact.html?" + new URLSearchParams({ produit: "Sac kraft personnalisé 26 × 17 × 29 cm", config: rows().slice(1).map(([k, v]) => k + " : " + v).join(" | ") });
 
   function render() {
     const c = S.colors[st.c];
-    bag.dataset.color = c.id; bag.dataset.ink = S.inks[st.i].id;
+    const was = bag.dataset.sides;
+    bag.dataset.color = c.id; bag.dataset.ink = S.inks[st.i].id; bag.dataset.sides = st.s === 1 ? "rv" : "r";
+    if (was === "r" && st.s === 1) face("back");
+    document.getElementById("back-note").hidden = st.s === 1; back.disabled = st.s !== 1;
+    pulse();
     document.getElementById("v-color").textContent = c.label;
     document.querySelectorAll(".sw").forEach((b) => b.classList.toggle("is-on", +b.dataset.i === st.c));
     document.querySelectorAll("#qty button").forEach((b) => b.classList.toggle("is-on", +b.dataset.q === st.q));
