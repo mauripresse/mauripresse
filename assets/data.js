@@ -535,7 +535,9 @@ const SAC = {
   sides: [{ label: "Recto", hint: "Logo sur une face" }, { label: "Recto-verso", hint: "Logo sur les deux faces" }],
   inks: [{ id: "noir", label: "Noir", hint: "1 couleur" }, { id: "blanc", label: "Blanc", hint: "Pour sac noir" }, { id: "quadri", label: "Couleurs (quadri)", hint: "Votre logo en couleurs" }],
   qty: [100, 250, 500, 1000, 2000, 5000, 10000],
-  prices: { 100: 99.99 }, /* prix HT ; les autres quantités partent en devis */
+  /* Prix HT dégressifs. 100 sacs : prix fixé par Mauri Presse ; au-delà, grille estimée d'après le marché
+     (≈ 0,25 € HT / sac à 1 000 en impression couleur), à aligner sur le concurrent si besoin. */
+  prices: { 100: 99.99, 250: 169.99, 500: 219.99, 1000: 289.99, 2000: 499.99, 5000: 1049.99, 10000: 1899.99 },
   deliv: [
     { id: "pickup", label: "Retrait à l'atelier", hint: "Fabriqué sous 24 – 48 h · gratuit" },
     { id: "day", label: "Livraison jour même", hint: "Paris & IDF · tarif selon l'adresse", paid: true },
