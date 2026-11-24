@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=202611241414">
+<link rel="stylesheet" href="assets/style.css?v=202611241451">
 </head>
 <body>
 <div id="site-header"></div>
-<script src="assets/data.js?v=202611241414"></script>
-<script src="assets/app.js?v=202611241414"></script>
+<script src="assets/data.js?v=202611241451"></script>
+<script src="assets/app.js?v=202611241451"></script>
 
 <main>
   <section class="pagehead"><div class="wrap">
@@ -108,7 +108,7 @@
   const LABELS = { nom: "Nom", email: "E-mail", tel: "Téléphone", societe: "Société", produit: "Produit", message: "Projet", total: "Total", paiement: "Paiement" };
   function recap(d, num, sent, payId) {
     const lines = Object.keys(LABELS).filter((k) => d[k]).map((k) => [LABELS[k], d[k]]);
-    if (file.files[0]) lines.push(["Fichier", file.files[0].name + (SHOP.web3pro ? " (joint à l'e-mail)" : " (à nous envoyer, voir ci-dessous)")]);
+    if (file.files[0]) lines.push(["Fichier", file.files[0].name + (fileAuto(file.files[0]) ? " (joint à l'e-mail)" : " (à nous envoyer, voir ci-dessous)")]);
     const body = `${order ? "Commande" : "Demande de devis"} ${num}\n\n` + lines.map(([k, v]) => `${k} : ${v}`).join("\n");
     const mailto = `mailto:${SHOP.mail}?subject=${encodeURIComponent((order ? "Commande " : "Demande de devis ") + num)}&body=${encodeURIComponent(body.slice(0, 1800))}`;
     const total = order ? cartHT * 1.2 : 0;

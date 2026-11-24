@@ -52,6 +52,10 @@ const SHOP = {
   web3key: "201a0977-4e64-461e-9be9-fd89c3eef3d6",
   /* Passer à true quand l'abonnement Web3Forms Pro est actif : les fichiers partent alors directement dans l'e-mail. */
   web3pro: false,
+  /* Script Google (gratuit) : envoie les e-mails AVEC les fichiers joints depuis mauripresse24@gmail.com.
+     Coller ici l'URL /exec du déploiement (voir google-script-mauripresse.gs). Prioritaire sur Web3Forms. */
+  gasUrl: "",
+  gasToken: "mp-site-2026",
   address: "24 Rue de Chabrol, 75010 Paris",
   social: [
     { id: "instagram", name: "Instagram", handle: "@mauripresse", url: "https://www.instagram.com/mauripresse/" },
@@ -163,7 +167,7 @@ const PRODUCTS = {
 const CATS = [
   { id: "reprographie", name: "Reprographie", blurb: "Copies, impressions et reliures minute.", items: ["Photocopie", "Impression", "Reliures", "Scan et numérisation", "Plastification"] },
   { id: "cartes-de-visite", name: "Cartes de visite", blurb: "Classiques, pelliculées, Deluxe ou PVC.", items: [{ n: "Cartes de visite classiques", p: "cartes" }, { n: "Cartes de Visite Classic", p: "classic" }, "Cartes de visite pelliculées", "Cartes de fidélité", "Cartes de visite finitions Deluxe", "Cartes de visite en PVC", "Cartes de correspondance", "Cartes postales"] },
-  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, pour vos événements et opérations commerciales.", items: [{ n: "Flyers & tracts", from: 36.27, f: "flyers" }, { n: "Flyer A6", f: "flyers", t: 0 }, { n: "Flyer 10×15 cm", f: "flyers", t: 1 }, { n: "Flyer DL 10×21 cm", f: "flyers", t: 2 }, { n: "Flyer A5", f: "flyers", t: 3 }, { n: "Flyer A4", f: "flyers", t: 4 }, { n: "Flyer A3", f: "flyers", t: 5 }] },
+  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, pour vos événements et opérations commerciales.", items: [{ n: "Flyers & tracts", from: 80, f: "flyers" }, { n: "Flyer A6", f: "flyers", t: 0 }, { n: "Flyer 10×15 cm", f: "flyers", t: 1 }, { n: "Flyer DL 10×21 cm", f: "flyers", t: 2 }, { n: "Flyer A5", f: "flyers", t: 3 }, { n: "Flyer A4", f: "flyers", t: 4 }, { n: "Flyer A3", f: "flyers", t: 5 }] },
   { id: "depliants-plaquettes", name: "Dépliants & plaquettes", blurb: "1, 2 ou 3 plis pour vos présentations.", items: [{ n: "Dépliant 1 pli", f: "depliants", t: 0 }, { n: "Dépliant 2 plis roulés", f: "depliants", t: 2 }, { n: "Dépliant 2 plis accordéon", f: "depliants", t: 3 }] },
   { id: "catalogue-brochures", name: "Catalogues & brochures", blurb: "Agrafé, spirale, dos carré collé.", items: ["Brochure agrafée", "Spirale métallique", "Dos carré collé", "Couverture rigide"] },
   { id: "affiche-poster", name: "Affiches & posters", blurb: "À l'unité ou en série, jusqu'à l'Abribus.", items: ["Affiches à l'unité", "Affiches petit format", "Affiche grand format", "Affiche Abribus", "Affiche dos bleu", "Affiche fluo", "Affiche autocollante", "Affiche backlight"] },
@@ -249,7 +253,22 @@ const rollupHTML = (i) => {
 
 /* Envoi des formulaires par e-mail à l'atelier (service FormSubmit, sans serveur).
    Le tout premier envoi déclenche un e-mail d'activation à SHOP.mail : il faut cliquer dessus une fois. */
+/* Envoi par le script Google, fichiers inclus (base64) */
+const fileB64 = (f) => new Promise((ok, ko) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.onerror = ko; r.readAsDataURL(f); });
+async function sendGas(subject, data, file) {
+  const files = file && file.size <= 10 * 1024 * 1024 ? [{ name: file.name, type: file.type, data: await fileB64(file) }] : [];
+  const fields = Object.assign({}, data); if (file && !files.length) fields.fichier = file.name + " (trop lourd : à envoyer séparément)";
+  const ctrl = new AbortController(), t = setTimeout(() => ctrl.abort(), 25000);
+  try {
+    const r = await fetch(SHOP.gasUrl, { method: "POST", body: JSON.stringify({ token: SHOP.gasToken, subject, fields, files }), signal: ctrl.signal });
+    const j = await r.json().catch(() => ({}));
+    if (!j.success) throw new Error(j.message || "Envoi impossible");
+    return j;
+  } finally { clearTimeout(t); }
+}
+const fileAuto = (file) => !!(file && ((SHOP.gasUrl && file.size <= 10 * 1024 * 1024) || (SHOP.web3key && SHOP.web3pro)));
 async function sendMail(subject, data, file) {
+  if (SHOP.gasUrl) { try { return await sendGas(subject, data, file); } catch (e) { /* secours : Web3Forms ci-dessous */ } }
   /* Le texte part par un service d'e-mail (Web3Forms si une clé est configurée, sinon FormSubmit).
      Les fichiers ne passent pas par ces services gratuits (non pris en charge ou instables) :
      le nom du fichier est indiqué, et le client l'envoie ensuite par WhatsApp ou e-mail (voir fileShareHTML). */
@@ -277,7 +296,7 @@ async function sendMail(subject, data, file) {
 }
 /* Envoi d'un fichier (capture, devis, maquette) : partage natif sur téléphone, sinon WhatsApp / e-mail */
 function fileShareHTML(file, ref) {
-  if (!file || (SHOP.web3key && SHOP.web3pro)) return "";
+  if (!file || fileAuto(file)) return "";
   const txt = `Bonjour Mauri Presse, voici le fichier de ma demande ${ref}.`;
   return `<div class="fshare"><b>📎 Dernière étape : envoyez-nous votre fichier « ${esc(file.name)} »</b>
     <p>Les pièces jointes ne passent pas par le formulaire : envoyez-la en un clic, avec la référence ${esc(ref)}.</p>
@@ -359,7 +378,7 @@ const FORMATS = {
     ],
   },
   flyers: {
-    name: "Flyers & tracts", catId: "flyers-tracts", cat: "Flyers & tracts", kind: "sheet", from: 36.27,
+    name: "Flyers & tracts", catId: "flyers-tracts", cat: "Flyers & tracts", kind: "sheet", from: 80,
     desc: "Pour vos ouvertures, événements et opérations commerciales. Papier brillant ou mat, recto ou recto/verso, du A6 au A3.",
     sizes: [
       { label: "A6", w: 10.5, h: 14.8, hint: "10,5 × 14,8 cm" },
@@ -710,3 +729,16 @@ FORMATS.flyers.grid = FLY_GRID;
 /* Prix retenus : les anciens prix (non remisés) deviennent les prix du site, sans prix barré ni remise. */
 FLY_GRID.cols.forEach((c) => { if (c.old) { c.now = c.old.slice(); delete c.old; c.badge = c.id === "j5" ? "Le moins cher" : ""; } });
 FORMATS.flyers.from = FLY_GRID.cols.find((c) => c.id === "j5").now[0];
+
+/* ---------- Flyers : grille simplifiée (24/11/2026) ----------
+   Livraison standard : 80 € à 160 € HT de 250 à 5 000 ex. (+20 € par palier). Jour même : +10 %. */
+(() => {
+  const std = [80, 100, 120, 140, 160];
+  FLY_GRID.qty = [250, 500, 1000, 2500, 5000];
+  FLY_GRID.cols = [
+    { id: "day", sameDay: true, badge: "Express +10 %", now: std.map((p) => Math.round(p * 1.1 * 100) / 100),
+      note: "Paris 20 € · Île-de-France 40 € · Retrait atelier gratuit" },
+    { id: "std", label: "Standard", sub: "3 à 5 jours ouvrés", badge: "Le moins cher", now: std },
+  ];
+  FORMATS.flyers.from = std[0];
+})();

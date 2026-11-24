@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=202611241414">
+<link rel="stylesheet" href="assets/style.css?v=202611241451">
 </head>
 <body>
 <div id="site-header"></div>
-<script src="assets/data.js?v=202611241414"></script>
-<script src="assets/app.js?v=202611241414"></script>
+<script src="assets/data.js?v=202611241451"></script>
+<script src="assets/app.js?v=202611241451"></script>
 
 <main>
   <section class="pagehead"><div class="wrap">
@@ -86,9 +86,9 @@
 (() => {
   const qs = new URLSearchParams(location.search);
   const key = FORMATS[qs.get("p")] ? qs.get("p") : "rollup", F = FORMATS[key];
-  const st = { s: qs.has("t") && F.sizes[+qs.get("t")] ? +qs.get("t") : F.defSize, c: F.groups.map(() => 0), q: F.grid ? 4 : 0, d: F.deliv[0].id, col: "j2" };
+  const st = { s: qs.has("t") && F.sizes[+qs.get("t")] ? +qs.get("t") : F.defSize, c: F.groups.map(() => 0), q: F.grid ? Math.min(2, F.grid.qty.length - 1) : 0, d: F.deliv[0].id, col: F.grid ? F.grid.cols.find((c) => !c.sameDay).id : "j2" };
   const G = F.grid;
-  const colLabel = (c) => c.sameDay ? "Livraison jour même" : "Livraison le " + fmtDay(workDate(c.days)).join(" ");
+  const colLabel = (c) => c.sameDay ? "Livraison jour même" : c.label ? "Livraison " + c.label.toLowerCase() + " (" + c.sub + ")" : "Livraison le " + fmtDay(workDate(c.days)).join(" ");
 
   const MODEL = qs.get("n") || "";
   document.title = (MODEL || F.name) + " · choisir sa taille · Mauri Presse";
@@ -157,11 +157,11 @@
     document.getElementById("qty-h").textContent = "Quantité et date de livraison";
     const q = document.getElementById("qty"); q.className = "pgrid-wrap";
     const unit = (p, n) => (p / n).toLocaleString("fr-FR", { minimumFractionDigits: 3, maximumFractionDigits: 3 }) + " €/ex.";
-    q.innerHTML = `<div class="pgrid__intro"><span>📅 Choisissez votre <b>date de livraison</b> : plus elle est lointaine, plus le prix baisse.</span><span class="pgrid__legend"><i></i>Prix HT · livraison incluse</span></div>
+    q.innerHTML = `<div class="pgrid__intro"><span>📦 Choisissez la <b>quantité</b> et le <b>délai</b> : standard ou livré le jour même (+10 %).</span><span class="pgrid__legend"><i></i>Prix HT · livraison incluse</span></div>
       <div class="pgrid__scroll"><table class="pgrid"><thead><tr><th class="pgrid__q">Quantité</th>${G.cols.map((c) => {
-      const [wd, dd] = c.sameDay ? ["Aujourd'hui", "avant 5 000 ex."] : fmtDay(workDate(c.days));
-      const tag = c.sameDay ? "Express +40 %" : c.badge.replace("jusqu'à ", "jusqu'à ");
-      return `<th class="${c.sameDay ? "is-day" : ""}"><span class="pgrid__ico">${c.sameDay ? "⚡" : "🚚"}</span><b>${c.sameDay ? "Jour même" : wd}</b><small>${c.sameDay ? "Paris & IDF · " + dd : dd}</small>${tag ? `<span class="pgrid__tag">${tag}</span>` : ""}</th>`; }).join("")}</tr></thead><tbody>${G.qty.map((n, qi) => `<tr><th class="pgrid__q" scope="row">${n.toLocaleString("fr-FR")}<small>ex.</small></th>${G.cols.map((c) => {
+      const [wd, dd] = c.sameDay ? ["Aujourd'hui", "livré aujourd'hui"] : c.label ? [c.label, c.sub] : fmtDay(workDate(c.days));
+      const tag = c.badge || "";
+      return `<th class="${c.sameDay ? "is-day" : ""}"><span class="pgrid__ico">${c.sameDay ? "⚡" : "🚚"}</span><b>${c.sameDay ? "Jour même" : wd}</b><small>${dd}</small>${tag ? `<span class="pgrid__tag">${tag}</span>` : ""}${c.note ? `<span class="pgrid__note">${c.note}</span>` : ""}</th>`; }).join("")}</tr></thead><tbody>${G.qty.map((n, qi) => `<tr><th class="pgrid__q" scope="row">${n.toLocaleString("fr-FR")}<small>ex.</small></th>${G.cols.map((c) => {
         const now = c.now[qi], old = c.old ? c.old[qi] : null;
         if (now == null) return `<td class="${c.sameDay ? "is-day" : ""}"><button type="button" class="is-off" disabled title="Jour même jusqu'à 5 000 ex."><b>Indisponible</b><small>max. 5 000 ex.</small></button></td>`;
         return `<td class="${c.sameDay ? "is-day" : ""}"><button type="button" data-q="${qi}" data-col="${c.id}">${old && old > now ? `<s>${eur(old)}</s>` : ""}<b>${eur(now)}</b><small>${unit(now, n)}</small></button></td>`; }).join("")}</tr>`).join("")}</tbody></table></div>`;
@@ -182,10 +182,10 @@
     const d = F.deliv.find((x) => x.id === st.d);
     document.getElementById("recap-date").innerHTML = d.paid ? "🚚 <b>Livraison aujourd'hui</b> à Paris et en Île-de-France. Frais selon l'adresse, confirmés par l'atelier."
       : d.id === "pickup" ? `📍 <b>Retrait à l'atelier</b> · ${esc(d.sub)}` : `📦 ${esc(d.label)} · ${esc(d.sub)}`;
-    if (G) document.getElementById("recap-date").innerHTML = st.col === "day" ? "⚡ <b>Livré aujourd'hui</b> à Paris et en Île-de-France (+40 %)." : `🚚 <b>${esc(colLabel(G.cols.find((c) => c.id === st.col)))}</b>`;
+    if (G) document.getElementById("recap-date").innerHTML = st.col === "day" ? "⚡ <b>Livré aujourd'hui</b> (+10 %).<br><small>Livraison Paris 20 € · Île-de-France 40 € · Retrait à l'atelier gratuit</small>" : `🚚 <b>${esc(colLabel(G.cols.find((c) => c.id === st.col)))}</b>`;
     const ht = priced(), go = document.getElementById("go"), bb = document.getElementById("bb-go"), alt = document.getElementById("go-devis");
     if (ht) {
-      document.getElementById("recap-price").innerHTML = `<div class="recap__sum"><div><span>Prix HT</span><span>${eur(ht)}</span></div><div><span>Livraison</span><span>${G ? "Incluse" : d.paid ? "Selon l'adresse" : d.id === "pickup" ? "Retrait gratuit" : "Offerte"}</span></div></div><div class="recap__ttc"><span>Total HT</span><b>${eur(ht)}</b></div><div class="recap__note">TVA (20 %) ajoutée au moment du paiement.</div>`;
+      document.getElementById("recap-price").innerHTML = `<div class="recap__sum"><div><span>Prix HT</span><span>${eur(ht)}</span></div><div><span>Livraison</span><span>${G ? (st.col === "day" ? "Paris 20 € · IDF 40 € · retrait gratuit" : "Incluse") : d.paid ? "Selon l'adresse" : d.id === "pickup" ? "Retrait gratuit" : "Offerte"}</span></div></div><div class="recap__ttc"><span>Total HT</span><b>${eur(ht)}</b></div><div class="recap__note">TVA (20 %) ajoutée au moment du paiement.</div>`;
       go.innerHTML = 'Ajouter au panier <span class="arrow">→</span>'; bb.textContent = "Ajouter au panier";
       document.getElementById("bb-k").textContent = "Total HT"; document.getElementById("bb-ttc").textContent = eur(ht);
       alt.hidden = false; alt.href = devisHref();

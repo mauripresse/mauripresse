@@ -2321,3 +2321,5 @@ button.lineup__it:hover { transform: translateY(-4px); }
 .paysum div { display: flex; justify-content: space-between; padding: 3px 0; font-size: 14.5px; }
 .paysum__ttc { margin-top: 8px; padding-top: 10px !important; border-top: 1.5px solid var(--ink); align-items: baseline; }
 .paysum__ttc b { font-family: var(--display); font-size: 30px; }
+.pgrid__note { display: block; margin-top: 7px; font-size: 10.5px; line-height: 1.35; color: rgba(255,255,255,.75); font-family: var(--body); }
+.recap__date small { display: block; margin-top: 4px; font-size: 12px; color: var(--ink-soft); }

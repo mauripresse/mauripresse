@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=202611241414">
+<link rel="stylesheet" href="assets/style.css?v=202611241451">
 </head>
 <body>
 <div id="site-header"></div>
-<script src="assets/data.js?v=202611241414"></script>
-<script src="assets/app.js?v=202611241414"></script>
+<script src="assets/data.js?v=202611241451"></script>
+<script src="assets/app.js?v=202611241451"></script>
 
 <main>
 <!-- GRAND CARROUSEL -->
@@ -86,7 +86,7 @@
         <h2>Vos flyers du A6 au A3, <em>imprimés à Paris.</em></h2>
         <p class="rusec__lead">Pour vos ouvertures, événements et opérations commerciales. Papier brillant ou mat, recto ou recto/verso, retrait le jour même.</p>
       </div>
-      <div class="rusec__price"><small>À partir de</small><b>36,27 €</b><span>HT · 100 flyers</span></div>
+      <div class="rusec__price"><small>À partir de</small><b>80,00 €</b><span>HT · 250 flyers</span></div>
     </div>
     <div class="rusec__line is-fly" data-flyers-line></div>
     <div class="hero__cta"><a class="btn btn--yellow" href="format.html?p=flyers">Choisir mon format <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=flyers-tracts">Voir les flyers</a></div>
@@ -382,7 +382,7 @@
 /* Catalogue de l'accueil : huit familles, une photo et un prix chacune */
 (() => {
   const SHOW = ["roll-up-kakemono", "cartes-de-visite", "flyers-tracts", "depliants-plaquettes", "affiche-poster", "etiquettes-autocollants", "vinyle-adhesif", "signaletique-enseignes", "objets-packaging"];
-  const FROM = { "cartes-de-visite": fromPrice("classic"), "flyers-tracts": 36.27, "roll-up-kakemono": 79.99, "objets-packaging": 99.99 }; /* prix « dès » du site officiel */
+  const FROM = { "cartes-de-visite": fromPrice("classic"), "flyers-tracts": 80, "roll-up-kakemono": 79.99, "objets-packaging": 99.99 }; /* prix « dès » du site officiel */
   document.getElementById("cats").innerHTML = SHOW.map((id, i) => {
     const c = CATS.find((x) => x.id === id), k = FROM[id];
     return `<a class="shopcard${i === 0 ? " shopcard--big" : ""}${i >= 7 ? " shopcard--extra" : ""}" href="categorie.html?c=${id}">
@@ -497,6 +497,6 @@
   fill(); update();
 })();
 </script>
-<script src="assets/home.js?v=202611241414"></script>
+<script src="assets/home.js?v=202611241451"></script>
 </body>
 </html>
