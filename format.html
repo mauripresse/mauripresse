@@ -156,12 +156,15 @@
     document.getElementById("deliv-sec").hidden = true;
     document.getElementById("qty-h").textContent = "Quantité et date de livraison";
     const q = document.getElementById("qty"); q.className = "pgrid-wrap";
-    q.innerHTML = `<p class="pgrid__hint">Cliquez sur un prix : plus la date est lointaine, moins c'est cher. Prix HT, livraison incluse.</p><div class="grid-wrap"><table class="pgrid"><thead><tr><th>Quantité</th>${G.cols.map((c) => {
-      const [wd, dd] = c.sameDay ? ["Aujourd'hui", "jour même"] : fmtDay(workDate(c.days));
-      return `<th class="${c.sameDay ? "is-day" : ""}"><span class="pgrid__badge">${c.badge}</span><b>${c.sameDay ? "⚡ Jour même" : wd}</b><small>${c.sameDay ? "avant 5 000 ex." : dd}</small></th>`; }).join("")}</tr></thead><tbody>${G.qty.map((n, qi) => `<tr><td>${n.toLocaleString("fr-FR")}</td>${G.cols.map((c) => {
+    const unit = (p, n) => (p / n).toLocaleString("fr-FR", { minimumFractionDigits: 3, maximumFractionDigits: 3 }) + " €/ex.";
+    q.innerHTML = `<div class="pgrid__intro"><span>📅 Choisissez votre <b>date de livraison</b> : plus elle est lointaine, plus le prix baisse.</span><span class="pgrid__legend"><i></i>Prix HT · livraison incluse</span></div>
+      <div class="pgrid__scroll"><table class="pgrid"><thead><tr><th class="pgrid__q">Quantité</th>${G.cols.map((c) => {
+      const [wd, dd] = c.sameDay ? ["Aujourd'hui", "avant 5 000 ex."] : fmtDay(workDate(c.days));
+      const tag = c.sameDay ? "Express +40 %" : c.badge.replace("jusqu'à ", "jusqu'à ");
+      return `<th class="${c.sameDay ? "is-day" : ""}"><span class="pgrid__ico">${c.sameDay ? "⚡" : "🚚"}</span><b>${c.sameDay ? "Jour même" : wd}</b><small>${c.sameDay ? "Paris & IDF · " + dd : dd}</small><span class="pgrid__tag">${tag}</span></th>`; }).join("")}</tr></thead><tbody>${G.qty.map((n, qi) => `<tr><th class="pgrid__q" scope="row">${n.toLocaleString("fr-FR")}<small>ex.</small></th>${G.cols.map((c) => {
         const now = c.now[qi], old = c.old ? c.old[qi] : null;
-        if (now == null) return `<td><button type="button" class="is-off" disabled title="Jour même jusqu'à 5 000 ex.">—<small>non disponible</small></button></td>`;
-        return `<td><button type="button" data-q="${qi}" data-col="${c.id}">${old && old > now ? `<s>${eur(old)}</s>` : ""}<b>${eur(now)}</b></button></td>`; }).join("")}</tr>`).join("")}</tbody></table></div>`;
+        if (now == null) return `<td class="${c.sameDay ? "is-day" : ""}"><button type="button" class="is-off" disabled title="Jour même jusqu'à 5 000 ex."><b>Indisponible</b><small>max. 5 000 ex.</small></button></td>`;
+        return `<td class="${c.sameDay ? "is-day" : ""}"><button type="button" data-q="${qi}" data-col="${c.id}">${old && old > now ? `<s>${eur(old)}</s>` : ""}<b>${eur(now)}</b><small>${unit(now, n)}</small></button></td>`; }).join("")}</tr>`).join("")}</tbody></table></div>`;
   }
   const priced = () => { if (G) return G.cols.find((c) => c.id === st.col).now[st.q]; const s = F.sizes[st.s]; return s.price && F.groups.every((g, i) => !g.options[st.c[i]].quote) ? s.price * F.qty[st.q] : null; };
   const rows = () => {

@@ -2266,3 +2266,48 @@ button.lineup__it:hover { transform: translateY(-4px); }
   .pgrid th b { font-size: 13px; } .pgrid th small { font-size: 11px; } .pgrid__badge { font-size: 10px; padding: 2px 6px; }
   .pgrid td button { min-height: 44px; } .pgrid td button b { font-size: 13.5px; } .pgrid td button s { font-size: 10.5px; }
 }
+
+/* ================= Grille flyers : design Mauri Presse ================= */
+.pgrid-wrap { display: block; }
+.pgrid__intro { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; align-items: center; margin-bottom: 14px; font-size: 14.5px; }
+.pgrid__legend { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); display: inline-flex; align-items: center; gap: 6px; }
+.pgrid__legend i { width: 10px; height: 10px; border-radius: 3px; background: var(--cyan); }
+.pgrid__scroll { overflow-x: auto; border-radius: 20px; border: 1.5px solid var(--ink); background: var(--white); box-shadow: 6px 6px 0 var(--ink); }
+.pgrid { width: 100%; border-collapse: collapse; border-spacing: 0; min-width: 560px; }
+.pgrid thead th { position: static; padding: 16px 10px 14px; border: 0; border-radius: 0; background: var(--ink); color: #fff; text-align: center; vertical-align: top; font-weight: 500; }
+.pgrid thead th + th { border-left: 1px solid rgba(255,255,255,.12); }
+.pgrid thead th.pgrid__q { text-align: left; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.7); vertical-align: bottom; padding-left: 18px; background: var(--ink); }
+.pgrid__ico { display: block; font-size: 18px; line-height: 1; margin-bottom: 6px; }
+.pgrid thead b { display: block; font-family: var(--display); font-size: 17px; text-transform: capitalize; color: #fff; }
+.pgrid thead small { display: block; font-family: var(--mono); font-size: 11.5px; color: rgba(255,255,255,.7); margin-top: 2px; }
+.pgrid__tag { display: inline-block; margin-top: 8px; padding: 3px 9px; border-radius: 99px; font-size: 11.5px; font-weight: 700; background: var(--cyan); color: #fff; position: static; transform: none; }
+.pgrid thead th.is-day { background: #2a2366; }
+.pgrid thead th.is-day .pgrid__tag { background: var(--yellow); color: var(--ink); }
+.pgrid tbody tr { border-top: 1px solid var(--line); }
+.pgrid tbody tr:nth-child(even) { background: #faf9f5; }
+.pgrid tbody th.pgrid__q { padding: 0 18px; text-align: left; font-family: var(--display); font-size: 17px; font-weight: 700; color: var(--ink); white-space: nowrap; background: none; border: 0; border-radius: 0; }
+.pgrid tbody th.pgrid__q small { font-family: var(--body); font-size: 12px; font-weight: 500; color: var(--ink-soft); margin-left: 4px; }
+.pgrid td { padding: 6px; border: 0; border-radius: 0; background: none; text-align: center; }
+.pgrid td.is-day { background: rgba(255,230,0,.08); }
+.pgrid td button { width: 100%; min-height: 58px; padding: 6px; border-radius: 12px; border: 1.5px solid transparent; background: none; font: inherit; color: var(--ink); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; transition: background .15s, border-color .15s, transform .15s; }
+.pgrid td button s { font-size: 11.5px; color: #9a99ad; }
+.pgrid td button b { font-family: var(--display); font-size: 17px; font-weight: 700; color: var(--ink); }
+.pgrid td button small { font-family: var(--mono); font-size: 10.5px; color: var(--ink-soft); }
+.pgrid td button:hover { border-color: var(--cyan); background: var(--cyan-soft); }
+.pgrid td button.is-on { background: var(--ink); border-color: var(--ink); transform: scale(1.03); box-shadow: 0 8px 18px -8px rgba(21,19,58,.6); }
+.pgrid td button.is-on b { color: var(--yellow); }
+.pgrid td button.is-on s, .pgrid td button.is-on small { color: rgba(255,255,255,.65); }
+.pgrid td button.is-off { cursor: not-allowed; opacity: 1; border: 0; background: repeating-linear-gradient(135deg, #eeece6 0 6px, #f6f5f0 6px 12px); }
+.pgrid td button.is-off b { font-family: var(--body); font-size: 12px; font-weight: 600; color: #a3a2b4; }
+.pgrid td button.is-off small { color: #b6b5c4; }
+@media (max-width: 720px) {
+  .pgrid__scroll { box-shadow: 4px 4px 0 var(--ink); border-radius: 16px; }
+  .pgrid thead b { font-size: 14px; } .pgrid__tag { font-size: 10px; padding: 2px 7px; }
+  .pgrid tbody th.pgrid__q { padding: 0 10px; font-size: 14.5px; }
+  .pgrid td button { min-height: 50px; } .pgrid td button b { font-size: 14.5px; }
+}
+.pgrid { table-layout: fixed; }
+.pgrid .pgrid__q { width: 120px; }
+.pgrid tbody th.pgrid__q { white-space: nowrap; }
+@media (max-width: 720px) { .pgrid .pgrid__q { width: 84px; } }
+.pgrid tbody th.pgrid__q small { display: inline; }
