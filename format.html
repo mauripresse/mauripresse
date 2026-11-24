@@ -161,7 +161,7 @@
       <div class="pgrid__scroll"><table class="pgrid"><thead><tr><th class="pgrid__q">Quantité</th>${G.cols.map((c) => {
       const [wd, dd] = c.sameDay ? ["Aujourd'hui", "avant 5 000 ex."] : fmtDay(workDate(c.days));
       const tag = c.sameDay ? "Express +40 %" : c.badge.replace("jusqu'à ", "jusqu'à ");
-      return `<th class="${c.sameDay ? "is-day" : ""}"><span class="pgrid__ico">${c.sameDay ? "⚡" : "🚚"}</span><b>${c.sameDay ? "Jour même" : wd}</b><small>${c.sameDay ? "Paris & IDF · " + dd : dd}</small><span class="pgrid__tag">${tag}</span></th>`; }).join("")}</tr></thead><tbody>${G.qty.map((n, qi) => `<tr><th class="pgrid__q" scope="row">${n.toLocaleString("fr-FR")}<small>ex.</small></th>${G.cols.map((c) => {
+      return `<th class="${c.sameDay ? "is-day" : ""}"><span class="pgrid__ico">${c.sameDay ? "⚡" : "🚚"}</span><b>${c.sameDay ? "Jour même" : wd}</b><small>${c.sameDay ? "Paris & IDF · " + dd : dd}</small>${tag ? `<span class="pgrid__tag">${tag}</span>` : ""}</th>`; }).join("")}</tr></thead><tbody>${G.qty.map((n, qi) => `<tr><th class="pgrid__q" scope="row">${n.toLocaleString("fr-FR")}<small>ex.</small></th>${G.cols.map((c) => {
         const now = c.now[qi], old = c.old ? c.old[qi] : null;
         if (now == null) return `<td class="${c.sameDay ? "is-day" : ""}"><button type="button" class="is-off" disabled title="Jour même jusqu'à 5 000 ex."><b>Indisponible</b><small>max. 5 000 ex.</small></button></td>`;
         return `<td class="${c.sameDay ? "is-day" : ""}"><button type="button" data-q="${qi}" data-col="${c.id}">${old && old > now ? `<s>${eur(old)}</s>` : ""}<b>${eur(now)}</b><small>${unit(now, n)}</small></button></td>`; }).join("")}</tr>`).join("")}</tbody></table></div>`;
