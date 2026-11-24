@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=202611241407">
+<link rel="stylesheet" href="assets/style.css?v=202611241414">
 </head>
 <body>
 <div id="site-header"></div>
-<script src="assets/data.js?v=202611241407"></script>
-<script src="assets/app.js?v=202611241407"></script>
+<script src="assets/data.js?v=202611241414"></script>
+<script src="assets/app.js?v=202611241414"></script>
 
 <main>
   <section class="pagehead"><div class="wrap">
@@ -98,7 +98,8 @@
   if (order) {
     f.querySelector("h2").textContent = "Finaliser ma commande";
     btn.innerHTML = `Envoyer ma commande · ${eur(cartHT * 1.2)} TTC <span class="arrow">→</span>`;
-    btn.insertAdjacentHTML("beforebegin", `<div class="field field--full" style="margin-top:20px"><span>Paiement</span><div class="opts">${pays.map((p, i) => `
+    btn.insertAdjacentHTML("beforebegin", `<div class="paysum"><div><span>Total HT</span><span>${eur(cartHT)}</span></div><div><span>TVA (20 %)</span><span>${eur(cartHT * 0.2)}</span></div><div class="paysum__ttc"><span>Total TTC à payer</span><b>${eur(cartHT * 1.2)}</b></div></div>
+      <div class="field field--full" style="margin-top:20px"><span>Paiement</span><div class="opts">${pays.map((p, i) => `
       <label class="opt"><input type="radio" name="paiement" value="${p.label}" data-pay="${p.id}" ${i === 0 ? "checked" : ""}><span><b>${p.label}</b><small>${p.hint}</small></span></label>`).join("")}</div></div>
       <p class="form__pay">L'atelier vérifie vos fichiers avant impression. ${pays.length > 1 ? "Le paiement en ligne s'ouvre juste après l'envoi de la commande." : "Vous réglez au retrait, ou par le lien de paiement que l'atelier vous envoie."}</p>`);
   }
@@ -107,7 +108,7 @@
   const LABELS = { nom: "Nom", email: "E-mail", tel: "Téléphone", societe: "Société", produit: "Produit", message: "Projet", total: "Total", paiement: "Paiement" };
   function recap(d, num, sent, payId) {
     const lines = Object.keys(LABELS).filter((k) => d[k]).map((k) => [LABELS[k], d[k]]);
-    if (file.files[0]) lines.push(["Fichier", file.files[0].name + " (à nous envoyer, voir ci-dessous)"]);
+    if (file.files[0]) lines.push(["Fichier", file.files[0].name + (SHOP.web3pro ? " (joint à l'e-mail)" : " (à nous envoyer, voir ci-dessous)")]);
     const body = `${order ? "Commande" : "Demande de devis"} ${num}\n\n` + lines.map(([k, v]) => `${k} : ${v}`).join("\n");
     const mailto = `mailto:${SHOP.mail}?subject=${encodeURIComponent((order ? "Commande " : "Demande de devis ") + num)}&body=${encodeURIComponent(body.slice(0, 1800))}`;
     const total = order ? cartHT * 1.2 : 0;

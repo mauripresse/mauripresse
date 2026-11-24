@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=202611241407">
+<link rel="stylesheet" href="assets/style.css?v=202611241414">
 </head>
 <body>
 <div id="site-header"></div>
-<script src="assets/data.js?v=202611241407"></script>
-<script src="assets/app.js?v=202611241407"></script>
+<script src="assets/data.js?v=202611241414"></script>
+<script src="assets/app.js?v=202611241414"></script>
 
 <main>
   <section class="pagehead"><div class="wrap">
@@ -94,7 +94,7 @@
 
   <div class="wrap" id="reviews"></div>
 </main>
-<div class="buybar"><div><small id="bb-k">Total TTC</small><b id="bb-ttc"></b></div><button class="btn btn--cyan" id="bb-go" type="button"></button></div>
+<div class="buybar"><div><small id="bb-k">Total HT</small><b id="bb-ttc"></b></div><button class="btn btn--cyan" id="bb-go" type="button"></button></div>
 
 <script>
 (() => {
@@ -157,9 +157,9 @@
     document.getElementById("recap-list").innerHTML = rows().map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
     const ht = price(), d = S.deliv[st.d], go = document.getElementById("go"), bb = document.getElementById("bb-go");
     if (ht) {
-      document.getElementById("recap-price").innerHTML = `<div class="recap__sum"><div><span>Prix HT</span><span>${eur(ht)}</span></div><div><span>Livraison</span><span>${d.paid ? "Selon l'adresse" : d.id === "pickup" ? "Retrait gratuit" : "Offerte"}</span></div><div><span>TVA (20 %)</span><span>${eur(ht * 0.2)}</span></div></div><div class="recap__ttc"><span>Total TTC</span><b>${eur(ht * 1.2)}</b></div><div class="recap__unit">soit ${(ht / S.qty[st.q]).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} € HT / sac</div>`;
+      document.getElementById("recap-price").innerHTML = `<div class="recap__sum"><div><span>Prix HT</span><span>${eur(ht)}</span></div><div><span>Livraison</span><span>${d.paid ? "Selon l'adresse" : d.id === "pickup" ? "Retrait gratuit" : "Offerte"}</span></div></div><div class="recap__ttc"><span>Total HT</span><b>${eur(ht)}</b></div><div class="recap__note">TVA (20 %) ajoutée au moment du paiement.</div><div class="recap__unit">soit ${(ht / S.qty[st.q]).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 3 })} € HT / sac</div>`;
       go.innerHTML = 'Ajouter au panier <span class="arrow">→</span>'; bb.textContent = "Ajouter au panier";
-      document.getElementById("bb-k").textContent = "Total TTC"; document.getElementById("bb-ttc").textContent = eur(ht * 1.2);
+      document.getElementById("bb-k").textContent = "Total HT"; document.getElementById("bb-ttc").textContent = eur(ht);
     } else {
       document.getElementById("recap-price").innerHTML = `<div class="recap__quote"><b>Prix sur devis</b><span>À partir de ${eur(S.prices[100])} HT les 100 sacs · réponse de l'atelier dans la journée.</span></div>`;
       go.innerHTML = 'Recevoir mon devis gratuit <span class="arrow">→</span>'; bb.textContent = "Recevoir mon devis";

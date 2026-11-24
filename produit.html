@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=202611241407">
+<link rel="stylesheet" href="assets/style.css?v=202611241414">
 </head>
 <body>
 <div id="site-header"></div>
-<script src="assets/data.js?v=202611241407"></script>
-<script src="assets/app.js?v=202611241407"></script>
+<script src="assets/data.js?v=202611241414"></script>
+<script src="assets/app.js?v=202611241414"></script>
 
 <main>
   <section class="pagehead"><div class="wrap">
@@ -72,9 +72,9 @@
       <div class="recap__sum">
         <div><span>Prix HT</span><span id="r-ht"></span></div>
         <div><span>Livraison</span><span id="r-liv">Offerte</span></div>
-        <div><span>TVA (20 %)</span><span id="r-tva"></span></div>
+
       </div>
-      <div class="recap__ttc"><span>Total TTC</span><b id="r-ttc"></b></div>
+      <div class="recap__ttc"><span>Total HT</span><b id="r-ttc"></b></div><div class="recap__note">TVA (20 %) ajoutée au moment du paiement.</div>
       <div class="recap__unit" id="r-unit"></div>
       <button class="btn btn--cyan btn--block" id="add" type="button">Ajouter au panier <span class="arrow">→</span></button>
       <a class="guarantee guarantee--big" id="guarantee-link" href="garantie.html">
@@ -89,7 +89,7 @@
 
   <div class="wrap" id="reviews"></div>
 </main>
-<div class="buybar"><div><small>Total TTC</small><b id="bb-ttc"></b></div><button class="btn btn--cyan" id="bb-add" type="button">Ajouter au panier</button></div>
+<div class="buybar"><div><small>Total HT</small><b id="bb-ttc"></b></div><button class="btn btn--cyan" id="bb-add" type="button">Ajouter au panier</button></div>
 
 <script>
 (() => {
@@ -206,11 +206,10 @@ stages.forEach((st) => {
     p.groups.forEach((g, i) => { const e = document.querySelector(`[data-val="${i}"]`); if (e) e.textContent = g.options[state.c[i]].label; });
     document.getElementById("r-ht").textContent = eur(ht);
     document.getElementById("guarantee-link").href = "garantie.html?" + new URLSearchParams({ produit: p.name, prix: ht.toFixed(2), config: rows.slice(1).map(([k, v]) => k + " : " + v).join(" | ") });
-    document.getElementById("r-tva").textContent = eur(ht * 0.2);
-    document.getElementById("r-ttc").textContent = eur(ht * 1.2);
-    document.getElementById("bb-ttc").textContent = eur(ht * 1.2);
+    document.getElementById("r-ttc").textContent = eur(ht);
+    document.getElementById("bb-ttc").textContent = eur(ht);
     bump(document.getElementById("r-ttc")); bump(document.getElementById("bb-ttc"));
-    document.getElementById("r-unit").textContent = "soit " + ((ht * 1.2) / qty).toLocaleString("fr-FR", { maximumFractionDigits: 3 }) + " € TTC / exemplaire";
+    document.getElementById("r-unit").textContent = "soit " + (ht / qty).toLocaleString("fr-FR", { maximumFractionDigits: 3 }) + " € HT / exemplaire";
   }
 
   document.getElementById("options").addEventListener("change", (e) => {

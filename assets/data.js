@@ -50,6 +50,8 @@ const SHOP = {
   pay: { paypal: "", stripe: "" },
   /* Clé Web3Forms (gratuite, à créer sur web3forms.com avec mauripresse24@gmail.com). Si elle est remplie, elle remplace FormSubmit. */
   web3key: "201a0977-4e64-461e-9be9-fd89c3eef3d6",
+  /* Passer à true quand l'abonnement Web3Forms Pro est actif : les fichiers partent alors directement dans l'e-mail. */
+  web3pro: false,
   address: "24 Rue de Chabrol, 75010 Paris",
   social: [
     { id: "instagram", name: "Instagram", handle: "@mauripresse", url: "https://www.instagram.com/mauripresse/" },
@@ -252,12 +254,14 @@ async function sendMail(subject, data, file) {
      Les fichiers ne passent pas par ces services gratuits (non pris en charge ou instables) :
      le nom du fichier est indiqué, et le client l'envoie ensuite par WhatsApp ou e-mail (voir fileShareHTML). */
   const fields = Object.assign({}, data);
-  if (file) fields.fichier = file.name + " (envoyé séparément par le client)";
+  const attach = !!(file && SHOP.web3key && SHOP.web3pro);
+  if (file && !attach) fields.fichier = file.name + " (envoyé séparément par le client)";
   const web3 = !!SHOP.web3key;
   const fd = new FormData();
   if (web3) { fd.append("access_key", SHOP.web3key); fd.append("subject", subject); fd.append("from_name", "Site Mauri Presse"); if (data.email) fd.append("replyto", data.email); }
   else { fd.append("_subject", subject); fd.append("_template", "table"); fd.append("_captcha", "false"); if (data.email) fd.append("_replyto", data.email); }
   Object.entries(fields).forEach(([k, v]) => { if (v !== "" && v != null) fd.append(k, v); });
+  if (attach) fd.append("attachment", file);
   const url = web3 ? "https://api.web3forms.com/submit" : "https://formsubmit.co/ajax/" + (SHOP.formKey || SHOP.mail);
   let last;
   for (let attempt = 0; attempt < 2; attempt++) { /* 2 essais, 8 s maximum chacun (un envoi normal prend moins d’1 s) */
@@ -273,7 +277,7 @@ async function sendMail(subject, data, file) {
 }
 /* Envoi d'un fichier (capture, devis, maquette) : partage natif sur téléphone, sinon WhatsApp / e-mail */
 function fileShareHTML(file, ref) {
-  if (!file) return "";
+  if (!file || (SHOP.web3key && SHOP.web3pro)) return "";
   const txt = `Bonjour Mauri Presse, voici le fichier de ma demande ${ref}.`;
   return `<div class="fshare"><b>📎 Dernière étape : envoyez-nous votre fichier « ${esc(file.name)} »</b>
     <p>Les pièces jointes ne passent pas par le formulaire : envoyez-la en un clic, avec la référence ${esc(ref)}.</p>

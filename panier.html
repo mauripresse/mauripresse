@@ -8,12 +8,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=202611241407">
+<link rel="stylesheet" href="assets/style.css?v=202611241414">
 </head>
 <body>
 <div id="site-header"></div>
-<script src="assets/data.js?v=202611241407"></script>
-<script src="assets/app.js?v=202611241407"></script>
+<script src="assets/data.js?v=202611241414"></script>
+<script src="assets/app.js?v=202611241414"></script>
 
 <main>
   <section class="pagehead"><div class="wrap">
@@ -32,10 +32,9 @@
       <div class="recap__sum" style="margin-top:16px">
         <div><span id="p-n"></span><span id="p-ht"></span></div>
         <div><span>Livraison</span><span id="p-liv">Offerte</span></div>
-        <div><span>TVA (20 %)</span><span id="p-tva"></span></div>
       </div>
-      <div class="recap__ttc"><span>Total TTC</span><b id="p-ttc"></b></div>
-      <a class="btn btn--cyan btn--block" href="contact.html?panier=1" style="margin-top:14px">Valider ma commande <span class="arrow">→</span></a>
+      <div class="recap__ttc"><span>Total HT</span><b id="p-ttc"></b></div><div class="recap__note">TVA (20 %) ajoutée au moment du paiement.</div>
+      <a class="btn btn--cyan btn--block" href="contact.html?panier=1" style="margin-top:14px">Passer au paiement <span class="arrow">→</span></a>
       <ul class="assure"><li>Vos fichiers sont vérifiés avant impression</li><li>Retrait à l'atelier ou livraison</li><li>Une question ? 01 47 70 79 24</li></ul>
     </aside>
   </div>
@@ -56,8 +55,7 @@
     document.getElementById("p-n").textContent = c.length + " article" + (c.length > 1 ? "s" : "") + " · HT";
     document.getElementById("p-liv").textContent = c.some((l) => /jour même/i.test(l.detail) && !/retrait/i.test(l.detail)) ? "Selon l'adresse (Paris & IDF)" : "Offerte";
     document.getElementById("p-ht").textContent = eur(ht);
-    document.getElementById("p-tva").textContent = eur(ht * 0.2);
-    document.getElementById("p-ttc").textContent = eur(ht * 1.2);
+    document.getElementById("p-ttc").textContent = eur(ht);
   }
   const base = Cart.render.bind(Cart);
   Cart.render = function () { base(); draw(); };
