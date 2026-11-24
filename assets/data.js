@@ -49,7 +49,7 @@ const SHOP = {
      paypal = identifiant PayPal.me ; stripe = lien de paiement Stripe (Payment Link). */
   pay: { paypal: "", stripe: "" },
   /* Clé Web3Forms (gratuite, à créer sur web3forms.com avec mauripresse24@gmail.com). Si elle est remplie, elle remplace FormSubmit. */
-  web3key: "",
+  web3key: "201a0977-4e64-461e-9be9-fd89c3eef3d6",
   address: "24 Rue de Chabrol, 75010 Paris",
   social: [
     { id: "instagram", name: "Instagram", handle: "@mauripresse", url: "https://www.instagram.com/mauripresse/" },
