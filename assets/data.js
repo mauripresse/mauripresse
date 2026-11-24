@@ -159,7 +159,7 @@ const PRODUCTS = {
 const CATS = [
   { id: "reprographie", name: "Reprographie", blurb: "Copies, impressions et reliures minute.", items: ["Photocopie", "Impression", "Reliures", "Scan et numérisation", "Plastification"] },
   { id: "cartes-de-visite", name: "Cartes de visite", blurb: "Classiques, pelliculées, Deluxe ou PVC.", items: [{ n: "Cartes de visite classiques", p: "cartes" }, { n: "Cartes de Visite Classic", p: "classic" }, "Cartes de visite pelliculées", "Cartes de fidélité", "Cartes de visite finitions Deluxe", "Cartes de visite en PVC", "Cartes de correspondance", "Cartes postales"] },
-  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, pour vos événements et opérations commerciales.", items: [{ n: "Flyers & tracts", from: 14.9, f: "flyers" }, { n: "Flyer A6", f: "flyers", t: 0 }, { n: "Flyer 10×15 cm", f: "flyers", t: 1 }, { n: "Flyer DL 10×21 cm", f: "flyers", t: 2 }, { n: "Flyer A5", f: "flyers", t: 3 }, { n: "Flyer A4", f: "flyers", t: 4 }, { n: "Flyer A3", f: "flyers", t: 5 }] },
+  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, pour vos événements et opérations commerciales.", items: [{ n: "Flyers & tracts", from: 30.83, f: "flyers" }, { n: "Flyer A6", f: "flyers", t: 0 }, { n: "Flyer 10×15 cm", f: "flyers", t: 1 }, { n: "Flyer DL 10×21 cm", f: "flyers", t: 2 }, { n: "Flyer A5", f: "flyers", t: 3 }, { n: "Flyer A4", f: "flyers", t: 4 }, { n: "Flyer A3", f: "flyers", t: 5 }] },
   { id: "depliants-plaquettes", name: "Dépliants & plaquettes", blurb: "1, 2 ou 3 plis pour vos présentations.", items: [{ n: "Dépliant 1 pli", f: "depliants", t: 0 }, { n: "Dépliant 2 plis roulés", f: "depliants", t: 2 }, { n: "Dépliant 2 plis accordéon", f: "depliants", t: 3 }] },
   { id: "catalogue-brochures", name: "Catalogues & brochures", blurb: "Agrafé, spirale, dos carré collé.", items: ["Brochure agrafée", "Spirale métallique", "Dos carré collé", "Couverture rigide"] },
   { id: "affiche-poster", name: "Affiches & posters", blurb: "À l'unité ou en série, jusqu'à l'Abribus.", items: ["Affiches à l'unité", "Affiches petit format", "Affiche grand format", "Affiche Abribus", "Affiche dos bleu", "Affiche fluo", "Affiche autocollante", "Affiche backlight"] },
@@ -325,7 +325,7 @@ const FORMATS = {
     ],
   },
   flyers: {
-    name: "Flyers & tracts", catId: "flyers-tracts", cat: "Flyers & tracts", kind: "sheet", from: 14.9,
+    name: "Flyers & tracts", catId: "flyers-tracts", cat: "Flyers & tracts", kind: "sheet", from: 30.83,
     desc: "Pour vos ouvertures, événements et opérations commerciales. Papier brillant ou mat, recto ou recto/verso, du A6 au A3.",
     sizes: [
       { label: "A6", w: 10.5, h: 14.8, hint: "10,5 × 14,8 cm" },
@@ -649,3 +649,27 @@ function persoHTML(key, st, logo = LOGO_URL, text = "") {
     <div class="fn__napkin"><i class="fn__fold fn__fold--a"></i><i class="fn__fold fn__fold--b"></i><div class="fn__print"><img src="${logo}" alt=""><b>${esc(text)}</b></div></div>
     <div class="fn__napkin fn__napkin--2"></div><span class="fp__dim">${esc(v("format").hint.split(" · ")[0])}</span></div>`;
 }
+
+/* ---------- Flyers : grille de prix par quantité et date de livraison (prix HT) ----------
+   old = prix avant remise (barré), now = prix remisé. Jour même : +40 % sur le prix de base le plus rapide, jusqu'à 5 000 ex. */
+const FLY_GRID = {
+  qty: [100, 250, 500, 1000, 2500, 5000, 7500, 10000, 15000, 20000, 30000],
+  cols: [
+    { id: "j2", days: 2, badge: "jusqu'à -5%",
+      old: [50.48, 54.41, 60.96, 74.06, 102.86, 148.35, 204.29, 245.65, 352.85, 448.28, 665.86],
+      now: [47.96, 51.69, 57.91, 70.36, 97.72, 140.93, 194.08, 233.37, 335.21, 425.87, 665.86] },
+    { id: "j3", days: 3, badge: "jusqu'à -5%",
+      old: [44.13, 47.57, 53.29, 64.74, 89.92, 129.70, 178.60, 214.76, 308.48, 391.91, 582.13],
+      now: [41.92, 45.19, 50.63, 61.50, 85.42, 123.21, 169.67, 204.02, 293.06, 372.31, 582.13] },
+    { id: "j5", days: 5, badge: "jusqu'à -15%",
+      old: [36.27, 39.10, 43.80, 53.21, 73.91, 106.60, 146.80, 176.52, 253.55, 322.12, 478.46],
+      now: [30.83, 33.23, 37.23, 45.23, 62.82, 90.61, 124.78, 150.04, 215.52, 273.80, 406.69] },
+  ],
+};
+/* Jour même = prix de base (non remisé) du délai le plus rapide + 40 %, seulement jusqu'à 5 000 ex. */
+FLY_GRID.cols.unshift({ id: "day", sameDay: true, badge: "+40 % · Paris & IDF", max: 5000,
+  now: FLY_GRID.cols[0].old.map((p, i) => (FLY_GRID.qty[i] <= 5000 ? Math.round(p * 1.4 * 100) / 100 : null)) });
+/* Date de livraison : jours ouvrés (lundi → vendredi) */
+const workDate = (n) => { const d = new Date(); let k = n; while (k > 0) { d.setDate(d.getDate() + 1); if (d.getDay() !== 0 && d.getDay() !== 6) k--; } return d; };
+const fmtDay = (d) => [d.toLocaleDateString("fr-FR", { weekday: "long" }), d.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" })];
+FORMATS.flyers.grid = FLY_GRID;

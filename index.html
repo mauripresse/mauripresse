@@ -86,7 +86,7 @@
         <h2>Vos flyers du A6 au A3, <em>imprimés à Paris.</em></h2>
         <p class="rusec__lead">Pour vos ouvertures, événements et opérations commerciales. Papier brillant ou mat, recto ou recto/verso, retrait le jour même.</p>
       </div>
-      <div class="rusec__price"><small>À partir de</small><b>14,90 €</b><span>HT · 6 formats</span></div>
+      <div class="rusec__price"><small>À partir de</small><b>30,83 €</b><span>HT · 100 flyers</span></div>
     </div>
     <div class="rusec__line is-fly" data-flyers-line></div>
     <div class="hero__cta"><a class="btn btn--yellow" href="format.html?p=flyers">Choisir mon format <span class="arrow">→</span></a><a class="btn btn--light" href="categorie.html?c=flyers-tracts">Voir les flyers</a></div>
@@ -382,7 +382,7 @@
 /* Catalogue de l'accueil : huit familles, une photo et un prix chacune */
 (() => {
   const SHOW = ["roll-up-kakemono", "cartes-de-visite", "flyers-tracts", "depliants-plaquettes", "affiche-poster", "etiquettes-autocollants", "vinyle-adhesif", "signaletique-enseignes", "objets-packaging"];
-  const FROM = { "cartes-de-visite": fromPrice("classic"), "flyers-tracts": 14.9, "roll-up-kakemono": 79.99, "objets-packaging": 99.99 }; /* prix « dès » du site officiel */
+  const FROM = { "cartes-de-visite": fromPrice("classic"), "flyers-tracts": 30.83, "roll-up-kakemono": 79.99, "objets-packaging": 99.99 }; /* prix « dès » du site officiel */
   document.getElementById("cats").innerHTML = SHOW.map((id, i) => {
     const c = CATS.find((x) => x.id === id), k = FROM[id];
     return `<a class="shopcard${i === 0 ? " shopcard--big" : ""}${i >= 7 ? " shopcard--extra" : ""}" href="categorie.html?c=${id}">

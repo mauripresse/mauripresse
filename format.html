@@ -41,11 +41,11 @@
       <form id="options"></form>
 
       <section class="og">
-        <div class="og__head"><span class="og__n" id="qty-n"></span><h3>Quantité</h3></div>
+        <div class="og__head"><span class="og__n" id="qty-n"></span><h3 id="qty-h">Quantité</h3></div>
         <div class="chips-q" id="qty"></div>
       </section>
 
-      <section class="og">
+      <section class="og" id="deliv-sec">
         <div class="og__head"><span class="og__n" id="deliv-n"></span><h3>Retrait ou livraison</h3></div>
         <div class="opts" id="deliv"></div>
       </section>
@@ -86,7 +86,9 @@
 (() => {
   const qs = new URLSearchParams(location.search);
   const key = FORMATS[qs.get("p")] ? qs.get("p") : "rollup", F = FORMATS[key];
-  const st = { s: qs.has("t") && F.sizes[+qs.get("t")] ? +qs.get("t") : F.defSize, c: F.groups.map(() => 0), q: 0, d: F.deliv[0].id };
+  const st = { s: qs.has("t") && F.sizes[+qs.get("t")] ? +qs.get("t") : F.defSize, c: F.groups.map(() => 0), q: F.grid ? 4 : 0, d: F.deliv[0].id, col: "j2" };
+  const G = F.grid;
+  const colLabel = (c) => c.sameDay ? "Livraison jour même" : "Livraison le " + fmtDay(workDate(c.days)).join(" ");
 
   const MODEL = qs.get("n") || "";
   document.title = (MODEL || F.name) + " · choisir sa taille · Mauri Presse";
@@ -149,25 +151,38 @@
     <label class="opt"><input type="radio" name="deliv" value="${d.id}" ${i === 0 ? "checked" : ""}><span><b>${esc(d.label)}</b><small>${esc(d.sub)}</small>${d.paid ? "<em>+ frais</em>" : ""}</span></label>`).join("");
 
   /* Prix : seulement s'il est connu (taille avec prix et options standard), sinon devis */
-  const priced = () => { const s = F.sizes[st.s]; return s.price && F.groups.every((g, i) => !g.options[st.c[i]].quote) ? s.price * F.qty[st.q] : null; };
+  /* Grille quantité × date (flyers) */
+  if (G) {
+    document.getElementById("deliv-sec").hidden = true;
+    document.getElementById("qty-h").textContent = "Quantité et date de livraison";
+    const q = document.getElementById("qty"); q.className = "pgrid-wrap";
+    q.innerHTML = `<p class="pgrid__hint">Cliquez sur un prix : plus la date est lointaine, moins c'est cher. Prix HT, livraison incluse.</p><div class="grid-wrap"><table class="pgrid"><thead><tr><th>Quantité</th>${G.cols.map((c) => {
+      const [wd, dd] = c.sameDay ? ["Aujourd'hui", "jour même"] : fmtDay(workDate(c.days));
+      return `<th class="${c.sameDay ? "is-day" : ""}"><span class="pgrid__badge">${c.badge}</span><b>${c.sameDay ? "⚡ Jour même" : wd}</b><small>${c.sameDay ? "avant 5 000 ex." : dd}</small></th>`; }).join("")}</tr></thead><tbody>${G.qty.map((n, qi) => `<tr><td>${n.toLocaleString("fr-FR")}</td>${G.cols.map((c) => {
+        const now = c.now[qi], old = c.old ? c.old[qi] : null;
+        if (now == null) return `<td><button type="button" class="is-off" disabled title="Jour même jusqu'à 5 000 ex.">—<small>non disponible</small></button></td>`;
+        return `<td><button type="button" data-q="${qi}" data-col="${c.id}">${old && old > now ? `<s>${eur(old)}</s>` : ""}<b>${eur(now)}</b></button></td>`; }).join("")}</tr>`).join("")}</tbody></table></div>`;
+  }
+  const priced = () => { if (G) return G.cols.find((c) => c.id === st.col).now[st.q]; const s = F.sizes[st.s]; return s.price && F.groups.every((g, i) => !g.options[st.c[i]].quote) ? s.price * F.qty[st.q] : null; };
   const rows = () => {
     const s = F.sizes[st.s], d = F.deliv.find((x) => x.id === st.d);
     return [["Produit", MODEL ? MODEL : F.name], ["Taille", F.kind === "rollup" ? `${s.w} × ${s.h} cm (${s.name})` : F.kind === "fold" ? `${s.label} · ${s.pli} (${s.w} × ${s.h} cm ouvert)` : `${s.label} · ${s.hint}`],
-      ...F.groups.map((g, i) => [g.label, g.options[st.c[i]].label]), ["Quantité", F.qty[st.q].toLocaleString("fr-FR") + " " + F.unit], ["Délai", d.label + " · " + d.sub]];
+      ...F.groups.map((g, i) => [g.label, g.options[st.c[i]].label]), ...(G ? [["Quantité", G.qty[st.q].toLocaleString("fr-FR") + " ex."], ["Délai", colLabel(G.cols.find((c) => c.id === st.col)) + (st.col === "day" ? " · Paris & IDF" : "")]] : [["Quantité", F.qty[st.q].toLocaleString("fr-FR") + " " + F.unit], ["Délai", d.label + " · " + d.sub]])];
   };
   const devisHref = () => "contact.html?" + new URLSearchParams({ produit: (MODEL || F.name) + " " + rows()[1][1], config: rows().slice(1).map(([k, v]) => k + " : " + v).join(" | ") });
 
   function render() {
     stage(); sizes();
     document.getElementById("size-val").textContent = rows()[1][1];
-    document.querySelectorAll("#qty button").forEach((b) => b.classList.toggle("is-on", +b.dataset.q === st.q));
+    document.querySelectorAll("#qty button").forEach((b) => b.classList.toggle("is-on", +b.dataset.q === st.q && (!G || b.dataset.col === st.col)));
     document.getElementById("recap-list").innerHTML = rows().map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
     const d = F.deliv.find((x) => x.id === st.d);
     document.getElementById("recap-date").innerHTML = d.paid ? "🚚 <b>Livraison aujourd'hui</b> à Paris et en Île-de-France. Frais selon l'adresse, confirmés par l'atelier."
       : d.id === "pickup" ? `📍 <b>Retrait à l'atelier</b> · ${esc(d.sub)}` : `📦 ${esc(d.label)} · ${esc(d.sub)}`;
+    if (G) document.getElementById("recap-date").innerHTML = st.col === "day" ? "⚡ <b>Livré aujourd'hui</b> à Paris et en Île-de-France (+40 %)." : `🚚 <b>${esc(colLabel(G.cols.find((c) => c.id === st.col)))}</b>`;
     const ht = priced(), go = document.getElementById("go"), bb = document.getElementById("bb-go"), alt = document.getElementById("go-devis");
     if (ht) {
-      document.getElementById("recap-price").innerHTML = `<div class="recap__sum"><div><span>Prix HT</span><span>${eur(ht)}</span></div><div><span>Livraison</span><span>${d.paid ? "Selon l'adresse" : d.id === "pickup" ? "Retrait gratuit" : "Offerte"}</span></div><div><span>TVA (20 %)</span><span>${eur(ht * 0.2)}</span></div></div><div class="recap__ttc"><span>Total TTC</span><b>${eur(ht * 1.2)}</b></div>`;
+      document.getElementById("recap-price").innerHTML = `<div class="recap__sum"><div><span>Prix HT</span><span>${eur(ht)}</span></div><div><span>Livraison</span><span>${G ? "Incluse" : d.paid ? "Selon l'adresse" : d.id === "pickup" ? "Retrait gratuit" : "Offerte"}</span></div><div><span>TVA (20 %)</span><span>${eur(ht * 0.2)}</span></div></div><div class="recap__ttc"><span>Total TTC</span><b>${eur(ht * 1.2)}</b></div>`;
       go.innerHTML = 'Ajouter au panier <span class="arrow">→</span>'; bb.textContent = "Ajouter au panier";
       document.getElementById("bb-k").textContent = "Total TTC"; document.getElementById("bb-ttc").textContent = eur(ht * 1.2);
       alt.hidden = false; alt.href = devisHref();
@@ -185,12 +200,12 @@
   document.getElementById("sizes").addEventListener("click", pick);
   document.getElementById("fz-stage").addEventListener("click", pick);
   document.getElementById("options").addEventListener("change", (e) => { if (e.target.name) { st.c[+e.target.name.slice(1)] = +e.target.value; render(); } });
-  document.getElementById("qty").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { st.q = +b.dataset.q; render(); } });
+  document.getElementById("qty").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b && !b.disabled) { st.q = +b.dataset.q; if (b.dataset.col) st.col = b.dataset.col; render(); } });
   document.getElementById("deliv").addEventListener("change", (e) => { st.d = e.target.value; render(); });
   document.getElementById("go").addEventListener("click", () => {
     const ht = priced();
     if (!ht) { location.href = devisHref(); return; }
-    Cart.add({ name: F.name + " " + F.sizes[st.s].w + " × " + F.sizes[st.s].h + " cm", detail: rows().slice(2).map(([, v]) => v).join(" · "), price: Math.round(ht * 100) / 100 });
+    Cart.add({ name: F.name + " " + String(F.sizes[st.s].w).replace(".", ",") + " × " + String(F.sizes[st.s].h).replace(".", ",") + " cm", detail: rows().slice(2).map(([, v]) => v).join(" · "), price: Math.round(ht * 100) / 100 });
   });
   document.body.classList.add("has-buybar");
   document.getElementById("bb-go").addEventListener("click", () => document.getElementById("go").click());

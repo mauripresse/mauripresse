@@ -2238,3 +2238,31 @@ button.lineup__it:hover { transform: translateY(-4px); }
   .hcar-sec { padding-top: 14px; }
 }
 .sacslide__duo .bph { width: 100%; margin: 0; }
+
+/* ================= Grille de prix des flyers ================= */
+.pgrid-wrap { display: block; }
+.pgrid__hint { font-size: 14px; color: var(--ink-soft); margin-bottom: 12px; }
+.pgrid { width: 100%; border-collapse: separate; border-spacing: 8px; }
+.pgrid th { position: relative; padding: 22px 8px 10px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--white); text-align: center; font-weight: 500; vertical-align: bottom; }
+.pgrid th:first-child { border: 0; background: none; text-align: left; font-size: 13px; color: var(--ink-soft); }
+.pgrid th b { display: block; font-size: 16px; text-transform: capitalize; }
+.pgrid th small { display: block; font-size: 13px; color: var(--ink-soft); }
+.pgrid__badge { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 8px; background: #f39200; color: #fff; }
+.pgrid th.is-day { background: #fff4d6; border-color: #f39200; }
+.pgrid th.is-day .pgrid__badge { background: var(--ink); }
+.pgrid td { padding: 0; }
+.pgrid td:first-child { padding: 12px 10px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--white); text-align: center; font-weight: 600; }
+.pgrid td button { width: 100%; min-height: 52px; padding: 8px 6px; border-radius: 12px; border: 1.5px solid #f6c48a; background: var(--white); font: inherit; cursor: pointer; display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px 8px; transition: all .15s; }
+.pgrid td button s { font-size: 12.5px; color: var(--ink-soft); }
+.pgrid td button b { font-size: 16px; color: #e07b00; }
+.pgrid td button:hover { border-color: #f39200; background: #fff8ef; }
+.pgrid td button.is-on { border-color: #f39200; background: #fde2c4; box-shadow: inset 0 0 0 1.5px #f39200; }
+.pgrid td button.is-on b { color: var(--ink); }
+.pgrid td button.is-off { border: 1.5px dashed var(--line); background: var(--paper-2); color: var(--ink-soft); cursor: not-allowed; opacity: .55; flex-direction: column; align-items: center; }
+.pgrid td button.is-off small { font-size: 10.5px; }
+.pgrid-wrap .grid-wrap { border: 0; background: none; overflow-x: auto; }
+@media (max-width: 720px) {
+  .pgrid { border-spacing: 4px; min-width: 520px; }
+  .pgrid th b { font-size: 13px; } .pgrid th small { font-size: 11px; } .pgrid__badge { font-size: 10px; padding: 2px 6px; }
+  .pgrid td button { min-height: 44px; } .pgrid td button b { font-size: 13.5px; } .pgrid td button s { font-size: 10.5px; }
+}
