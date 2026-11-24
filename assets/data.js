@@ -729,3 +729,12 @@ FORMATS.flyers.grid = FLY_GRID;
 /* Prix retenus : les anciens prix (non remisés) deviennent les prix du site, sans prix barré ni remise. */
 FLY_GRID.cols.forEach((c) => { if (c.old) { c.now = c.old.slice(); delete c.old; c.badge = c.id === "j5" ? "Le moins cher" : ""; } });
 FORMATS.flyers.from = FLY_GRID.cols.find((c) => c.id === "j5").now[0];
+
+/* Flyers — colonne « Jour même » seulement (24/11/2026) : prix fixés de 250 à 5 000 ex. (80 € → 160 €, +20 € par palier).
+   Les autres colonnes et la ligne 100 ex. ne changent pas. */
+(() => {
+  const day = FLY_GRID.cols.find((c) => c.sameDay);
+  const set = { 250: 80, 500: 100, 1000: 120, 2500: 140, 5000: 160 };
+  FLY_GRID.qty.forEach((q, i) => { if (set[q] != null) day.now[i] = set[q]; });
+  day.badge = "Express +10 %";
+})();
