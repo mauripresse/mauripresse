@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Devis sur mesure & contact · Mauri Presse</title>
 <meta name="description" content="Demandez un devis d'impression personnalisé à Mauri Presse, imprimerie à Paris 10e. Réponse rapide de notre équipe PAO.">
-<link rel="icon" href="https://mauripresse.com/images/favicon.ico">
+<link rel="icon" href="assets/img/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -107,7 +107,7 @@
   const LABELS = { nom: "Nom", email: "E-mail", tel: "Téléphone", societe: "Société", produit: "Produit", message: "Projet", total: "Total", paiement: "Paiement" };
   function recap(d, num, sent, payId) {
     const lines = Object.keys(LABELS).filter((k) => d[k]).map((k) => [LABELS[k], d[k]]);
-    if (file.files[0]) lines.push(["Fichier", file.files[0].name + (sent ? "" : " (à joindre à votre e-mail)")]);
+    if (file.files[0]) lines.push(["Fichier", file.files[0].name + " (à nous envoyer, voir ci-dessous)"]);
     const body = `${order ? "Commande" : "Demande de devis"} ${num}\n\n` + lines.map(([k, v]) => `${k} : ${v}`).join("\n");
     const mailto = `mailto:${SHOP.mail}?subject=${encodeURIComponent((order ? "Commande " : "Demande de devis ") + num)}&body=${encodeURIComponent(body.slice(0, 1800))}`;
     const total = order ? cartHT * 1.2 : 0;
@@ -120,11 +120,13 @@
       <p class="qdone__lead">${sent ? (order ? "L'atelier a bien reçu votre commande : nous vous recontactons pour confirmer." : "L'atelier a bien reçu votre demande et vous répond avec un prix et un délai, en général dans la journée.") + ` Une copie est enregistrée${me ? " dans votre compte" : ""}.`
         : "Votre demande n'a pas pu partir automatiquement. Cliquez sur « Envoyer par e-mail » : le message est déjà rédigé, il suffit de l'envoyer."}</p>
       <dl class="qdone__list">${lines.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
+      ${fileShareHTML(file.files[0], num)}
       <div class="qdone__btns">${payBtn}${sent ? "" : `<a class="btn btn--cyan" href="${mailto}">Envoyer par e-mail <span class="arrow">→</span></a>`}
         <button class="btn btn--ghost" type="button" onclick="window.print()">Imprimer / PDF</button>
         ${me ? '<a class="btn btn--ghost" href="compte.html">Mon compte</a>' : ""}<a class="btn btn--ghost" href="contact.html">Nouvelle demande</a></div>
       <p class="qdone__help">Une question ? <a href="tel:0147707924">01 47 70 79 24</a> · <a href="${SHOP.wa}" target="_blank" rel="noopener">WhatsApp</a></p>
     </div>`);
+    bindFileShare(document.getElementById("qdone"), file.files[0], num);
     document.getElementById("qdone").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 

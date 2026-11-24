@@ -2311,3 +2311,8 @@ button.lineup__it:hover { transform: translateY(-4px); }
 .pgrid tbody th.pgrid__q { white-space: nowrap; }
 @media (max-width: 720px) { .pgrid .pgrid__q { width: 84px; } }
 .pgrid tbody th.pgrid__q small { display: inline; }
+/* Envoi du fichier après le formulaire */
+.fshare { margin-top: 14px; padding: 14px 16px; border-radius: 12px; background: #fff8d6; border: 1.5px solid var(--yellow); text-align: left; }
+.fshare b { display: block; font-size: 14.5px; }
+.fshare p { font-size: 13.5px; color: var(--ink-soft); margin: 4px 0 10px; font-weight: 400; }
+.fshare__btns { display: flex; flex-wrap: wrap; gap: 8px; }

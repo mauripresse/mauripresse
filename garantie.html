@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Prix le plus bas garanti · Mauri Presse</title>
 <meta name="description" content="Trouvé moins cher ailleurs pour le même produit ? Dites-nous où : Mauri Presse analyse votre demande et vous accorde 5 % de réduction sur votre commande.">
-<link rel="icon" href="https://mauripresse.com/images/favicon.ico">
+<link rel="icon" href="assets/img/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -46,15 +46,15 @@
 
         <form id="g-form" novalidate>
           <input type="hidden" name="produit" id="g-produit">
-          <label class="gfield" data-panel="online"><span class="sr">Lien du concurrent</span><input name="lien" type="url" placeholder="* Lien du concurrent (https://…)" required></label>
+          <label class="gfield" data-panel="online"><span class="sr">Lien du concurrent</span><input name="lien" type="text" inputmode="url" placeholder="* Lien du concurrent (site ou page du produit)" required></label>
           <label class="gfield" data-panel="local"><span class="sr">Nom du concurrent</span><input name="concurrent" placeholder="* Nom du concurrent" required></label>
-          <label class="gfield"><span class="sr">Prix du concurrent</span><input name="prix" type="number" step="0.01" min="0" placeholder="* Prix du concurrent (€ TTC)" required></label>
+          <label class="gfield"><span class="sr">Prix du concurrent</span><input name="prix" type="text" inputmode="decimal" placeholder="* Prix du concurrent (€ TTC, ex. 45,90)" required></label>
           <label class="gfield"><span class="sr">Quantité</span><input name="quantite" type="number" min="1" placeholder="* Quantité"  required></label>
           <label class="gfield"><span class="sr">Caractéristiques du produit chez le concurrent</span><textarea name="details" placeholder="Caractéristiques du produit sur le site de la concurrence"></textarea></label>
-          <div class="gfield" data-panel="local">
-            <label class="gdrop" id="g-drop"><input type="file" id="g-file" accept=".pdf,.jpg,.jpeg,.png" required>
+          <div class="gfield">
+            <label class="gdrop" id="g-drop"><input type="file" id="g-file" accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,image/*">
               <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4.5 4.5 0 0 1-.5-9A6 6 0 0 1 18 9.5 4 4 0 0 1 17.5 18"/><path d="M12 12v8M9 15l3-3 3 3"/></svg>
-              <span id="g-drop-label">Soumettre une preuve du devis ou une facture de la commande.</span>
+              <span id="g-drop-label">Ajouter une capture d'écran, un devis ou une facture (facultatif en ligne, obligatoire pour un imprimeur local).</span>
             </label>
           </div>
           <label class="gfield"><span class="sr">Votre nom</span><input name="nom" placeholder="* Votre nom" required autocomplete="name"></label>
@@ -101,6 +101,7 @@
       el.querySelectorAll("input, textarea").forEach((i) => { i.disabled = el.hidden; });
     });
     document.getElementById("ok").classList.remove("is-on");
+    document.getElementById("g-file").required = name === "local";
   };
   tabs.forEach((t) => t.addEventListener("click", () => select(t.dataset.tab)));
   select("online");
@@ -122,12 +123,14 @@
     if (prix > 0) d.notre_prix = eur(prix) + " HT";
     btn.disabled = true; btn.textContent = "Envoi en cours…";
     ok.classList.remove("is-on", "is-err");
+    const f = file.files[0] || null, ref = "PB-" + Date.now().toString(36).slice(-6).toUpperCase(), subject = "Prix le plus bas " + ref + " — " + (produit || "demande") + " — " + d.nom;
+    d.reference = ref;
     try {
-      await sendMail("Prix le plus bas — " + (produit || "demande") + " — " + d.nom, d, tab === "local" ? file.files[0] : null);
-      ok.textContent = "Demande envoyée ✓ L'atelier vérifie l'offre et vous répond par e-mail avec votre réduction de 5 %.";
-      ok.classList.add("is-on");
-      form.reset(); (document.getElementById("g-drop-label").textContent = "Soumettre une preuve du devis ou une facture de la commande.");
-    } catch (err) { mailError(ok, "Prix le plus bas — " + (produit || "demande") + " — " + d.nom, d); }
+      await sendMail(subject, d, f);
+      ok.innerHTML = `<b>Demande ${ref} envoyée ✓</b> L'atelier vérifie l'offre et vous répond par e-mail avec votre réduction de 5 %.` + fileShareHTML(f, ref);
+      ok.classList.add("is-on"); bindFileShare(ok, f, ref);
+      form.reset(); document.getElementById("g-drop-label").textContent = "Ajouter une capture d'écran, un devis ou une facture (facultatif en ligne, obligatoire pour un imprimeur local).";
+    } catch (err) { mailError(ok, subject, d); ok.insertAdjacentHTML("beforeend", fileShareHTML(f, ref)); bindFileShare(ok, f, ref); }
     btn.disabled = false; btn.innerHTML = label;
   });
 })();

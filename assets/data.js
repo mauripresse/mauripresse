@@ -3,7 +3,7 @@
    Les grilles Flyers et Roll-up ainsi que les majorations d'options sont
    INDICATIVES et doivent être remplacées par les vrais tarifs de l'atelier. */
 
-const IMG = "https://mauripresse.com/images/"; /* logo uniquement */
+const IMG = "assets/img/"; /* logo et favicon, hébergés avec le site */
 
 /* Photos libres de droits (Unsplash, licence gratuite), choisies pour correspondre à chaque produit */
 const PH = (id, w = 1200) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=75`;
@@ -48,6 +48,8 @@ const SHOP = {
   /* Paiement en ligne : à remplir quand les comptes existent (sinon seul le paiement à l'atelier est proposé).
      paypal = identifiant PayPal.me ; stripe = lien de paiement Stripe (Payment Link). */
   pay: { paypal: "", stripe: "" },
+  /* Clé Web3Forms (gratuite, à créer sur web3forms.com avec mauripresse24@gmail.com). Si elle est remplie, elle remplace FormSubmit. */
+  web3key: "",
   address: "24 Rue de Chabrol, 75010 Paris",
   social: [
     { id: "instagram", name: "Instagram", handle: "@mauripresse", url: "https://www.instagram.com/mauripresse/" },
@@ -246,18 +248,46 @@ const rollupHTML = (i) => {
 /* Envoi des formulaires par e-mail à l'atelier (service FormSubmit, sans serveur).
    Le tout premier envoi déclenche un e-mail d'activation à SHOP.mail : il faut cliquer dessus une fois. */
 async function sendMail(subject, data, file) {
+  /* Le texte part par un service d'e-mail (Web3Forms si une clé est configurée, sinon FormSubmit).
+     Les fichiers ne passent pas par ces services gratuits (non pris en charge ou instables) :
+     le nom du fichier est indiqué, et le client l'envoie ensuite par WhatsApp ou e-mail (voir fileShareHTML). */
+  const fields = Object.assign({}, data);
+  if (file) fields.fichier = file.name + " (envoyé séparément par le client)";
+  const web3 = !!SHOP.web3key;
   const fd = new FormData();
-  fd.append("_subject", subject);
-  fd.append("_template", "table");
-  fd.append("_captcha", "false");
-  if (data.email) fd.append("_replyto", data.email);
-  Object.entries(data).forEach(([k, v]) => { if (v !== "" && v != null) fd.append(k, v); });
-  if (file) fd.append("attachment", file);
-  const ctrl = new AbortController(), t = setTimeout(() => ctrl.abort(), 20000); /* jamais plus de 20 s d'attente */
-  const r = await fetch("https://formsubmit.co/ajax/" + (SHOP.formKey || SHOP.mail), { method: "POST", body: fd, headers: { Accept: "application/json" }, signal: ctrl.signal }).finally(() => clearTimeout(t));
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok || String(j.success) === "false") throw new Error(j.message || "Envoi impossible");
-  return j;
+  if (web3) { fd.append("access_key", SHOP.web3key); fd.append("subject", subject); fd.append("from_name", "Site Mauri Presse"); if (data.email) fd.append("replyto", data.email); }
+  else { fd.append("_subject", subject); fd.append("_template", "table"); fd.append("_captcha", "false"); if (data.email) fd.append("_replyto", data.email); }
+  Object.entries(fields).forEach(([k, v]) => { if (v !== "" && v != null) fd.append(k, v); });
+  const url = web3 ? "https://api.web3forms.com/submit" : "https://formsubmit.co/ajax/" + (SHOP.formKey || SHOP.mail);
+  let last;
+  for (let attempt = 0; attempt < 2; attempt++) { /* 2 essais, 15 s maximum chacun */
+    const ctrl = new AbortController(), t = setTimeout(() => ctrl.abort(), 15000);
+    try {
+      const r = await fetch(url, { method: "POST", body: fd, headers: { Accept: "application/json" }, signal: ctrl.signal });
+      const j = await r.json().catch(() => ({}));
+      if (r.ok && String(j.success) !== "false") return j;
+      last = new Error(j.message || "Envoi impossible");
+    } catch (e) { last = e; } finally { clearTimeout(t); }
+  }
+  throw last;
+}
+/* Envoi d'un fichier (capture, devis, maquette) : partage natif sur téléphone, sinon WhatsApp / e-mail */
+function fileShareHTML(file, ref) {
+  if (!file) return "";
+  const txt = `Bonjour Mauri Presse, voici le fichier de ma demande ${ref}.`;
+  return `<div class="fshare"><b>📎 Dernière étape : envoyez-nous votre fichier « ${esc(file.name)} »</b>
+    <p>Les pièces jointes ne passent pas par le formulaire : envoyez-la en un clic, avec la référence ${esc(ref)}.</p>
+    <div class="fshare__btns">
+      <button type="button" class="btn btn--cyan btn--sm" data-share>Envoyer le fichier</button>
+      <a class="btn btn--ghost btn--sm" href="${SHOP.wa.split("&text=")[0]}&text=${encodeURIComponent(txt)}" target="_blank" rel="noopener">Par WhatsApp</a>
+      <a class="btn btn--ghost btn--sm" href="mailto:${SHOP.mail}?subject=${encodeURIComponent("Fichier – " + ref)}&body=${encodeURIComponent(txt + "\n\n(Pensez à joindre le fichier.)")}">Par e-mail</a>
+    </div></div>`;
+}
+function bindFileShare(root, file, ref) {
+  const b = root && root.querySelector("[data-share]"); if (!b || !file) return;
+  const can = navigator.canShare && navigator.canShare({ files: [file] });
+  if (!can) { b.remove(); return; }
+  b.addEventListener("click", () => navigator.share({ files: [file], title: "Mauri Presse – " + ref, text: `Fichier de ma demande ${ref}` }).catch(() => {}));
 }
 const formData = (form) => Object.fromEntries([...new FormData(form)].filter(([, v]) => typeof v === "string"));
 const mailError = (el, subject, data) => {
