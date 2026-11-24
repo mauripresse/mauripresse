@@ -260,8 +260,8 @@ async function sendMail(subject, data, file) {
   Object.entries(fields).forEach(([k, v]) => { if (v !== "" && v != null) fd.append(k, v); });
   const url = web3 ? "https://api.web3forms.com/submit" : "https://formsubmit.co/ajax/" + (SHOP.formKey || SHOP.mail);
   let last;
-  for (let attempt = 0; attempt < 2; attempt++) { /* 2 essais, 15 s maximum chacun */
-    const ctrl = new AbortController(), t = setTimeout(() => ctrl.abort(), 15000);
+  for (let attempt = 0; attempt < 2; attempt++) { /* 2 essais, 8 s maximum chacun (un envoi normal prend moins d’1 s) */
+    const ctrl = new AbortController(), t = setTimeout(() => ctrl.abort(), 8000);
     try {
       const r = await fetch(url, { method: "POST", body: fd, headers: { Accept: "application/json" }, signal: ctrl.signal });
       const j = await r.json().catch(() => ({}));
