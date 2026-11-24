@@ -167,7 +167,7 @@ const PRODUCTS = {
 const CATS = [
   { id: "reprographie", name: "Reprographie", blurb: "Copies, impressions et reliures minute.", items: ["Photocopie", "Impression", "Reliures", "Scan et numérisation", "Plastification"] },
   { id: "cartes-de-visite", name: "Cartes de visite", blurb: "Classiques, pelliculées, Deluxe ou PVC.", items: [{ n: "Cartes de visite classiques", p: "cartes" }, { n: "Cartes de Visite Classic", p: "classic" }, "Cartes de visite pelliculées", "Cartes de fidélité", "Cartes de visite finitions Deluxe", "Cartes de visite en PVC", "Cartes de correspondance", "Cartes postales"] },
-  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, pour vos événements et opérations commerciales.", items: [{ n: "Flyers & tracts", from: 80, f: "flyers" }, { n: "Flyer A6", f: "flyers", t: 0 }, { n: "Flyer 10×15 cm", f: "flyers", t: 1 }, { n: "Flyer DL 10×21 cm", f: "flyers", t: 2 }, { n: "Flyer A5", f: "flyers", t: 3 }, { n: "Flyer A4", f: "flyers", t: 4 }, { n: "Flyer A3", f: "flyers", t: 5 }] },
+  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, pour vos événements et opérations commerciales.", items: [{ n: "Flyers & tracts", from: 36.27, f: "flyers" }, { n: "Flyer A6", f: "flyers", t: 0 }, { n: "Flyer 10×15 cm", f: "flyers", t: 1 }, { n: "Flyer DL 10×21 cm", f: "flyers", t: 2 }, { n: "Flyer A5", f: "flyers", t: 3 }, { n: "Flyer A4", f: "flyers", t: 4 }, { n: "Flyer A3", f: "flyers", t: 5 }] },
   { id: "depliants-plaquettes", name: "Dépliants & plaquettes", blurb: "1, 2 ou 3 plis pour vos présentations.", items: [{ n: "Dépliant 1 pli", f: "depliants", t: 0 }, { n: "Dépliant 2 plis roulés", f: "depliants", t: 2 }, { n: "Dépliant 2 plis accordéon", f: "depliants", t: 3 }] },
   { id: "catalogue-brochures", name: "Catalogues & brochures", blurb: "Agrafé, spirale, dos carré collé.", items: ["Brochure agrafée", "Spirale métallique", "Dos carré collé", "Couverture rigide"] },
   { id: "affiche-poster", name: "Affiches & posters", blurb: "À l'unité ou en série, jusqu'à l'Abribus.", items: ["Affiches à l'unité", "Affiches petit format", "Affiche grand format", "Affiche Abribus", "Affiche dos bleu", "Affiche fluo", "Affiche autocollante", "Affiche backlight"] },
@@ -378,7 +378,7 @@ const FORMATS = {
     ],
   },
   flyers: {
-    name: "Flyers & tracts", catId: "flyers-tracts", cat: "Flyers & tracts", kind: "sheet", from: 80,
+    name: "Flyers & tracts", catId: "flyers-tracts", cat: "Flyers & tracts", kind: "sheet", from: 36.27,
     desc: "Pour vos ouvertures, événements et opérations commerciales. Papier brillant ou mat, recto ou recto/verso, du A6 au A3.",
     sizes: [
       { label: "A6", w: 10.5, h: 14.8, hint: "10,5 × 14,8 cm" },
@@ -729,16 +729,3 @@ FORMATS.flyers.grid = FLY_GRID;
 /* Prix retenus : les anciens prix (non remisés) deviennent les prix du site, sans prix barré ni remise. */
 FLY_GRID.cols.forEach((c) => { if (c.old) { c.now = c.old.slice(); delete c.old; c.badge = c.id === "j5" ? "Le moins cher" : ""; } });
 FORMATS.flyers.from = FLY_GRID.cols.find((c) => c.id === "j5").now[0];
-
-/* ---------- Flyers : grille simplifiée (24/11/2026) ----------
-   Livraison standard : 80 € à 160 € HT de 250 à 5 000 ex. (+20 € par palier). Jour même : +10 %. */
-(() => {
-  const std = [80, 100, 120, 140, 160];
-  FLY_GRID.qty = [250, 500, 1000, 2500, 5000];
-  FLY_GRID.cols = [
-    { id: "day", sameDay: true, badge: "Express +10 %", now: std.map((p) => Math.round(p * 1.1 * 100) / 100),
-      note: "Paris 20 € · Île-de-France 40 € · Retrait atelier gratuit" },
-    { id: "std", label: "Standard", sub: "3 à 5 jours ouvrés", badge: "Le moins cher", now: std },
-  ];
-  FORMATS.flyers.from = std[0];
-})();
