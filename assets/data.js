@@ -167,7 +167,7 @@ const PRODUCTS = {
 const CATS = [
   { id: "reprographie", name: "Reprographie", blurb: "Copies, impressions et reliures minute.", items: ["Photocopie", "Impression", "Reliures", "Scan et numérisation", "Plastification"] },
   { id: "cartes-de-visite", name: "Cartes de visite", blurb: "Classiques, pelliculées, Deluxe ou PVC.", items: [{ n: "Cartes de visite classiques", p: "cartes" }, { n: "Cartes de Visite Classic", p: "classic" }, "Cartes de visite pelliculées", "Cartes de fidélité", "Cartes de visite finitions Deluxe", "Cartes de visite en PVC", "Cartes de correspondance", "Cartes postales"] },
-  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, pour vos événements et opérations commerciales.", items: [{ n: "Flyers & tracts", from: 36.27, f: "flyers" }, { n: "Flyer A6", f: "flyers", t: 0 }, { n: "Flyer 10×15 cm", f: "flyers", t: 1 }, { n: "Flyer DL 10×21 cm", f: "flyers", t: 2 }, { n: "Flyer A5", f: "flyers", t: 3 }, { n: "Flyer A4", f: "flyers", t: 4 }, { n: "Flyer A3", f: "flyers", t: 5 }] },
+  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, pour vos événements et opérations commerciales.", items: [{ n: "Flyers & tracts", from: 30.38, f: "flyers" }, { n: "Flyer A6", f: "flyers", t: 0 }, { n: "Flyer 10×15 cm", f: "flyers", t: 1 }, { n: "Flyer DL 10×21 cm", f: "flyers", t: 2 }, { n: "Flyer A5", f: "flyers", t: 3 }, { n: "Flyer A4", f: "flyers", t: 4 }, { n: "Flyer A3", f: "flyers", t: 5 }] },
   { id: "depliants-plaquettes", name: "Dépliants & plaquettes", blurb: "1, 2 ou 3 plis pour vos présentations.", items: [{ n: "Dépliant 1 pli", f: "depliants", t: 0 }, { n: "Dépliant 2 plis roulés", f: "depliants", t: 2 }, { n: "Dépliant 2 plis accordéon", f: "depliants", t: 3 }] },
   { id: "catalogue-brochures", name: "Catalogues & brochures", blurb: "Agrafé, spirale, dos carré collé.", items: ["Brochure agrafée", "Spirale métallique", "Dos carré collé", "Couverture rigide"] },
   { id: "affiche-poster", name: "Affiches & posters", blurb: "À l'unité ou en série, jusqu'à l'Abribus.", items: ["Affiches à l'unité", "Affiches petit format", "Affiche grand format", "Affiche Abribus", "Affiche dos bleu", "Affiche fluo", "Affiche autocollante", "Affiche backlight"] },
@@ -390,7 +390,7 @@ const FORMATS = {
     ],
     defSize: 3,
     groups: [
-      { id: "papier", label: "Papier", options: [{ label: "Couché brillant 135 g", hint: "Le classique des flyers" }, { label: "Couché mat 170 g", hint: "Plus épais, aspect soigné" }, { label: "Couché 350 g rigide", hint: "Effet carton" }, { label: "Recyclé 120 g" }] },
+      { id: "papier", label: "Papier", options: [{ label: "Couché brillant 135 g", hint: "Le classique des flyers" }, { label: "Couché mat 170 g", hint: "Plus épais, aspect soigné" }, { label: "Couché 250 g", hint: "Épais, tient bien en main" }, { label: "Couché 350 g rigide", hint: "Effet carton" }] },
       { id: "impression", label: "Impression", options: [{ label: "Recto" }, { label: "Recto/verso" }] },
     ],
     qty: [100, 250, 500, 1000, 2500, 5000], unit: "ex.",
@@ -730,11 +730,25 @@ FORMATS.flyers.grid = FLY_GRID;
 FLY_GRID.cols.forEach((c) => { if (c.old) { c.now = c.old.slice(); delete c.old; c.badge = c.id === "j5" ? "Le moins cher" : ""; } });
 FORMATS.flyers.from = FLY_GRID.cols.find((c) => c.id === "j5").now[0];
 
-/* Flyers — colonne « Jour même » seulement (24/11/2026) : prix fixés de 250 à 5 000 ex. (80 € → 160 €, +20 € par palier).
-   Les autres colonnes et la ligne 100 ex. ne changent pas. */
-(() => {
-  const day = FLY_GRID.cols.find((c) => c.sameDay);
-  const set = { 250: 80, 500: 100, 1000: 120, 2500: 140, 5000: 160 };
-  FLY_GRID.qty.forEach((q, i) => { if (set[q] != null) day.now[i] = set[q]; });
-  day.badge = "Express +10 %";
-})();
+/* ---------- Flyers : prix par format (relevé Pixartprinting du 25/11/2026, prix non remisés, HT) ----------
+   Ordre des formats = FORMATS.flyers.sizes : A6, 10×15, DL (10×21), A5, A4, A3.
+   Chaque ligne = quantité, colonnes = [J+2, J+3, J+5]. */
+FLY_GRID.byFormat = [
+  [[42.29,36.97,30.38],[43.97,38.45,31.6],[46.79,40.91,33.62],[52.42,45.83,37.67],[66.1,57.78,47.49],[86.78,75.86,62.35],[108.39,94.76,77.88],[135.69,118.62,97.5],[199.31,174.25,143.22],[251.95,220.27,181.04],[352.85,308.48,253.55]],
+  [[42.29,36.97,30.38],[43.97,38.45,31.6],[46.79,40.91,33.62],[52.42,45.83,37.67],[66.1,57.78,47.49],[86.78,75.86,62.35],[108.39,94.76,77.88],[135.69,118.62,97.5],[199.31,174.25,143.22],[251.95,220.27,181.04],[352.85,308.48,253.55]],
+  [[49.61,43.37,35.64],[52.23,45.66,37.53],[56.59,49.47,40.66],[65.32,57.11,46.94],[91.52,80.01,65.76],[131.41,114.88,94.42],[180.92,158.17,130],[230.42,201.45,165.57],[314.94,275.34,226.3],[389.78,340.77,280.08],[527.39,461.07,378.96]],
+  [[50.48,44.13,36.27],[54.41,47.57,39.1],[60.96,53.29,43.8],[74.06,64.74,53.21],[102.86,89.92,73.91],[148.35,129.7,106.6],[204.29,178.6,146.8],[245.65,214.76,176.52],[352.85,308.48,253.55],[448.28,391.91,322.12],[665.86,582.13,478.46]],
+  [[63.72,55.71,45.79],[73.15,63.95,52.56],[81.46,71.22,58.53],[112.34,98.21,80.72],[172.56,150.86,123.99],[267.7,234.03,192.36],[352.85,308.48,253.55],[474.65,414.96,341.07],[665.86,582.13,478.46],[916.16,800.95,658.32],[1319.82,1153.85,948.37]],
+  [[67.73,59.21,43.8],[81.88,71.58,52.95],[109.87,96.05,71.05],[145.3,127.03,104.41],[277.69,242.77,199.53],[514.8,450.06,369.91],[716.63,626.51,514.94],[929.94,813,668.22],[1403.79,1227.26,1008.71],[1840.78,1609.3,1322.71],[2702.67,2362.81,1942.04]],
+];
+/* Met la grille aux prix du format choisi. Jour même = prix J+2 + 40 % (jusqu'à 5 000 ex.), + 10 % en recto/verso. */
+FLY_GRID.apply = (sizeIdx, rectoVerso) => {
+  const rows = FLY_GRID.byFormat[sizeIdx] || FLY_GRID.byFormat[3];
+  const r2 = (n) => Math.round(n * 100) / 100;
+  FLY_GRID.cols.forEach((c) => {
+    if (c.sameDay) c.now = rows.map((r, i) => (FLY_GRID.qty[i] <= 5000 ? r2(r[0] * 1.4 * (rectoVerso ? 1.1 : 1)) : null));
+    else c.now = rows.map((r) => r[{ j2: 0, j3: 1, j5: 2 }[c.id]]);
+  });
+};
+(() => { const day = FLY_GRID.cols.find((c) => c.sameDay); day.badge = "Express +40 %"; FLY_GRID.apply(3, false);
+  FORMATS.flyers.from = Math.min(...FLY_GRID.byFormat.map((f) => f[0][2])); })();

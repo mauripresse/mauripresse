@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=202611241506">
+<link rel="stylesheet" href="assets/style.css?v=202611251134">
 </head>
 <body>
 <div id="site-header"></div>
-<script src="assets/data.js?v=202611241506"></script>
-<script src="assets/app.js?v=202611241506"></script>
+<script src="assets/data.js?v=202611251134"></script>
+<script src="assets/app.js?v=202611251134"></script>
 
 <main>
   <section class="pagehead"><div class="wrap">
@@ -152,16 +152,18 @@
 
   /* Prix : seulement s'il est connu (taille avec prix et options standard), sinon devis */
   /* Grille quantité × date (flyers) */
-  if (G) {
+  const isRV = () => { const gi = F.groups.findIndex((g) => g.id === "impression"); return gi >= 0 && /verso/i.test(F.groups[gi].options[st.c[gi]].label); };
+  function buildGrid() {
+    if (G.apply) G.apply(st.s, isRV());
     document.getElementById("deliv-sec").hidden = true;
     document.getElementById("qty-h").textContent = "Quantité et date de livraison";
     const q = document.getElementById("qty"); q.className = "pgrid-wrap";
     const unit = (p, n) => (p / n).toLocaleString("fr-FR", { minimumFractionDigits: 3, maximumFractionDigits: 3 }) + " €/ex.";
     q.innerHTML = `<div class="pgrid__intro"><span>📅 Choisissez votre <b>date de livraison</b> : plus elle est lointaine, plus le prix baisse.</span><span class="pgrid__legend"><i></i>Prix HT · livraison incluse</span></div>
       <div class="pgrid__scroll"><table class="pgrid"><thead><tr><th class="pgrid__q">Quantité</th>${G.cols.map((c) => {
-      const [wd, dd] = c.sameDay ? ["Aujourd'hui", "avant 5 000 ex."] : fmtDay(workDate(c.days));
+      const [wd, dd] = c.sameDay ? ["Aujourd'hui", ""] : fmtDay(workDate(c.days));
       const tag = c.sameDay ? (c.badge || "Express") : c.badge.replace("jusqu'à ", "jusqu'à ");
-      return `<th class="${c.sameDay ? "is-day" : ""}"><span class="pgrid__ico">${c.sameDay ? "⚡" : "🚚"}</span><b>${c.sameDay ? "Jour même" : wd}</b><small>${c.sameDay ? "Paris & IDF · " + dd : dd}</small>${c.sameDay ? `<span class="pgrid__note">Livraison Paris 20 € · Île-de-France 40 €</span>` : ""}${tag ? `<span class="pgrid__tag">${tag}</span>` : ""}</th>`; }).join("")}</tr></thead><tbody>${G.qty.map((n, qi) => `<tr><th class="pgrid__q" scope="row">${n.toLocaleString("fr-FR")}<small>ex.</small></th>${G.cols.map((c) => {
+      return `<th class="${c.sameDay ? "is-day" : ""}"><span class="pgrid__ico">${c.sameDay ? "⚡" : "🚚"}</span><b>${c.sameDay ? "Jour même" : wd}</b><small>${c.sameDay ? "Paris & IDF" : dd}</small>${c.sameDay ? `<span class="pgrid__note">Livraison Paris 20 € · Île-de-France 40 €</span>` : ""}${tag ? `<span class="pgrid__tag">${tag}</span>` : ""}</th>`; }).join("")}</tr></thead><tbody>${G.qty.map((n, qi) => `<tr><th class="pgrid__q" scope="row">${n.toLocaleString("fr-FR")}<small>ex.</small></th>${G.cols.map((c) => {
         const now = c.now[qi], old = c.old ? c.old[qi] : null;
         if (now == null) return `<td class="${c.sameDay ? "is-day" : ""}"><button type="button" class="is-off" disabled title="Jour même jusqu'à 5 000 ex."><b>Indisponible</b><small>max. 5 000 ex.</small></button></td>`;
         return `<td class="${c.sameDay ? "is-day" : ""}"><button type="button" data-q="${qi}" data-col="${c.id}">${old && old > now ? `<s>${eur(old)}</s>` : ""}<b>${eur(now)}</b><small>${unit(now, n)}</small></button></td>`; }).join("")}</tr>`).join("")}</tbody></table></div>`;
@@ -175,6 +177,7 @@
   const devisHref = () => "contact.html?" + new URLSearchParams({ produit: (MODEL || F.name) + " " + rows()[1][1], config: rows().slice(1).map(([k, v]) => k + " : " + v).join(" | ") });
 
   function render() {
+    if (G) buildGrid();
     stage(); sizes();
     document.getElementById("size-val").textContent = rows()[1][1];
     document.querySelectorAll("#qty button").forEach((b) => b.classList.toggle("is-on", +b.dataset.q === st.q && (!G || b.dataset.col === st.col)));
