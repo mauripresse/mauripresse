@@ -196,10 +196,10 @@ const delivOf = (key, id) => { const p = PRODUCTS[key]; return p.deliv.find((x) 
    - calculateur (base)   : base(quantité) × délai × options + suppléments. */
 function computePrice(key, qtyIndex, choices, deliveryId) {
   const p = PRODUCTS[key], d = delivOf(key, deliveryId);
-  let price = d.prices ? d.prices[qtyIndex] : p.base[qtyIndex] * d.mult, add = 0;
+  let price = p.px ? p.px(qtyIndex, choices, d) : d.prices ? d.prices[qtyIndex] : p.base[qtyIndex] * d.mult, add = 0;
   p.groups.forEach((g, i) => {
     const o = g.options[choices?.[i] ?? 0] || g.options[0];
-    if (o.mult) price *= o.mult;
+    if (o.mult && !p.px) price *= o.mult;
     if (o.add) add += o.add;
   });
   return Math.round((price + add) * 100) / 100;
@@ -794,3 +794,92 @@ FLY_GRID.apply = (sizeIdx, rectoVerso, paperIdx) => {
 };
 FLY_GRID.apply(3, false, 0);
 FORMATS.flyers.from = Math.min(...FLY_GRID.byPaper.flatMap((g) => g.map((f) => f[0][2])));
+
+/* ---------- Cartes de visite : prix Pixartprinting (relevé du 25/11/2026, prix barrés, HT) ----------
+   Prix de base par format (couché mat 350 g, recto/verso, sans pelliculage) pour 100 → 2 500 ex. et 3 dates
+   (J+2, J+3, J+5 ouvrés). Chaque option applique le rapport de prix relevé chez Pixartprinting.
+   Jour même = prix J+2 + 40 % (+10 % en recto/verso). */
+const CARD_PX = {
+  qty: [100, 250, 500, 1000, 2500],
+  fmt: [[[29.77, 23.39, 18.98], [30.88, 24.26, 19.69], [32.72, 25.71, 21.85], [36.41, 28.61, 24.32], [47.47, 37.3, 33.14]], [[33.66, 26.45, 24.04], [35.67, 28.02, 25.48], [39.69, 31.18, 28.35], [51.74, 40.66, 36.96], [71.23, 55.97, 50.88]], [[34.28, 26.93, 24.48], [36.32, 28.54, 25.94], [40.41, 31.75, 28.87], [52.69, 41.4, 37.64], [72.54, 57, 51.82]], [[30.88, 24.26, 22.06], [32.72, 25.71, 23.37], [36.41, 28.61, 26.01], [47.47, 37.3, 33.91], [65.35, 51.35, 46.68]]],
+  r: {"l_mat1": [[1.4179, 1.4177, 1.5885], [1.4061, 1.4064, 1.5754], [1.4691, 1.4691, 1.5712], [1.5946, 1.5945, 1.7052], [1.7535, 1.7534, 1.7942]], "l_soft1": [[1.788, 1.7879, 2.0032], [1.7668, 1.7671, 1.9792], [1.846, 1.846, 1.9744], [2.0044, 2.0042, 2.1435], [2.4605, 2.4603, 2.5175]], "l_bri2": [[1.4286, 1.4288, 1.6006], [1.422, 1.4221, 1.5932], [1.5755, 1.5753, 1.6851], [1.8075, 1.8074, 1.933], [2.2562, 2.256, 2.3084]], "l_mat2": [[1.4286, 1.4288, 1.6006], [1.422, 1.4221, 1.5932], [1.5755, 1.5753, 1.6851], [1.8075, 1.8074, 1.933], [2.2562, 2.256, 2.3084]], "l_soft2": [[1.8105, 1.8106, 2.0285], [1.8993, 1.8994, 2.1275], [2.2127, 2.2124, 2.3666], [2.641, 2.6407, 2.824], [3.4715, 3.4713, 3.5519]], "g300": [[0.9966, 0.9966, 0.9963], [0.9916, 0.9918, 0.9914], [0.9844, 0.9844, 0.9844], [0.9717, 0.9717, 0.9716], [0.9459, 0.9458, 0.946]], "g250": [[1.0208, 1.0209, 1.0205], [1.0278, 1.028, 1.0767], [1.0529, 1.0529, 1.0531], [1.1692, 1.1692, 1.222], [1.182, 1.1818, 1.2094]], "g130": [[1.003, 1.003, 1.0032], [0.9938, 0.9938, 1.0411], [0.9887, 0.9887, 0.9886], [1.025, 1.0248, 1.0711], [0.9732, 0.9732, 0.9958]], "recycle": [[1.2405, 1.2407, 1.3899], [1.3251, 1.3256, 1.4845], [1.4542, 1.4539, 1.5556], [1.6723, 1.6721, 1.7887], [2.1241, 2.1239, 2.1732]], "havane": [[1.2553, 1.2552, 1.4062], [1.3611, 1.3611, 1.5246], [1.5214, 1.5212, 1.6275], [1.7935, 1.7931, 1.9178], [2.356, 2.3558, 2.4104]], "round": [[1.7071, 1.7071, 1.9125], [1.7302, 1.7304, 1.9385], [1.7659, 1.7658, 1.8888], [1.8259, 1.8256, 1.9527], [1.6863, 1.6861, 1.7254]], "vernis": [[1.4734, 1.4733, 1.4733], [1.5628, 1.5629, 1.5625], [1.6938, 1.6938, 1.694], [1.9046, 1.9048, 1.9044], [2.5026, 2.5028, 2.5024]], "or": [[1.6114, 1.6116, 1.6116], [1.6098, 1.6098, 1.6094], [1.6071, 1.607, 1.6072], [1.603, 1.6033, 1.6029], [1.5322, 1.5322, 1.532]]},
+};
+const FIN_PX = [{ label: "Sans pelliculage" }, { label: "Pelliculage mat soft-touch (recto)", hint: "Toucher velours", px: "l_soft1" }, { label: "Pelliculage brillant (recto/verso)", hint: "Couleurs éclatantes", px: "l_bri2" },
+  { label: "Pelliculage mat (recto)", px: "l_mat1" }, { label: "Pelliculage mat (recto/verso)", px: "l_mat2" }, { label: "Pelliculage soft-touch (recto/verso)", px: "l_soft2" },
+  { label: "Vernis sélectif 3D", hint: "Relief brillant au toucher", px: "vernis" }, { label: "Dorure or 3D", hint: "Effet métallisé en relief", px: "or" }];
+(() => {
+  const D = () => [
+    { id: "day", label: "Jour même", sub: "Paris 20 € · IDF 40 € · Express +40 %", short: "Jour même", days: 0, paid: true },
+    ...[[2, 0], [3, 1], [5, 2]].map(([n, col]) => { const [wd, dd] = fmtDay(workDate(n)); return { id: "j" + n, col, days: n, label: wd.charAt(0).toUpperCase() + wd.slice(1) + " " + dd, sub: n === 5 ? "Le moins cher · livraison incluse" : "Livraison incluse", short: wd + " " + dd }; }),
+  ];
+  const fmtIdx = (o) => ["8,5 × 5,5", "9,0 × 5,0", "8,5 × 5,0", "5,5 × 5,5"].findIndex((f) => o.label.replace("8,50", "8,5").replace("5,50", "5,5").replace("9,00", "9,0").replace("5,00", "5,0").startsWith(f));
+  const price = (p) => (qi, choices, d) => {
+    const opt = (id) => { const i = p.groups.findIndex((g) => g.id === id); return i < 0 ? null : p.groups[i].options[choices?.[i] ?? 0]; };
+    const col = d.id === "day" ? 0 : d.col;
+    let v = CARD_PX.fmt[Math.max(0, fmtIdx(opt("format")))][qi][col];
+    p.groups.forEach((g, i) => { const o = g.options[choices?.[i] ?? 0]; if (o && o.px) v *= CARD_PX.r[o.px][qi][col]; });
+    if (d.id === "day") v *= 1.4 * (/verso/i.test((opt("impression") || {}).label || "") ? 1.1 : 1);
+    return v;
+  };
+  Object.entries(PRODUCTS).forEach(([k, p]) => {
+    p.qty = CARD_PX.qty.slice(); p.defQty = 100; p.deliv = D(); p.defDeliv = "j5"; delete p.base;
+    p.groups.forEach((g) => g.options.forEach((o) => { delete o.mult; }));
+    const g = (id) => p.groups.find((x) => x.id === id);
+    if (g("finition")) g("finition").options = FIN_PX.map((o) => ({ ...o }));
+    if (g("coins")) g("coins").options[1].px = "round";
+    p.px = price(p);
+  });
+  /* Cartes classiques : papiers et grammages proposés chez Pixartprinting */
+  PRODUCTS.cartes.groups.find((x) => x.id === "papier").options = [{ label: "Classic demimatt – Couché mat" }, { label: "Classic gloss – Couché brillant" }, { label: "Papier recyclé", px: "recycle" }, { label: "Papier Havane (kraft)", px: "havane" }];
+  PRODUCTS.cartes.groups.find((x) => x.id === "grammage").options = [{ label: "350 g", hint: "Le standard, rigide" }, { label: "300 g", px: "g300" }, { label: "250 g", px: "g250" }, { label: "130 g", hint: "Fin et léger", px: "g130" }];
+  PRODUCTS.cartes.groups.find((x) => x.id === "grammage").label = "Grammage";
+  const kraft = PRODUCTS.classic.groups.find((x) => x.id === "papier").options.find((o) => /kraft/i.test(o.label)); if (kraft) kraft.px = "havane";
+})();
+
+/* ---------- Grille Pixartprinting pour les autres familles (relevé du 25/11/2026, prix barrés HT) ----------
+   F.px = { qty, days: [3 délais en jours ouvrés], t: tableaux relevés, key(s, choix) → nom du tableau,
+            r: rapports de prix des options (option.px) }. Jour même = 1er délai + 40 % (+10 % recto/verso), jusqu'à 5 000. */
+function pxGrid(F) {
+  const P = F.px, r2 = (n) => Math.round(n * 100) / 100;
+  const G = { qty: P.qty, cols: [{ id: "day", sameDay: true, badge: "Express +40 %" }, { id: "j2", days: P.days[0], badge: "" }, { id: "j3", days: P.days[1], badge: "" }, { id: "j5", days: P.days[2], badge: "Le moins cher" }] };
+  const rows = (s, ch) => P.t[P.key(s, ch || [])];
+  const mult = (ch, q, c) => F.groups.reduce((m, g, i) => { const o = g.options[(ch || [])[i] || 0]; const r = o && o.px && P.r && P.r[o.px]; return r ? m * (r[q] && r[q][c] != null ? r[q][c] : NaN) : m; }, 1);
+  G.apply = (s, rv, pi, ch) => {
+    const t = rows(s, ch) || [];
+    G.cols.forEach((col, ci) => {
+      col.now = P.qty.map((n, q) => {
+        const c = col.sameDay ? 0 : ci - 1, b = t[q] && t[q][c], m = mult(ch, q, c);
+        if (b == null || !isFinite(m) || (col.sameDay && n > 5000)) return null;
+        return r2(b * m * (col.sameDay ? 1.4 * (rv ? 1.1 : 1) : 1));
+      });
+    });
+  };
+  F.sizes.forEach((z, s) => { const t = rows(s); const v = t && t.map((r) => r[2]).find((x) => x != null); if (v) z.price = v; });
+  F.from = Math.min(...F.sizes.map((z) => z.price || Infinity));
+  F.grid = G; G.apply(F.defSize || 0, false, 0, []);
+  return G;
+}
+
+/* ---------- Branchement des relevés Pixartprinting (assets/pxdata.js) sur les familles ---------- */
+(() => {
+  if (typeof PXDATA === "undefined") return;
+  const wire = (fk, key, extra) => {
+    const d = PXDATA[fk], F = FORMATS[fk]; if (!d || !F) return;
+    F.px = Object.assign({ qty: d.qty, days: d.days || [2, 3, 5], t: d.t, r: d.r || {}, key }, extra || {});
+    pxGrid(F);
+  };
+  const c = (F, id, ch) => { const i = F.groups.findIndex((g) => g.id === id); return i < 0 ? 0 : ch[i] || 0; };
+  wire("depliants", (s, ch) => "s" + s + "_" + c(FORMATS.depliants, "papier", ch));
+})();
+(() => {
+  if (typeof PXDATA === "undefined") return;
+  const wire = (fk, key, extra) => { const d = PXDATA[fk], F = FORMATS[fk]; if (!d || !F) return; F.px = Object.assign({ qty: d.qty, days: d.days || [2, 3, 5], t: d.t, r: d.r || {}, key }, extra || {}); pxGrid(F); };
+  const ci = (F, id, ch) => { const i = F.groups.findIndex((g) => g.id === id); return i < 0 ? 0 : ch[i] || 0; };
+  /* Affiches : papiers des affiches grand format Pixartprinting (prix à l'unité, 1 à 5 affiches) */
+  const A = FORMATS.affiches;
+  A.groups.find((g) => g.id === "papier").options = [
+    { label: "Papier affiche dos blanc", hint: "Le standard intérieur" }, { label: "Papier photo haute qualité", hint: "Couleurs et détails photo" },
+    { label: "Papier affiche dos bleu", hint: "Affichage extérieur, opaque" }, { label: "Backlight", hint: "Caisson lumineux", quote: true }];
+  A.unit = "affiche(s)";
+  wire("affiches", (s, ch) => "s" + s + "_" + ci(A, "papier", ch));
+})();

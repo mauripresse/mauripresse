@@ -9,12 +9,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=202611251419">
+<link rel="stylesheet" href="assets/style.css?v=202611251502">
 </head>
 <body>
 <div id="site-header"></div>
-<script src="assets/data.js?v=202611251419"></script>
-<script src="assets/app.js?v=202611251419"></script>
+<script src="assets/pxdata.js?v=202611251502"></script>
+<script src="assets/data.js?v=202611251502"></script>
+<script src="assets/app.js?v=202611251502"></script>
 
 <main>
   <section class="pagehead"><div class="wrap">
@@ -155,28 +156,31 @@
   const isRV = () => { const gi = F.groups.findIndex((g) => g.id === "impression"); return gi >= 0 && /verso/i.test(F.groups[gi].options[st.c[gi]].label); };
   function buildGrid() {
     const pi = F.groups.findIndex((g) => g.id === "papier");
-    if (G.apply) G.apply(st.s, isRV(), pi >= 0 ? st.c[pi] : 1);
+    if (G.apply) G.apply(st.s, isRV(), pi >= 0 ? st.c[pi] : 1, st.c);
+    const anyPrice = G.cols.some((c) => c.now.some((v) => v != null));
+    if (anyPrice && !G.cols.some((c) => c.now[st.q] != null)) st.q = G.qty.findIndex((_, i) => G.cols.some((c) => c.now[i] != null));
     /* Si le délai choisi n'existe pas pour ce papier / cette quantité, on bascule sur le délai le moins cher */
     const cur = G.cols.find((c) => c.id === st.col);
     if (cur && cur.now[st.q] == null) { const alt = [...G.cols].reverse().find((c) => c.now[st.q] != null); if (alt) st.col = alt.id; }
     document.getElementById("deliv-sec").hidden = true;
     document.getElementById("qty-h").textContent = "Quantité et date de livraison";
     const q = document.getElementById("qty"); q.className = "pgrid-wrap";
-    const unit = (p, n) => (p / n).toLocaleString("fr-FR", { minimumFractionDigits: 3, maximumFractionDigits: 3 }) + " €/ex.";
+    if (!anyPrice) { q.innerHTML = `<div class="pgrid__intro"><span>📐 Ce format est réalisé <b>sur devis</b> : l'atelier vous répond en général dans la journée.</span></div>`; return; }
+    const unit = (p, n) => (p / n).toLocaleString("fr-FR", { minimumFractionDigits: 3, maximumFractionDigits: 3 }) + " €/" + (F.unit && F.unit !== "ex." ? "pièce" : "ex.");
     q.innerHTML = `<div class="pgrid__intro"><span>📅 Choisissez votre <b>date de livraison</b> : plus elle est lointaine, plus le prix baisse.</span><span class="pgrid__legend"><i></i>Prix HT · livraison incluse</span></div>
       <div class="pgrid__scroll"><table class="pgrid"><thead><tr><th class="pgrid__q">Quantité</th>${G.cols.map((c) => {
       const [wd, dd] = c.sameDay ? ["Aujourd'hui", ""] : fmtDay(workDate(c.days));
       const tag = c.sameDay ? (c.badge || "Express") : c.badge.replace("jusqu'à ", "jusqu'à ");
-      return `<th class="${c.sameDay ? "is-day" : ""}"><span class="pgrid__ico">${c.sameDay ? "⚡" : "🚚"}</span><b>${c.sameDay ? "Jour même" : wd}</b><small>${c.sameDay ? "Paris & IDF" : dd}</small>${c.sameDay ? `<span class="pgrid__note">Livraison Paris 20 € · Île-de-France 40 €</span>` : ""}${tag ? `<span class="pgrid__tag">${tag}</span>` : ""}</th>`; }).join("")}</tr></thead><tbody>${G.qty.map((n, qi) => `<tr><th class="pgrid__q" scope="row">${n.toLocaleString("fr-FR")}<small>ex.</small></th>${G.cols.map((c) => {
+      return `<th class="${c.sameDay ? "is-day" : ""}"><span class="pgrid__ico">${c.sameDay ? "⚡" : "🚚"}</span><b>${c.sameDay ? "Jour même" : wd}</b><small>${c.sameDay ? "Paris & IDF" : dd}</small>${c.sameDay ? `<span class="pgrid__note">Livraison Paris 20 € · Île-de-France 40 €</span>` : ""}${tag ? `<span class="pgrid__tag">${tag}</span>` : ""}</th>`; }).join("")}</tr></thead><tbody>${G.qty.map((n, qi) => `<tr><th class="pgrid__q" scope="row">${n.toLocaleString("fr-FR")}<small>${esc(F.unit || "ex.")}</small></th>${G.cols.map((c) => {
         const now = c.now[qi], old = c.old ? c.old[qi] : null;
-        if (now == null) return `<td class="${c.sameDay ? "is-day" : ""}"><button type="button" class="is-off" disabled title="Délai disponible jusqu'à 5 000 ex."><b>Indisponible</b><small>max. 5 000 ex.</small></button></td>`;
+        if (now == null) return `<td class="${c.sameDay ? "is-day" : ""}"><button type="button" class="is-off" disabled><b>Indisponible</b><small>${n > 5000 ? "max. 5 000 ex." : "autre date"}</small></button></td>`;
         return `<td class="${c.sameDay ? "is-day" : ""}"><button type="button" data-q="${qi}" data-col="${c.id}">${old && old > now ? `<s>${eur(old)}</s>` : ""}<b>${eur(now)}</b><small>${unit(now, n)}</small></button></td>`; }).join("")}</tr>`).join("")}</tbody></table></div>`;
   }
   const priced = () => { if (G) return G.cols.find((c) => c.id === st.col).now[st.q]; const s = F.sizes[st.s]; return s.price && F.groups.every((g, i) => !g.options[st.c[i]].quote) ? s.price * F.qty[st.q] : null; };
   const rows = () => {
     const s = F.sizes[st.s], d = F.deliv.find((x) => x.id === st.d);
     return [["Produit", MODEL ? MODEL : F.name], ["Taille", F.kind === "rollup" ? `${s.w} × ${s.h} cm (${s.name})` : F.kind === "fold" ? `${s.label} · ${s.pli} (${s.w} × ${s.h} cm ouvert)` : `${s.label} · ${s.hint}`],
-      ...F.groups.map((g, i) => [g.label, g.options[st.c[i]].label]), ...(G ? [["Quantité", G.qty[st.q].toLocaleString("fr-FR") + " ex."], ["Délai", colLabel(G.cols.find((c) => c.id === st.col)) + (st.col === "day" ? " · Paris & IDF" : "")]] : [["Quantité", F.qty[st.q].toLocaleString("fr-FR") + " " + F.unit], ["Délai", d.label + " · " + d.sub]])];
+      ...F.groups.map((g, i) => [g.label, g.options[st.c[i]].label]), ...(G ? [["Quantité", G.qty[st.q].toLocaleString("fr-FR") + " " + (F.unit || "ex.")], ["Délai", colLabel(G.cols.find((c) => c.id === st.col)) + (st.col === "day" ? " · Paris & IDF" : "")]] : [["Quantité", F.qty[st.q].toLocaleString("fr-FR") + " " + F.unit], ["Délai", d.label + " · " + d.sub]])];
   };
   const devisHref = () => "contact.html?" + new URLSearchParams({ produit: (MODEL || F.name) + " " + rows()[1][1], config: rows().slice(1).map(([k, v]) => k + " : " + v).join(" | ") });
 
