@@ -167,7 +167,7 @@ const PRODUCTS = {
 const CATS = [
   { id: "reprographie", name: "Reprographie", blurb: "Copies, impressions et reliures minute.", items: ["Photocopie", "Impression", "Reliures", "Scan et numérisation", "Plastification"] },
   { id: "cartes-de-visite", name: "Cartes de visite", blurb: "Classiques, pelliculées, Deluxe ou PVC.", items: [{ n: "Cartes de visite classiques", p: "cartes" }, { n: "Cartes de Visite Classic", p: "classic" }, "Cartes de visite pelliculées", "Cartes de fidélité", "Cartes de visite finitions Deluxe", "Cartes de visite en PVC", "Cartes de correspondance", "Cartes postales"] },
-  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, pour vos événements et opérations commerciales.", items: [{ n: "Flyers & tracts", from: 30.38, f: "flyers" }, { n: "Flyer A6", f: "flyers", t: 0 }, { n: "Flyer 10×15 cm", f: "flyers", t: 1 }, { n: "Flyer DL 10×21 cm", f: "flyers", t: 2 }, { n: "Flyer A5", f: "flyers", t: 3 }, { n: "Flyer A4", f: "flyers", t: 4 }, { n: "Flyer A3", f: "flyers", t: 5 }] },
+  { id: "flyers-tracts", name: "Flyers & tracts", blurb: "Du A6 au A3, pour vos événements et opérations commerciales.", items: [{ n: "Flyers & tracts", from: 27.09, f: "flyers" }, { n: "Flyer A6", f: "flyers", t: 0 }, { n: "Flyer 10×15 cm", f: "flyers", t: 1 }, { n: "Flyer DL 10×21 cm", f: "flyers", t: 2 }, { n: "Flyer A5", f: "flyers", t: 3 }, { n: "Flyer A4", f: "flyers", t: 4 }, { n: "Flyer A3", f: "flyers", t: 5 }] },
   { id: "depliants-plaquettes", name: "Dépliants & plaquettes", blurb: "1, 2 ou 3 plis pour vos présentations.", items: [{ n: "Dépliant 1 pli", f: "depliants", t: 0 }, { n: "Dépliant 2 plis roulés", f: "depliants", t: 2 }, { n: "Dépliant 2 plis accordéon", f: "depliants", t: 3 }] },
   { id: "catalogue-brochures", name: "Catalogues & brochures", blurb: "Agrafé, spirale, dos carré collé.", items: ["Brochure agrafée", "Spirale métallique", "Dos carré collé", "Couverture rigide"] },
   { id: "affiche-poster", name: "Affiches & posters", blurb: "À l'unité ou en série, jusqu'à l'Abribus.", items: ["Affiches à l'unité", "Affiches petit format", "Affiche grand format", "Affiche Abribus", "Affiche dos bleu", "Affiche fluo", "Affiche autocollante", "Affiche backlight"] },
@@ -752,3 +752,45 @@ FLY_GRID.apply = (sizeIdx, rectoVerso) => {
 };
 (() => { const day = FLY_GRID.cols.find((c) => c.sameDay); day.badge = "Express +40 %"; FLY_GRID.apply(3, false);
   FORMATS.flyers.from = Math.min(...FLY_GRID.byFormat.map((f) => f[0][2])); })();
+
+/* ---------- Flyers : prix par papier (relevé Pixartprinting du 25/11/2026, prix barrés, HT) ----------
+   Papier 0 = couché brillant (130 g chez Pixartprinting), 1 = couché mat 170 g, 2 = 250 g, 3 = 350 g.
+   null = délai non proposé (Pixartprinting : pas de J+2 / J+3 au-delà de 5 000 ex. en 130, 250 et 350 g). */
+FLY_GRID.byPaper = [
+  [
+    [[37.7,32.96,27.09],[38.97,34.07,28],[43.76,38.26,31.44],[48.27,42.2,34.69],[61.82,54.04,44.42],[79.89,69.84,57.41],[null,null,70.46],[null,null,76.15],[null,null,127.79],[null,null,153.53],[null,null,213.39]],
+    [[37.7,32.96,27.09],[38.97,34.07,28],[43.76,38.26,31.44],[48.27,42.2,34.69],[61.82,54.04,44.42],[79.89,69.84,57.41],[null,null,70.46],[null,null,76.15],[null,null,127.79],[null,null,153.53],[null,null,213.39]],
+    [[49.33,43.12,35.44],[51.53,45.05,37.03],[55.2,48.26,39.66],[62.54,54.68,44.94],[84.56,73.93,60.76],[119.48,104.46,85.86],[null,null,117.15],[null,null,139.75],[null,null,191.92],[null,null,228.44],[null,null,310.19]],
+    [[47.56,41.58,34.17],[50.7,44.32,36.43],[53.57,46.84,38.5],[63.59,55.6,45.7],[94.3,82.44,67.76],[133.68,116.87,96.06],[null,null,130.99],[null,null,149.69],[null,null,213.39],[null,null,263.66],[null,null,385.61]],
+    [[62.72,54.83,45.07],[70.64,61.76,50.76],[76.87,67.2,55.24],[91.9,80.35,66.04],[154.82,135.35,111.25],[227.02,198.47,163.13],[null,null,213.39],[null,null,279.17],[null,null,385.61],[null,null,519.4],[null,null,744.11]],
+    [[66.23,57.9,42.83],[78.12,68.3,50.52],[92.5,80.87,59.82],[123.72,108.16,88.9],[237.32,207.48,170.53],[423.87,370.57,304.58],[null,null,416.94],[null,null,529.3],[null,null,793.7],[null,null,1030.24],[null,null,1503.33]]
+  ],
+  FLY_GRID.byFormat,
+  [
+    [[49.66,43.41,35.68],[52.36,45.77,37.62],[56.86,49.71,40.86],[65.85,57.57,47.32],[83.56,73.06,60.05],[113.63,99.34,81.65],[null,null,105.96],[null,null,126.64],[null,null,193.31],[null,null,243.2],[null,null,360]],
+    [[49.66,43.41,35.68],[52.36,45.77,37.62],[56.86,49.71,40.86],[65.85,57.57,47.32],[83.56,73.06,60.05],[113.63,99.34,81.65],[null,null,105.96],[null,null,126.64],[null,null,193.31],[null,null,243.2],[null,null,360]],
+    [[50.26,43.94,36.11],[53.86,47.09,38.7],[59.86,52.33,43.01],[71.85,62.82,51.63],[119.93,104.85,86.18],[171.48,149.92,123.22],[null,null,168.85],[null,null,223.16],[null,null,304],[null,null,386.58],[null,null,543.05]],
+    [[51.46,44.99,36.98],[56.86,49.71,40.86],[65.85,57.57,47.32],[83.85,73.31,60.25],[134.93,117.96,96.96],[211.48,184.89,151.96],[null,null,205.39],[null,null,237.12],[null,null,360],[null,null,461.59],[null,null,703.88]],
+    [[66.07,57.76,47.47],[79.03,69.09,56.78],[92.24,80.64,66.28],[131.93,115.34,94.8],[224.46,196.24,161.29],[359.61,314.39,258.4],[null,null,360],[null,null,488.74],[null,null,703.88],[null,null,970.08],[null,null,1416.01]],
+    [[71.26,62.3,46.08],[90.69,79.29,65.17],[126.52,110.61,90.91],[183.75,160.64,132.04],[369.28,322.84,265.35],[731.73,639.72,525.79],[null,null,752.89],[null,null,979.98],[null,null,1500.96],[null,null,1979.05],[null,null,2926.54]]
+  ],
+  [
+    [[50.31,43.98,36.15],[53.99,47.2,38.79],[60.12,52.56,43.2],[72.38,63.27,52.01],[109.11,95.39,78.4],[147.66,129.09,106.1],[null,null,143.96],[null,null,169.78],[null,null,262.34],[null,null,328.3],[null,null,499.32]],
+    [[50.31,43.98,36.15],[53.99,47.2,38.79],[60.12,52.56,43.2],[72.38,63.27,52.01],[109.11,95.39,78.4],[147.66,129.09,106.1],[null,null,143.96],[null,null,169.78],[null,null,262.34],[null,null,328.3],[null,null,499.32]],
+    [[51.13,44.7,36.74],[56.03,48.99,40.26],[64.2,56.13,46.13],[80.55,70.42,57.88],[141.67,123.85,101.8],[220.83,193.06,158.68],[null,null,226.38],[null,null,294.08],[null,null,419.06],[null,null,528.41],[null,null,764.48]],
+    [[52.76,46.13,37.91],[60.12,52.56,43.2],[72.38,63.27,52.01],[108.98,95.27,78.31],[175.15,153.13,125.86],[283.54,247.88,203.74],[null,null,278.74],[null,null,320.09],[null,null,499.32],[null,null,642.43],[null,null,991.1]],
+    [[69.2,60.5,49.72],[86.85,75.93,62.41],[119.88,104.8,86.14],[170.1,148.71,122.22],[300.43,262.65,215.88],[485.44,424.4,348.82],[null,null,499.32],[null,null,680.22],[null,null,991.1],[null,null,1374.3],[null,null,2030.6]],
+    [[75.95,66.4,54.58],[113.31,99.06,81.42],[158.96,138.97,114.23],[231.94,202.77,166.66],[494.28,432.13,355.17],[1013,885.62,727.91],[null,null,1056.06],[null,null,1384.2],[null,null,2147.9],[null,null,2838.73],[null,null,4211.73]]
+  ],
+];
+FLY_GRID.apply = (sizeIdx, rectoVerso, paperIdx) => {
+  const grid = FLY_GRID.byPaper[paperIdx == null ? 1 : paperIdx] || FLY_GRID.byFormat;
+  const rows = grid[sizeIdx] || grid[3];
+  const r2 = (n) => Math.round(n * 100) / 100;
+  FLY_GRID.cols.forEach((c) => {
+    if (c.sameDay) c.now = rows.map((r, i) => (FLY_GRID.qty[i] <= 5000 && r[0] != null ? r2(r[0] * 1.4 * (rectoVerso ? 1.1 : 1)) : null));
+    else c.now = rows.map((r) => r[{ j2: 0, j3: 1, j5: 2 }[c.id]]);
+  });
+};
+FLY_GRID.apply(3, false, 0);
+FORMATS.flyers.from = Math.min(...FLY_GRID.byPaper.flatMap((g) => g.map((f) => f[0][2])));
