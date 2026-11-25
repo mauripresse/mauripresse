@@ -845,7 +845,8 @@ function pxGrid(F) {
   const rows = (s, ch) => P.t[P.key(s, ch || [])];
   const mult = (ch, q, c) => F.groups.reduce((m, g, i) => { const o = g.options[(ch || [])[i] || 0]; const r = o && o.px && P.r && P.r[o.px]; return r ? m * (r[q] && r[q][c] != null ? r[q][c] : NaN) : m; }, 1);
   G.apply = (s, rv, pi, ch) => {
-    const t = rows(s, ch) || [];
+    const t = rows(s, ch) || [], kd = P.kd && P.kd[P.key(s, ch || [])];
+    G.cols.forEach((col, ci) => { if (!col.sameDay) col.days = (kd || P.days)[ci - 1]; });
     G.cols.forEach((col, ci) => {
       col.now = P.qty.map((n, q) => {
         const c = col.sameDay ? 0 : ci - 1, b = t[q] && t[q][c], m = mult(ch, q, c);
@@ -873,7 +874,7 @@ function pxGrid(F) {
 })();
 (() => {
   if (typeof PXDATA === "undefined") return;
-  const wire = (fk, key, extra) => { const d = PXDATA[fk], F = FORMATS[fk]; if (!d || !F) return; F.px = Object.assign({ qty: d.qty, days: d.days || [2, 3, 5], t: d.t, r: d.r || {}, key }, extra || {}); pxGrid(F); };
+  const wire = (fk, key, extra) => { const d = PXDATA[fk], F = FORMATS[fk]; if (!d || !F) return; F.px = Object.assign({ qty: d.qty, days: d.days || [2, 3, 5], t: d.t, r: d.r || {}, kd: d.kd, key }, extra || {}); pxGrid(F); };
   const ci = (F, id, ch) => { const i = F.groups.findIndex((g) => g.id === id); return i < 0 ? 0 : ch[i] || 0; };
   /* Affiches : papiers des affiches grand format Pixartprinting (prix à l'unité, 1 à 5 affiches) */
   const A = FORMATS.affiches;
@@ -882,4 +883,24 @@ function pxGrid(F) {
     { label: "Papier affiche dos bleu", hint: "Affichage extérieur, opaque" }, { label: "Backlight", hint: "Caisson lumineux", quote: true }];
   A.unit = "affiche(s)";
   wire("affiches", (s, ch) => "s" + s + "_" + ci(A, "papier", ch));
+})();
+(() => {
+  if (typeof PXDATA === "undefined") return;
+  const wire = (fk, key, extra) => { const d = PXDATA[fk], F = FORMATS[fk]; if (!d || !F) return; F.px = Object.assign({ qty: d.qty, days: d.days || [2, 3, 5], t: d.t, r: d.r || {}, kd: d.kd, key }, extra || {}); pxGrid(F); };
+  const ci = (F, id, ch) => { const i = F.groups.findIndex((g) => g.id === id); return i < 0 ? 0 : ch[i] || 0; };
+  /* Étiquettes : autocollants Pixartprinting (polypropylène blanc / transparent, papier couché) */
+  const E = FORMATS.etiquettes, M = E.groups.find((g) => g.id === "matiere"), C = E.groups.find((g) => g.id === "livraison");
+  M.options = [{ label: "Vinyle blanc (polypropylène)", hint: "Résiste à l'eau", k: 1 }, { label: "Papier couché adhésif", hint: "Usage intérieur, livré en 8 jours", k: 0 }, { label: "Transparent (polypropylène)", k: 3 }, { label: "Holographique", quote: true }];
+  C.options = [{ label: "À l'unité (découpe pleine chair)" }, { label: "Planches (découpe mi-chair)" }, { label: "Rouleau", quote: true }];
+  wire("etiquettes", (s, ch) => (M.options[ci(E, "matiere", ch)].quote || C.options[ci(E, "livraison", ch)].quote) ? "devis" : "s" + s + "_" + M.options[ci(E, "matiere", ch)].k);
+})();
+(() => {
+  if (typeof PXDATA === "undefined") return;
+  const wire = (fk, key, extra) => { const d = PXDATA[fk], F = FORMATS[fk]; if (!d || !F) return; F.px = Object.assign({ qty: d.qty, days: d.days || [2, 3, 5], t: d.t, r: d.r || {}, kd: d.kd, key }, extra || {}); pxGrid(F); };
+  const ci = (F, id, ch) => { const i = F.groups.findIndex((g) => g.id === id); return i < 0 ? 0 : ch[i] || 0; };
+  /* Vinyle adhésif : adhésifs pour vitrines Pixartprinting, prix à la pièce (1 à 4 pièces) */
+  const V = FORMATS.vinyle, T = V.groups.find((g) => g.id === "type"), P = V.groups.find((g) => g.id === "pose");
+  T.options = [{ label: "Vinyle couleur brillant", hint: "Lettrage, logo, vitrine", k: 0 }, { label: "Vitrophanie (double face)", hint: "Lisible des deux côtés", k: 1 }, { label: "Dépoli", hint: "Effet verre sablé", quote: true }, { label: "Microperforé", hint: "On voit à travers", k: 3 }];
+  P.options[1].quote = true;
+  wire("vinyle", (s, ch) => (T.options[ci(V, "type", ch)].quote || P.options[ci(V, "pose", ch)].quote) ? "devis" : "s" + s + "_" + T.options[ci(V, "type", ch)].k);
 })();
